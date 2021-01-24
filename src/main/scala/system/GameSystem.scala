@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics._
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.{Gdx, Input}
-import com.easternsauce.game.animation.Animation
 import com.easternsauce.game.area.{Area, AreaGate, CurrentAreaHolder}
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
@@ -16,15 +15,17 @@ import com.easternsauce.game.creature.mob.Skeleton
 import com.easternsauce.game.creature.player.PlayerCharacter
 import com.easternsauce.game.dialogue.DialogueWindow
 import com.easternsauce.game.gui.{Hud, LootOptionWindow}
+import com.easternsauce.game.item.Item
 import com.easternsauce.game.item.inventory.InventoryWindow
 import com.easternsauce.game.item.loot.LootSystem
+import com.easternsauce.game.item.util.ItemType
 import com.easternsauce.game.shapes.{Polygon, Rectangle}
 import com.easternsauce.game.spawn.PlayerRespawnPoint
 import com.easternsauce.game.utils.Timer
-import system.GameSystem.shapeRenderer
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
+import scala.io.Source
 import scala.util.Random
 
 object GameSystem {
@@ -38,7 +39,7 @@ object GameSystem {
 
   var cameraFocussedCreature: Option[Creature] = None
 
-  var areaList: ListBuffer[Area] = _
+//  var areaList: ListBuffer[Area] = _
 
   var inventoryWindow = new InventoryWindow()
 
@@ -136,6 +137,33 @@ object GameSystem {
   def create(): Unit = {
     Assets.createAssets()
 
+    init()
+
+    val w = Gdx.graphics.getWidth
+    val h = Gdx.graphics.getHeight
+    camera = new OrthographicCamera
+    camera.setToOrtho(false, w, h)
+
+    //    grassyArea = new Area(Assets.grassyMap, 4.0f)
+//    grassyArea.creatures += player.id -> player
+//    grassyArea.creatures += skele.id -> skele
+
+//    player.area = grassyArea
+//    skele.area = grassyArea
+
+//    grassyArea.creatures.values.foreach(creature => creature.onInit())
+//
+//    currentArea = Some(grassyArea)
+//
+//    val w = Gdx.graphics.getWidth
+//    val h = Gdx.graphics.getHeight
+//    camera = new OrthographicCamera
+//    camera.setToOrtho(false, w, h)
+//
+//    anim = new Animation(Assets.slashWindup, 0.1f, 40, 40)
+  }
+
+  def init(): Unit = {
     GameSystem.playerCharacter = new PlayerCharacter("protagonist")
     val skele: Skeleton = new Skeleton("skellie123") // TODO: load from file
 
@@ -164,30 +192,6 @@ object GameSystem {
 
 
     cameraFocussedCreature = Some(playerCharacter)
-
-
-    val w = Gdx.graphics.getWidth
-    val h = Gdx.graphics.getHeight
-    camera = new OrthographicCamera
-    camera.setToOrtho(false, w, h)
-
-    //    grassyArea = new Area(Assets.grassyMap, 4.0f)
-//    grassyArea.creatures += player.id -> player
-//    grassyArea.creatures += skele.id -> skele
-
-//    player.area = grassyArea
-//    skele.area = grassyArea
-
-//    grassyArea.creatures.values.foreach(creature => creature.onInit())
-//
-//    currentArea = Some(grassyArea)
-//
-//    val w = Gdx.graphics.getWidth
-//    val h = Gdx.graphics.getHeight
-//    camera = new OrthographicCamera
-//    camera.setToOrtho(false, w, h)
-//
-//    anim = new Animation(Assets.slashWindup, 0.1f, 40, 40)
   }
 
   def update(): Unit = {
@@ -239,15 +243,11 @@ object GameSystem {
 
     spriteBatch.end()
 
-
-
     val pix = new Pixmap(1, 1, Pixmap.Format.RGBA8888)
     pix.setColor(0xDEADBEFF)
 
     pix.fill()
     val textureSolid = new Texture(pix)
-
-    val a = 100
 
     val poly = testPolygon
 
@@ -279,6 +279,116 @@ object GameSystem {
 
     shapeRenderer.end()
 
+
+  }
+
+  def loadGame(): Unit = {
+    init()
+
+    var creature: Creature = null
+
+    val fileContents = Source.fromFile("saves/savegame.sav")
+    try {
+      for (line <- fileContents.getLines) {
+        val s = line.split(" ")
+        if(s(0).equals("creature")) {
+          var foundCreature: Creature = null
+
+          areas.values.foreach (area => {
+            if (foundCreature == null) {
+              foundCreature = area.creaturesManager.getCreatureById(s(1))
+            }
+          })
+
+          creature = foundCreature
+
+        }
+        if(s(0).equals("pos")) {
+          if (creature != null) {
+            if (creature.area == null) throw new RuntimeException("position cannot be set before creature is spawned in area")
+          }
+
+          creature.rect.x = s(1).toFloat
+          creature.rect.y = s(2).toFloat
+        }
+
+        if(s(0).equals("health")) {
+          if (creature != null) {
+            creature.healthPoints = s(1).toFloat
+          }
+        }
+
+        if(s(0).equals("equipment_item")) {
+          if (creature != null) {
+            val equipmentItems: mutable.Map[Int, Item] = creature.equipmentItems
+            val item: Item = new Item(itemType = ItemType.getItemType(s(2)),
+              damage = if (s(3).equals("0")) null.asInstanceOf[Float] else s(3).toInt.toFloat,
+              armor = if (s(4).equals("0")) null.asInstanceOf[Float] else s(4).toInt.toFloat)
+            equipmentItems += (s(1).toInt -> item)
+          }
+        }
+
+        if (creature.isPlayer) {
+          if (!creature.alive) {
+            creature.onDeath()
+          }
+        }
+      }
+    }
+    finally fileContents.close()
+
+    val invFileContents = Source.fromFile("saves/inventory.sav")
+    try {
+      for (line <- invFileContents.getLines) {
+        val s = line.split(" ")
+
+        if (s(0) == "inventory_item") {
+          // TODO
+        }
+
+        if (s(0) == "gold") {
+          // TODO
+        }
+      }
+    }
+    finally invFileContents.close()
+
+    val respawnFileContents = Source.fromFile("saves/respawn_points.sav")
+    try {
+      for (line <- respawnFileContents.getLines) {
+        val s = line.split(" ")
+
+        if (s(0) == "respawnPoint") {
+          // TODO
+        }
+
+      }
+    }
+    finally respawnFileContents.close()
+
+
+    val treasureFileContents = Source.fromFile("saves/treasure_collected.sav")
+    try {
+      for (line <- treasureFileContents.getLines) {
+        val s = line.split(" ")
+
+        if (s(0) == "treasure") {
+          // TODO
+        }
+
+      }
+    }
+    finally treasureFileContents.close()
+
+    if (currentArea.isEmpty) currentArea = areas.get("area1")
+
+    currentArea match {
+      case Some(area) => area.onEntry()
+      case _ => throw new RuntimeException("current area is not set")
+    }
+  }
+
+  def saveGame(): Unit = {
 
   }
 }

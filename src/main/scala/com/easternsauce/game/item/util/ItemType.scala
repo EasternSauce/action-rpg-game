@@ -6,3 +6,11 @@ class ItemType {
 
 
 }
+
+
+object ItemType {
+  def getItemType(itemTypeId: String): ItemType = {
+    // TODO
+    null
+  }
+}

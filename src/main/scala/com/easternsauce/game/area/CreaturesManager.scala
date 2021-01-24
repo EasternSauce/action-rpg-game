@@ -10,6 +10,8 @@ import scala.collection.mutable
 
 class CreaturesManager(private val area: Area) {
 
+
+
   var creatures: mutable.Map[String, Creature] = mutable.Map()
 
   private var renderPriorityQueue: mutable.PriorityQueue[Creature] = _
@@ -71,6 +73,13 @@ class CreaturesManager(private val area: Area) {
     renderPriorityQueue = new mutable.PriorityQueue[Creature]()
 
     renderPriorityQueue.addAll(creatures.values)
+  }
+
+  def getCreatureById(id: String): Creature = {
+    creatures.get(id) match {
+      case Some(creature) => creature
+      case _ => throw new RuntimeException("creature doesn't exist: " + id)
+    }
   }
 }
 

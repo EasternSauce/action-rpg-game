@@ -4,22 +4,9 @@ import com.easternsauce.game.item.loot.LootPile
 import com.easternsauce.game.item.util.ItemType
 import system.GameSystem
 
-class Item {
-  private var itemType: ItemType = _
-  private var lootPileBackref : LootPile = _
+class Item(val itemType: ItemType, val lootPileBackref: LootPile = null, var damage: Float = 0, var armor: Float = 0, var quantity: Integer = 1) {
 
-  private var damage = 0f
-  private var armor = 0f
-
-  private var quantity = 1
-
-  def this(itemType: ItemType, lootPileBackref: LootPile) {
-    this()
-
-    this.itemType = itemType
-
-    this.lootPileBackref = lootPileBackref
-
+  if (damage == 0f && armor == 0f) {
     if (itemType.maxDamage != null.asInstanceOf[Float]) {
       this.damage = Math.ceil(itemType.maxDamage * (0.5f + 0.5f * GameSystem.random.nextFloat())).toFloat
     }
@@ -29,6 +16,8 @@ class Item {
 
     quantity = 1
   }
+
+
 
 
 }

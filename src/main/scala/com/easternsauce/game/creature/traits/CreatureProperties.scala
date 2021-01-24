@@ -14,8 +14,6 @@ trait CreatureProperties {
   protected var healthRegen = 0.3f
   protected var staminaRegen = 10f
 
-  protected var equipmentItems: mutable.Map[Integer, Item] = mutable.Map()
-
   protected var staminaOveruseTime = 1300
 
 
@@ -91,6 +89,8 @@ trait CreatureProperties {
   var isBoss: Boolean = false
 
   var sprinting = false
+
+  var equipmentItems: mutable.Map[Int, Item] = mutable.Map()
 
   def alive: Boolean = healthPoints > 0f
 

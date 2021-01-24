@@ -21,7 +21,7 @@ class AreaGate(val areaFrom: Area, val fromPosX: Int, val fromPosY: Int, val are
   }
 
   def update(): Unit = {
-    for (area <- GameSystem.areaList) {
+    for (area <- GameSystem.areas.values) {
       area.creaturesManager.updateGatesLogic(this, GameSystem.currentAreaHolder)
     }
   }
