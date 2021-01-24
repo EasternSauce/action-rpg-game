@@ -1,10 +1,14 @@
 package com.easternsauce.game.area
 
+import java.io.{FileWriter, PrintWriter}
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.npc.NonPlayerCharacter
 import com.easternsauce.game.creature.player.PlayerCharacter
+import com.easternsauce.game.item.Item
 import com.easternsauce.game.shapes.Rectangle
+import system.GameSystem
 
 import scala.collection.mutable
 
@@ -24,7 +28,7 @@ class CreaturesManager(private val area: Area) {
     creatures.filterInPlace((_, creature) => !creature.toBeRemoved)
   }
 
-  def updateGatesLogic(areaGate: AreaGate, currentAreaHolder: CurrentAreaHolder): Unit = {
+  def updateGatesLogic(areaGate: AreaGate): Unit = {
     for (creature <- creatures.values) {
       if (creature.isInstanceOf[PlayerCharacter]) if (!creature.passedGateRecently) {
         var gateRect: Rectangle = null
@@ -46,7 +50,7 @@ class CreaturesManager(private val area: Area) {
         if (creature.rect.intersects(gateRect)) {
           creature.passedGateRecently = true
           creature.moveToArea(destinationArea, destinationRect.getX, destinationRect.getY)
-          currentAreaHolder.currentArea = destinationArea
+          GameSystem.currentArea = Some(destinationArea)
           oldArea.onLeave()
           destinationArea.onEntry()
         }
@@ -79,6 +83,30 @@ class CreaturesManager(private val area: Area) {
     creatures.get(id) match {
       case Some(creature) => creature
       case _ => throw new RuntimeException("creature doesn't exist: " + id)
+    }
+  }
+
+  def saveToFile(writer: PrintWriter): Unit = {
+    for (creature <- creatures.values) {
+      if (creature.isPlayer) { // TODO: or npc
+        writer.write("creature " + creature.id + "\n")
+        writer.write("area " + creature.area.id + "\n")
+        writer.write("pos " + creature.rect.x + " " + creature.rect.y + "\n")
+        writer.write("health " + creature.healthPoints + "\n")
+        val equipmentItems: mutable.Map[Int, Item] = creature.equipmentItems
+        for ((key, value) <- equipmentItems) {
+          if (value != null) {
+            val damage: String =
+              if (value.damage == null.asInstanceOf[Float]) "0"
+              else "" + value.damage.intValue
+            val armor: String =
+              if (value.armor == null.asInstanceOf[Float]) "0"
+              else "" + value.armor.intValue
+            writer.write("equipment_item " + key + " " + value.itemType.id +
+              " " + damage + " " + armor + "\n")
+          }
+        }
+      }
     }
   }
 }

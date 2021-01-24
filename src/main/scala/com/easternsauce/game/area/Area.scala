@@ -8,6 +8,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
+import com.easternsauce.game.item.Item
 import com.easternsauce.game.item.loot.{LootPile, Treasure}
 import com.easternsauce.game.projectile.Arrow
 import com.easternsauce.game.spawn.{Blockade, EnemyRespawnArea, MobSpawnPoint, PlayerRespawnPoint, SpawnLocationsContainer}
@@ -25,7 +26,6 @@ class Area(val tiledMap: TiledMap, scale: Float) {
   private var enemyRespawnAreaList: mutable.ListBuffer[EnemyRespawnArea] = null
   private var mobSpawnPointList: mutable.ListBuffer[MobSpawnPoint] = null
 
-  private val id: String = null
 
   private var respawnList: mutable.ListBuffer[PlayerRespawnPoint] = null
 
@@ -40,6 +40,9 @@ class Area(val tiledMap: TiledMap, scale: Float) {
   private var abandonedPlains = null //music
 
   private var blockadeList: mutable.ListBuffer[Blockade] = null
+
+  val id: String = null
+
 
   private def loadSpawns(): Unit = {
     // TODO
@@ -120,4 +123,5 @@ class Area(val tiledMap: TiledMap, scale: Float) {
   def creatures: mutable.Map[String, Creature] = {
     creaturesManager.creatures
   }
+
 }

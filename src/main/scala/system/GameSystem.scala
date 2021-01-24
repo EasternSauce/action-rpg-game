@@ -1,6 +1,8 @@
 package system
 
-import com.badlogic.gdx.Input.Buttons
+import java.io.{File, PrintWriter}
+
+import com.badlogic.gdx.Input.{Buttons, Keys}
 import com.badlogic.gdx.graphics.g2d._
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType
@@ -8,7 +10,7 @@ import com.badlogic.gdx.graphics._
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.{Gdx, Input}
-import com.easternsauce.game.area.{Area, AreaGate, CurrentAreaHolder}
+import com.easternsauce.game.area.{Area, AreaGate}
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.mob.Skeleton
@@ -48,8 +50,6 @@ object GameSystem {
   var lootSystem = new LootSystem()
 
   var lootOptionWindow = new LootOptionWindow()
-
-  val currentAreaHolder: CurrentAreaHolder = CurrentAreaHolder()
 
   var areas: mutable.Map[String, Area] = mutable.Map()
 
@@ -137,12 +137,15 @@ object GameSystem {
   def create(): Unit = {
     Assets.createAssets()
 
-    init()
+    //init()
 
     val w = Gdx.graphics.getWidth
     val h = Gdx.graphics.getHeight
     camera = new OrthographicCamera
     camera.setToOrtho(false, w, h)
+
+    loadGame() // TODO: move to main menu
+
 
     //    grassyArea = new Area(Assets.grassyMap, 4.0f)
 //    grassyArea.creatures += player.id -> player
@@ -177,6 +180,7 @@ object GameSystem {
         area.addNewCreature(playerCharacter, 1000f, 1000f)
         area.addNewCreature(skele, 600f, 600f) // TODO: load from file
 
+        println("setting current area")
         currentArea = Some(area) // TODO: load from file
         area.creatures.values.foreach(creature => creature.onInit()) // TODO: do it while loading saves
 
@@ -198,6 +202,9 @@ object GameSystem {
     Timer.updateTimers()
 
     if (Gdx.input.isButtonPressed(Buttons.LEFT)) if (playerCharacter.currentAttack.canPerform) playerCharacter.currentAttack.perform()
+
+    if (Gdx.input.isKeyJustPressed(Keys.F5)) saveGame()
+
 
     areaCreatures.foreach(c => c.update())
 
@@ -389,6 +396,27 @@ object GameSystem {
   }
 
   def saveGame(): Unit = {
+    println("saving")
+    val writer = new PrintWriter(new File("saves/savegame.sav"))
+
+    for (area <- areas.values) {
+      area.creaturesManager.saveToFile(writer)
+    }
+
+    writer.close()
+
+    val inventoryWriter = new PrintWriter(new File("saves/inventory.sav"))
+
+    // TODO
+
+    writer.close()
+
+    val respawnWriter = new PrintWriter(new File("saves/respawn_points.sav"))
+
+    // TODO
+
+    writer.close()
+
 
   }
 }

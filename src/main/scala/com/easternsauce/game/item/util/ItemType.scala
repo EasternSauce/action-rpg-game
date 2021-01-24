@@ -1,9 +1,8 @@
 package com.easternsauce.game.item.util
 
-class ItemType {
-  var maxDamage: Float = _
-  var maxArmor: Float = _
-
+class ItemType(val id: String, val name: String, val description: String, val image: AnyVal/*TODO: prepare image class???*/,
+               val equipmentType: String, val worth: Int, val maxDamage: Float,
+               val maxArmor: Float, val stackable: Boolean, val consumable: Boolean) {
 
 }
 
