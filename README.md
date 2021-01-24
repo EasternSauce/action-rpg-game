@@ -1,0 +1,2 @@
+Rewrite of https://github.com/EasternSauce/slickgame in Scala and libgdx library (previously Java and slick2d library).
+Reason: slick2d is no longer up do date, and Scala has cleaner syntax over Java. Using libgdx allows using the latest version of Tiled for tiled game maps.
