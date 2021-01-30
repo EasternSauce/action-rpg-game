@@ -21,7 +21,7 @@ import com.easternsauce.game.item.Item
 import com.easternsauce.game.item.inventory.InventoryWindow
 import com.easternsauce.game.item.loot.LootSystem
 import com.easternsauce.game.item.util.ItemType
-import com.easternsauce.game.shapes.{Polygon, Rectangle}
+import com.easternsauce.game.shapes.{CustomBatch, Polygon, Rectangle}
 import com.easternsauce.game.spawn.PlayerRespawnPoint
 import com.easternsauce.game.utils.Timer
 
@@ -59,7 +59,7 @@ object GameSystem {
 
   var creaturesToMove: ListBuffer[Creature] = ListBuffer()
 
-  var hud: Hud = new Hud()
+  var hud: Hud = _
 
   var playerCharacter: PlayerCharacter = _
 
@@ -87,6 +87,8 @@ object GameSystem {
 
 //  var anim: Animation = _
 
+  val ScreenProportion: Float = 3 / 4f
+
 
   def getTiledMapRealWidth(tiledMap: TiledMap): Int = {
     val layer = tiledMap.getLayers.get(0).asInstanceOf[TiledMapTileLayer]
@@ -105,7 +107,7 @@ object GameSystem {
 
   def adjustCamera(rect: Rectangle): Unit = {
     camera.position.x = rect.x + rect.width / 2
-    camera.position.y = rect.y + rect.height / 2
+    camera.position.y = rect.y + rect.height / 2 - Gdx.graphics.getHeight * (1 - ScreenProportion) / 2
     camera.update()
   }
 
@@ -170,8 +172,8 @@ object GameSystem {
     GameSystem.playerCharacter = new PlayerCharacter("protagonist")
     val skele: Skeleton = new Skeleton("skellie123") // TODO: load from file
 
-    areas += ("area1" -> new Area(Assets.grassyMap, 4.0f))
-    areas += ("area2" -> new Area(null, 1.0f))
+    areas += ("area1" -> new Area("area1", Assets.grassyMap, 4.0f))
+    areas += ("area2" -> new Area("area2", null, 1.0f)) // TODO: load assets
 
     areas.get("area1") match {
       case Some(area) =>
@@ -194,6 +196,7 @@ object GameSystem {
       case None => throw new RuntimeException("area doesn't exist")
     }
 
+    hud = new Hud()
 
     cameraFocussedCreature = Some(playerCharacter)
   }
@@ -221,9 +224,11 @@ object GameSystem {
       case Some(area) => area.creaturesManager.updateRenderPriorityQueue()
       case _ => throw new RuntimeException("current area not set")
     }
+
+    hud.update()
   }
 
-  def render(spriteBatch: SpriteBatch, shapeRenderer: ShapeRenderer, polygonBatch: PolygonSpriteBatch): Unit = {
+  def render(spriteBatch: CustomBatch, hudBatch: CustomBatch, shapeRenderer: ShapeRenderer, polygonBatch: PolygonSpriteBatch): Unit = {
     spriteBatch.setProjectionMatrix(camera.combined)
     polygonBatch.setProjectionMatrix(camera.combined)
     shapeRenderer.setProjectionMatrix(camera.combined)
@@ -282,9 +287,17 @@ object GameSystem {
     shapeRenderer.rect(0, 0, 500, 500)
 
 
+
+
     //shapeRenderer.polygon(poly.getVertices)
 
     shapeRenderer.end()
+
+    hudBatch.begin()
+
+    hud.render(hudBatch)
+
+    hudBatch.end()
 
 
   }

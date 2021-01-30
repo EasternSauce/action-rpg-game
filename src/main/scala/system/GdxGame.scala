@@ -3,14 +3,17 @@ package system
 import com.badlogic.gdx.graphics.g2d._
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.{ApplicationAdapter, Gdx, Input, InputProcessor}
+import com.easternsauce.game.shapes.CustomBatch
 import system.GameSystem._
 
 class GdxGame extends ApplicationAdapter with InputProcessor {
-  private var spriteBatch: SpriteBatch = _
+  private var spriteBatch: CustomBatch = _
+  private var hudBatch: CustomBatch = _
   private var polygonBatch: PolygonSpriteBatch = _
 
   override def create() {
-    spriteBatch = new SpriteBatch()
+    spriteBatch = new CustomBatch()
+    hudBatch = new CustomBatch()
     polygonBatch = new PolygonSpriteBatch()
     shapeRenderer = new ShapeRenderer()
 
@@ -21,7 +24,7 @@ class GdxGame extends ApplicationAdapter with InputProcessor {
 
   override def render() {
     GameSystem.update()
-    GameSystem.render(spriteBatch, shapeRenderer, polygonBatch)
+    GameSystem.render(spriteBatch, hudBatch, shapeRenderer, polygonBatch)
 
   }
 

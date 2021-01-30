@@ -15,7 +15,7 @@ import com.easternsauce.game.spawn.{Blockade, EnemyRespawnArea, MobSpawnPoint, P
 
 import scala.collection.mutable
 
-class Area(val tiledMap: TiledMap, scale: Float) {
+class Area(val id: String, val tiledMap: TiledMap, scale: Float) {
 //  val creatures: mutable.Map[String, Creature] = mutable.Map()
   val tiledMapRenderer = new OrthogonalTiledMapRenderer(Assets.grassyMap, scale)
 
@@ -40,9 +40,6 @@ class Area(val tiledMap: TiledMap, scale: Float) {
   private var abandonedPlains = null //music
 
   private var blockadeList: mutable.ListBuffer[Blockade] = null
-
-  val id: String = null
-
 
   private def loadSpawns(): Unit = {
     // TODO
