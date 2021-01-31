@@ -3,7 +3,7 @@ package com.easternsauce.game.shapes
 import scala.collection.mutable
 
 
-class Polygon extends com.badlogic.gdx.math.Polygon {
+class CustomPolygon extends com.badlogic.gdx.math.Polygon {
 
   def this(vertices: Array[Float]) {
     this()
@@ -11,7 +11,7 @@ class Polygon extends com.badlogic.gdx.math.Polygon {
     setVertices(vertices)
   }
 
-  def this(rect: Rectangle) {
+  def this(rect: CustomRectangle) {
     this()
 
     val vertices: mutable.ArrayBuffer[Float] = mutable.ArrayBuffer()

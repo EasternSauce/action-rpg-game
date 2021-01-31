@@ -7,12 +7,12 @@ import com.badlogic.gdx.math.Vector2
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up}
-import com.easternsauce.game.shapes.Rectangle
+import com.easternsauce.game.shapes.{CustomRectangle, CustomVector2}
 import system.GameSystem
 
 class PlayerCharacter(id: String) extends Creature(id) {
-  override val rect = new Rectangle(0,5000,64,64)
-  override val hitboxBounds = new Rectangle(18, 0, 28, 64)
+  override val rect = new CustomRectangle(0,5000,64,64)
+  override val hitboxBounds = new CustomRectangle(18, 0, 28, 64)
   override val isPlayer = true
 
   override protected val onGettingHitSound: Sound = Assets.painSound
@@ -42,8 +42,9 @@ class PlayerCharacter(id: String) extends Creature(id) {
     val centerX = Gdx.graphics.getWidth / 2f
     val centerY = Gdx.graphics.getHeight / 2f - Gdx.graphics.getHeight * (1 - GameSystem.ScreenProportion) / 2
 
-    facingVector = new Vector2(mouseX - centerX, mouseY - centerY)
+    facingVector = CustomVector2(mouseX - centerX, mouseY - centerY)
   }
+
 
   override def onDeath(): Unit = {
     super.onDeath()

@@ -4,7 +4,7 @@ import com.easternsauce.game.animation.Animation
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.util.{AttackType, Sword}
-import com.easternsauce.game.shapes.{Polygon, Rectangle}
+import com.easternsauce.game.shapes.{CustomPolygon, CustomRectangle}
 
 class SwordAttack(override protected val abilityCreature: Creature) extends MeleeAttack(abilityCreature) {
     override val attackType: AttackType = Sword
@@ -34,15 +34,15 @@ class SwordAttack(override protected val abilityCreature: Creature) extends Mele
     windupAnimation = new Animation(Assets.slashWindup, channelFrameDuration, spriteWidth, spriteHeight)
     attackAnimation = new Animation(Assets.slash, frameDuration, spriteWidth, spriteHeight)
 
-    meleeAttackRect = new Rectangle(-999, -999, 1, 1)
+    meleeAttackRect = new CustomRectangle(-999, -999, 1, 1)
 
-    meleeAttackHitbox = new Polygon(meleeAttackRect)
+    meleeAttackHitbox = new CustomPolygon(meleeAttackRect)
 
     width = 40f
     height = 40f
     scale = 1f
     attackRange = 30f
-    knockbackPower = 0.35f
+    knockbackPower = 700f
 
     aimed = false
   }

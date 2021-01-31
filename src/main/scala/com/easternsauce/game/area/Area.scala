@@ -39,7 +39,7 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float) {
 
   private var abandonedPlains = null //music
 
-  private var blockadeList: mutable.ListBuffer[Blockade] = null
+  var blockadeList: mutable.ListBuffer[Blockade] = null
 
   private def loadSpawns(): Unit = {
     // TODO

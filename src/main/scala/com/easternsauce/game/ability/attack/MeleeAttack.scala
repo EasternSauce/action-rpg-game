@@ -6,7 +6,7 @@ import com.easternsauce.game.ability.util.AbilityState
 import com.easternsauce.game.animation.Animation
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
-import com.easternsauce.game.shapes.{Polygon, Rectangle}
+import com.easternsauce.game.shapes.{CustomPolygon, CustomRectangle, CustomVector2}
 import system.GameSystem
 
 abstract class MeleeAttack(override protected val abilityCreature: Creature) extends Attack(abilityCreature) {
@@ -22,7 +22,7 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
 
   protected var knockbackPower = 0f
 
-  implicit def rectConversion(s: com.badlogic.gdx.math.Rectangle): Rectangle = new Rectangle(s.x, s.y, s.width, s.height)
+  implicit def rectConversion(s: com.badlogic.gdx.math.Rectangle): CustomRectangle = new CustomRectangle(s.x, s.y, s.width, s.height)
 
   override def onActiveStart(): Unit = {
     super.onActiveStart()
@@ -76,7 +76,7 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
 //
 //    meleeAttackHitbox = new com.easternsauce.game.shapes.Polygon(meleeAttackRect)
 //
-//    val theta = new Vector2(attackVector.x, attackVector.y).angleDeg()
+//    val theta = CustomVector2(attackVector.x, attackVector.y).angleDeg()
 //
 //    meleeAttackHitbox.rotate(theta)
 //
@@ -88,7 +88,7 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
 
 //    val image = windupAnimation.getFrameByIndex(5)
 //    val attackVector = abilityCreature.facingVector
-//    val theta = -new Vector2(attackVector.x, attackVector.y).angleDeg()
+//    val theta = -CustomVector2(attackVector.x, attackVector.y).angleDeg()
 //
 //    if (attackVector.length() > 0f) attackVector.normalise()
 //
@@ -111,10 +111,10 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
     if (state == AbilityState.Channeling) {
       val image = windupAnimation.currentFrame()
       var attackVector = abilityCreature.attackVector
-      val theta = -new Vector2(attackVector.x, attackVector.y).angleDeg()
+      val theta = -new CustomVector2(attackVector.x, attackVector.y).angleDeg()
 
       if (attackVector.len() > 0f) {
-        attackVector = new Vector2(attackVector.x / attackVector.len(), attackVector.y / attackVector.len())
+        attackVector = CustomVector2(attackVector.x / attackVector.len(), attackVector.y / attackVector.len())
       }
 
       val attackShiftX = attackVector.x * attackRange
@@ -133,10 +133,10 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
     if (state == AbilityState.Active) {
       val image = attackAnimation.currentFrame()
       var attackVector = abilityCreature.attackVector
-      val theta = -new Vector2(attackVector.x, attackVector.y).angleDeg()
+      val theta = -CustomVector2(attackVector.x, attackVector.y).angleDeg()
 
       if (attackVector.len() > 0f) {
-        attackVector = new Vector2(attackVector.x / attackVector.len(), attackVector.y / attackVector.len())
+        attackVector = CustomVector2(attackVector.x / attackVector.len(), attackVector.y / attackVector.len())
       }
 
       val attackShiftX = attackVector.x * attackRange
@@ -145,7 +145,7 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
       val attackRectX = attackShiftX + abilityCreature.rect.center.x
       val attackRectY = attackShiftY + abilityCreature.rect.center.y
 
-      val poly = new Polygon(new Rectangle(0,0, width, height))
+      val poly = new CustomPolygon(new CustomRectangle(0,0, width, height))
 
       poly.setOrigin(0, height / 2 * scale)
       poly.setRotation(theta)
@@ -153,7 +153,6 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
       poly.translate(0, -height / 2  * scale)
 
       meleeAttackHitbox = poly
-      GameSystem.testPolygon = poly
 
       image.setOrigin(0, height / 2 * scale)
       image.setRotation(theta)

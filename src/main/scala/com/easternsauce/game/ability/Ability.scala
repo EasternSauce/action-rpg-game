@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.easternsauce.game.ability.util.AbilityState
 import com.easternsauce.game.ability.util.AbilityState.{AbilityState, Inactive}
 import com.easternsauce.game.creature.Creature
-import com.easternsauce.game.shapes.{Polygon, Rectangle}
+import com.easternsauce.game.shapes.{CustomPolygon, CustomRectangle}
 import com.easternsauce.game.utils.Timer
 
 abstract class Ability(protected val abilityCreature: Creature) {
@@ -18,9 +18,9 @@ abstract class Ability(protected val abilityCreature: Creature) {
   protected var activeTime = 0f
   protected var channelTime = 0f
 
-  protected var meleeAttackRect: Rectangle = _
+  protected var meleeAttackRect: CustomRectangle = _
 
-  var meleeAttackHitbox: Polygon = _
+  var meleeAttackHitbox: CustomPolygon = _
 
 
   protected var isAttack = false
@@ -83,10 +83,11 @@ abstract class Ability(protected val abilityCreature: Creature) {
     state = AbilityState.Channeling
     onChannellingStart()
     onChannelAction()
-    //if (isAttack) { // + 10 to ensure regen doesnt start if we hold attack button
-//      abilityCreature.getEffect("staminaRegenStopped").applyEffect(channelTime + cooldownTime + 10)
-   // }
-//    else abilityCreature.getEffect("staminaRegenStopped").applyEffect(1000)
+
+    if (isAttack) { // + 10 to ensure regen doesnt start if we hold attack button
+      abilityCreature.getEffect("staminaRegenStopped").applyEffect(channelTime + cooldownTime + 0.001f)
+    }
+    else abilityCreature.getEffect("staminaRegenStopped").applyEffect(1f)
   }
 
   def performMovement(): Unit = {

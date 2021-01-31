@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.util.WalkDirection.WalkDirection
 import com.easternsauce.game.creature.util.{Unarmed, WalkDirection}
+import com.easternsauce.game.shapes.CustomVector2
 import com.easternsauce.game.utils.Timer
 import org.lwjgl.util.vector.Vector2f
 import system.GameSystem
@@ -118,7 +119,7 @@ abstract class Mob(id: String) extends Creature(id) {
             if (circlingDir == 0) {
               destinationX = aggroedCenter.x
               destinationY = aggroedCenter.y
-              val destinationVector = new Vector2(destinationX - creatureCenter.x, destinationY - creatureCenter.y)
+              val destinationVector = CustomVector2(destinationX - creatureCenter.x, destinationY - creatureCenter.y)
               val perpendicular = GameSystem.getVectorPerpendicular(destinationVector)
               destinationX = aggroedCenter.x + perpendicular.x
               destinationY = aggroedCenter.y + perpendicular.y
@@ -127,9 +128,9 @@ abstract class Mob(id: String) extends Creature(id) {
             else {
               destinationX = aggroedCenter.x
               destinationY = aggroedCenter.y
-              val destinationVector = new Vector2(destinationX - creatureCenter.x, destinationY - creatureCenter.y)
+              val destinationVector = CustomVector2(destinationX - creatureCenter.x, destinationY - creatureCenter.y)
               val perpendicular = GameSystem.getVectorPerpendicular(destinationVector)
-              val negated = new Vector2(-perpendicular.x, -perpendicular.y)
+              val negated = CustomVector2(-perpendicular.x, -perpendicular.y)
 
               destinationX = creatureCenter.x + negated.x
               destinationY = creatureCenter.y + negated.y
@@ -199,7 +200,7 @@ abstract class Mob(id: String) extends Creature(id) {
   override def setFacingDirection(): Unit = {
     if (aggroedCreature.nonEmpty) {
       val aggroed = aggroedCreature.get
-      facingVector = new Vector2(aggroed.rect.center.x - rect.center.x, -(aggroed.rect.center.y - rect.center.y))
+      facingVector = CustomVector2(aggroed.rect.center.x - rect.center.x, -(aggroed.rect.center.y - rect.center.y))
     }
   }
 

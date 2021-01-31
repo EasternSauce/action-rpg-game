@@ -1,5 +1,8 @@
 package com.easternsauce.game.creature
 
+import java.util
+import java.util.List
+
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.g2d.{Sprite, SpriteBatch}
@@ -10,11 +13,13 @@ import com.easternsauce.game.ability.attack.{Attack, BowAttack, SwordAttack, Tri
 import com.easternsauce.game.animation.Animation
 import com.easternsauce.game.area.{Area, AreaGate}
 import com.easternsauce.game.assets.{Assets, SpriteSheet}
+import com.easternsauce.game.creature.player.PlayerCharacter
 import com.easternsauce.game.creature.util.WalkDirection
 import com.easternsauce.game.creature.util.WalkDirection.WalkDirection
 import com.easternsauce.game.effect.Effect
 import com.easternsauce.game.item.Item
-import com.easternsauce.game.shapes.Rectangle
+import com.easternsauce.game.shapes.{CustomRectangle, CustomVector2}
+import com.easternsauce.game.spawn.Blockade
 import com.easternsauce.game.utils.{IntPair, Timer}
 import system.GameSystem
 
@@ -26,30 +31,30 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   protected var healthRegen = 0.3f
   protected var staminaRegen = 10f
 
-  protected var staminaOveruseTime = 1300
+  protected var staminaOveruseTime = 1.3f
 
 
-  protected var poisonTickTime = 1500
+  protected var poisonTickTime = 1.5f
 
-  protected var poisonTime = 20000
+  protected var poisonTime = 20f
   protected var knockbackPower = 0f
 
   protected var healing = false
 
-  protected var healingTickTime = 300
+  protected var healingTickTime = 0.3f
 
-  protected var healingTime = 8000
+  protected var healingTime = 8f
   protected var healingPower = 0f
 
   protected var knockback: Boolean = false
 
-  protected var knockbackVector: Vector2 = _
+  protected var knockbackVector: CustomVector2 = _
 
   protected var knockbackSpeed: Float = 0f
 
   protected var scale: Float = 1f
 
-  protected var knocbackable = false
+  protected var knockbackable = true
 
   protected var dropTable: mutable.Map[String, Float] = mutable.Map()
 
@@ -61,8 +66,10 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
   protected var effectMap: mutable.Map[String, Effect] = mutable.Map()
 
-  val rect: Rectangle = new Rectangle(0, 0, 64, 64)
-  val hitboxBounds: Rectangle = new Rectangle(2, 2, 60, 60)
+  protected var staminaDrain = 0.0f
+
+  val rect: CustomRectangle = new CustomRectangle(0, 0, 64, 64)
+  val hitboxBounds: CustomRectangle = new CustomRectangle(2, 2, 60, 60)
 
   val isPlayer = false
   val isMob = false
@@ -71,8 +78,8 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
   var area: Area = _
 
-  var attackVector: Vector2 = new Vector2(0f, 0f)
-  var facingVector: Vector2 = new Vector2(0f, 0f)
+  var attackVector: CustomVector2 = CustomVector2(0f, 0f)
+  var facingVector: CustomVector2 = CustomVector2(0f, 0f)
 
   var maxHealthPoints = 100f
   var healthPoints: Float = maxHealthPoints
@@ -109,7 +116,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   protected var wasMoving = false
   protected var totalDirections = 0
   protected var movementIncrement: Float = 0
-  protected var movementVector: Vector2 = new Vector2(0f, 0f)
+  protected var movementVector: CustomVector2 = CustomVector2(0f, 0f)
   protected var runningStoppedTimer: Timer = Timer()
 
   val speed: Float = 400.0f
@@ -143,6 +150,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
   def alive: Boolean = healthPoints > 0f
 
+
   def setFacingDirection(): Unit = {
 
   }
@@ -157,6 +165,8 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
       processMovement()
 
       setFacingDirection()
+
+      regenerate()
     }
 
     for (effect <- effectMap.values) {
@@ -174,6 +184,12 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
       && this == GameSystem.cameraFocussedCreature.get) {
       GameSystem.adjustCamera(rect)
     }
+
+    if (staminaDrain >= 0.3f) {
+      takeStaminaDamage(8f)
+
+      staminaDrain = 0.0f
+    }
   }
 
   def render(batch: SpriteBatch): Unit = {
@@ -186,10 +202,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   def performActions(): Unit
 
 
-  def takeDamage(damage: Float, immunityFrames: Boolean, knockbackPower: Float, x: Float, y: Float): Unit = {
-    healthPoints -= damage
-    // TODO
-
+  def takeDamage(damage: Float, immunityFrames: Boolean, knockbackPower: Float, sourceX: Float, sourceY: Float): Unit = {
     if (alive) {
       val beforeHP = healthPoints
 
@@ -204,6 +217,14 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
         getEffect("immune").applyEffect(0.75f)
         // stagger on hit
         getEffect("immobilized").applyEffect(0.35f)
+      }
+
+      if (knockbackable && !knockback && knockbackPower > 0f) {
+        this.knockbackPower = knockbackPower
+        knockbackVector = CustomVector2(rect.getX - sourceX, rect.getY - sourceY).normal
+        knockback = true
+        knockbackTimer.resetStart()
+
       }
 
       onGettingHitSound.play(0.1f)
@@ -276,7 +297,33 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   }
 
   def regenerate(): Unit = {
-    // TODO
+    if (healthRegenTimer.time > 0.5f) {
+      heal(healthRegen)
+      healthRegenTimer.resetStart()
+    }
+
+    if (!isEffectActive("staminaRegenStopped") && !sprinting) if (staminaRegenTimer.time > 0.25f && !abilityActive && !staminaOveruse) {
+      if (staminaPoints < maxStaminaPoints) {
+        val afterRegen = staminaPoints + staminaRegen
+        staminaPoints = Math.min(afterRegen, maxStaminaPoints)
+      }
+      staminaRegenTimer.resetStart()
+    }
+
+    if (staminaOveruse) if (staminaOveruseTimer.time > staminaOveruseTime) staminaOveruse = false
+
+    if (getEffect("poisoned").isActive) if (poisonTickTimer.time > poisonTickTime) {
+      takeDamage(15f, immunityFrames = false, 0, 0, 0)
+      poisonTickTimer.resetStart()
+    }
+
+    if (healing) {
+      if (healingTickTimer.time > healingTickTime) {
+        heal(healingPower)
+        healingTickTimer.resetStart()
+      }
+      if (healingTimer.time > healingTime || healthPoints >= maxHealthPoints) healing = false
+    }
   }
 
   def abilityActive: Boolean = {
@@ -285,7 +332,11 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   }
 
   def heal(healValue: Float): Unit = {
-    // TODO
+    if (healthPoints < maxHealthPoints) {
+      val afterHeal = healthPoints + healValue
+      healthPoints = Math.min(afterHeal, maxHealthPoints)
+
+    }
   }
 
   def becomePoisoned(): Unit = {
@@ -311,8 +362,12 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   }
 
   def takeStaminaDamage(staminaDamage: Float): Unit = {
-    // TODO
-
+    if (staminaPoints - staminaDamage > 0) staminaPoints -= staminaDamage
+    else {
+      staminaPoints = 0f
+      staminaOveruse = true
+      staminaOveruseTimer.resetStart()
+    }
   }
 
   def useItem(item: Item): Unit = {
@@ -370,10 +425,11 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
   }
 
-  def hitbox: Rectangle = new Rectangle(rect.x + hitboxBounds.x, rect.y + hitboxBounds.y,
+  def hitbox: CustomRectangle = new CustomRectangle(rect.x + hitboxBounds.x, rect.y + hitboxBounds.y,
     hitboxBounds.width, hitboxBounds.height)
 
-  def isCollidingX(tiledMap: TiledMap, newPosX: Float, newPosY: Float): Boolean = {
+  // TODO: check blockade list for collisions
+  def isCollidingX(tiledMap: TiledMap, blockadeList: ListBuffer[Blockade], newPosX: Float, newPosY: Float): Boolean = {
     val layer = tiledMap.getLayers.get(0).asInstanceOf[TiledMapTileLayer]
 
     var collided = false
@@ -387,9 +443,9 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
         if (!traversable) {
           collided = {
-            val rect1 = new Rectangle(x * GameSystem.TiledMapCellSize, y * GameSystem.TiledMapCellSize,
+            val rect1 = new CustomRectangle(x * GameSystem.TiledMapCellSize, y * GameSystem.TiledMapCellSize,
               GameSystem.TiledMapCellSize, GameSystem.TiledMapCellSize)
-            val rect2 = new Rectangle(newPosX + hitboxBounds.x, hitbox.y,
+            val rect2 = new CustomRectangle(newPosX + hitboxBounds.x, hitbox.y,
               hitbox.width, hitbox.height)
 
             rect1.overlaps(rect2)
@@ -403,7 +459,8 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     collided
   }
 
-  def isCollidingY(tiledMap: TiledMap, newPosX: Float, newPosY: Float): Boolean = {
+  // TODO: check blockade list for collisions
+  def isCollidingY(tiledMap: TiledMap, blockadeList: ListBuffer[Blockade], newPosX: Float, newPosY: Float): Boolean = {
     val layer = tiledMap.getLayers.get(0).asInstanceOf[TiledMapTileLayer]
 
     var collided = false
@@ -418,9 +475,9 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
         if (!traversable) {
           collided = {
-            val rect1 = new Rectangle(x * GameSystem.TiledMapCellSize, y * GameSystem.TiledMapCellSize,
+            val rect1 = new CustomRectangle(x * GameSystem.TiledMapCellSize, y * GameSystem.TiledMapCellSize,
               GameSystem.TiledMapCellSize, GameSystem.TiledMapCellSize)
-            val rect2 = new Rectangle(hitbox.x, newPosY + hitboxBounds.y,
+            val rect2 = new CustomRectangle(hitbox.x, newPosY + hitboxBounds.y,
               hitbox.width, hitbox.height)
 
             rect1.overlaps(rect2)
@@ -464,13 +521,18 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
     totalDirections = 0
 
+    knockbackSpeed = knockbackPower * Gdx.graphics.getDeltaTime
+
     movingDir.x = 0
     movingDir.y = 0
 
     var adjustedSpeed = this.speed
 
     if (isAttacking) adjustedSpeed = adjustedSpeed / 3
-    else if (sprinting && staminaPoints > 0) adjustedSpeed = adjustedSpeed * 2
+    else if (sprinting && staminaPoints > 0) {
+      adjustedSpeed = adjustedSpeed * 2
+      staminaDrain += Gdx.graphics.getDeltaTime
+    }
 
     movementIncrement = adjustedSpeed * Gdx.graphics.getDeltaTime
 
@@ -478,52 +540,73 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
   def processMovement(): Unit = {
 
-    if (totalDirections > 1) {
-      movementIncrement = movementIncrement / Math.sqrt(2).floatValue
-    }
-    val newPosX: Float = rect.getX + movementIncrement * movingDir.x
-    val newPosY: Float = rect.getY + movementIncrement * movingDir.y
+    assert(GameSystem.currentArea.nonEmpty)
 
-    if (!isCollidingX(Assets.grassyMap, newPosX, newPosY)
-      && newPosX + hitboxBounds.x >= 0 && newPosX <
-      GameSystem.getTiledMapRealWidth(Assets.grassyMap) - (hitboxBounds.x + hitboxBounds.width)) {
-      move(movementIncrement * movingDir.x, 0)
-      movementVector.x = movementIncrement * movingDir.x
-    }
-    else movementVector.x = 0
+    val tiledMap = GameSystem.currentArea.get.tiledMap
+    val blockadeList = GameSystem.currentArea.get.blockadeList
 
-    if (!isCollidingY(Assets.grassyMap, newPosX, newPosY)
-      && newPosY + hitboxBounds.y >= 0 && newPosY <
-      GameSystem.getTiledMapRealHeight(Assets.grassyMap) - (hitboxBounds.y + hitboxBounds.height)) {
-      move(0, movementIncrement * movingDir.y)
-      movementVector.y = movementIncrement * movingDir.y
+    def isMovementAllowedXAxis(newPosX: Float, newPosY: Float): Boolean = {
+      !isCollidingX(tiledMap, blockadeList, newPosX, newPosY) && newPosX + hitboxBounds.x >= 0 && newPosX <
+        GameSystem.getTiledMapRealWidth(tiledMap) - (hitboxBounds.x + hitboxBounds.width)
     }
-    else movementVector.y = 0
 
-    if (isMoving && !wasMoving) {
-      if (!isRunningAnimationActive) {
+    def isMovementAllowedYAxis(newPosX: Float, newPosY: Float): Boolean = {
+      !isCollidingY(tiledMap, blockadeList, newPosX, newPosY) && newPosY + hitboxBounds.y >= 0 && newPosY <
+        GameSystem.getTiledMapRealHeight(tiledMap) - (hitboxBounds.y + hitboxBounds.height)
+    }
+
+    if (!isEffectActive("immobilized") && !knockback) {
+
+      if (totalDirections > 1) movementIncrement = movementIncrement / Math.sqrt(2).toFloat
+      val newPosX = rect.getX + movementIncrement * movingDir.x
+      val newPosY = rect.getY + movementIncrement * movingDir.y
+
+
+      if (isMovementAllowedXAxis(newPosX, newPosY)) {
+        move(movementIncrement * movingDir.x, 0)
+        movementVector.x = movementIncrement * movingDir.x
+      }
+      else movementVector.x = 0
+
+      if (isMovementAllowedYAxis(newPosX, newPosY)) {
+        move(0, movementIncrement * movingDir.y)
+        movementVector.y = movementIncrement * movingDir.y
+      }
+      else movementVector.y = 0
+
+      if (isMoving && !wasMoving) if (!isRunningAnimationActive) {
 
         isRunningAnimationActive = true
         walkAnimationTimer.resetStart()
       }
+
+      if (!isMoving && wasMoving) runningStoppedTimer.resetStart()
+
+      if (!isMoving && isRunningAnimationActive && runningStoppedTimer.time > 0.25f) {
+        isRunningAnimationActive = false
+        runningStoppedTimer.stop()
+        walkAnimationTimer.stop()
+      }
+
+      wasMoving = isMoving
     }
 
-    if (!isMoving && wasMoving) {
-      runningStoppedTimer.resetStart()
-    }
+    if (knockback) {
+      val tiledMap = GameSystem.currentArea.get.tiledMap
 
-    if (!isMoving && isRunningAnimationActive && runningStoppedTimer.time > 0.25f) {
-      isRunningAnimationActive = false
-      runningStoppedTimer.stop()
-      walkAnimationTimer.stop()
+      val newPosX: Float = rect.getX + knockbackSpeed * knockbackVector.x
+      val newPosY: Float = rect.getY + knockbackSpeed * knockbackVector.y
+      val blockadeList: ListBuffer[Blockade] = GameSystem.currentArea.get.blockadeList
+      if (isMovementAllowedXAxis(newPosX, newPosY)) move(knockbackSpeed * knockbackVector.x, 0)
+      if (isMovementAllowedYAxis(newPosX, newPosY)) move(0, knockbackSpeed * knockbackVector.y)
+      if (knockbackTimer.time > 0.2f) knockback = false
     }
-
-    wasMoving = isMoving
   }
 
   private def move(dx: Float, dy: Float): Unit = {
     rect.x = rect.x + dx
     rect.y = rect.y + dy
+
   }
 
   def controlMovement(): Unit = {

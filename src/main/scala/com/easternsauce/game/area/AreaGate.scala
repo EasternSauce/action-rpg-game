@@ -2,22 +2,20 @@ package com.easternsauce.game.area
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
-import com.easternsauce.game.shapes.Rectangle
+import com.easternsauce.game.shapes.{CustomBatch, CustomRectangle}
 import system.GameSystem
 
 class AreaGate(val areaFrom: Area, val fromPosX: Int, val fromPosY: Int, val areaTo: Area, val toPosX: Int, val toPosY: Int) {
-  val fromRect = new Rectangle(fromPosX, fromPosY, 50, 50)
-  val toRect = new Rectangle(toPosX, toPosY, 50, 50)
+  val fromRect = new CustomRectangle(fromPosX, fromPosY, 50, 50)
+  val toRect = new CustomRectangle(toPosX, toPosY, 50, 50)
 
-  def renderShapes(shapeRenderer: ShapeRenderer): Unit = {
-    shapeRenderer.setColor(Color.BLUE)
-
+  def renderShapes(batch: CustomBatch): Unit = {
     val currentArea = GameSystem.currentArea.getOrElse {
       throw new RuntimeException("current area not specified")
     }
 
-    if (currentArea == areaFrom) shapeRenderer.rect(fromRect.getX, fromRect.getY, fromRect.getWidth, fromRect.getHeight)
-    if (currentArea == areaTo) shapeRenderer.rect(toRect.getX, toRect.getY, toRect.getWidth, toRect.getHeight)
+    if (currentArea == areaFrom) batch.drawRect(fromRect, Color.BLUE)
+    if (currentArea == areaTo) batch.drawRect(toRect, Color.BLUE)
   }
 
   def update(): Unit = {

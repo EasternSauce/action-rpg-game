@@ -7,7 +7,7 @@ import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.npc.NonPlayerCharacter
 import com.easternsauce.game.creature.player.PlayerCharacter
 import com.easternsauce.game.item.Item
-import com.easternsauce.game.shapes.Rectangle
+import com.easternsauce.game.shapes.CustomRectangle
 import system.GameSystem
 
 import scala.collection.mutable
@@ -31,10 +31,10 @@ class CreaturesManager(private val area: Area) {
   def updateGatesLogic(areaGate: AreaGate): Unit = {
     for (creature <- creatures.values) {
       if (creature.isInstanceOf[PlayerCharacter]) if (!creature.passedGateRecently) {
-        var gateRect: Rectangle = null
+        var gateRect: CustomRectangle = null
         var destinationArea: Area = null
         var oldArea: Area = null
-        var destinationRect: Rectangle = null
+        var destinationRect: CustomRectangle = null
         if (area == areaGate.areaFrom) {
           gateRect = areaGate.fromRect
           oldArea = areaGate.areaFrom

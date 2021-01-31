@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType
 import com.badlogic.gdx.graphics._
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
-import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.math.{Intersector, Polygon, Vector2}
 import com.badlogic.gdx.{Gdx, Input}
 import com.easternsauce.game.area.{Area, AreaGate}
 import com.easternsauce.game.assets.Assets
@@ -21,7 +21,7 @@ import com.easternsauce.game.item.Item
 import com.easternsauce.game.item.inventory.InventoryWindow
 import com.easternsauce.game.item.loot.LootSystem
 import com.easternsauce.game.item.util.ItemType
-import com.easternsauce.game.shapes.{CustomBatch, Polygon, Rectangle}
+import com.easternsauce.game.shapes.{CustomBatch, CustomPolygon, CustomRectangle, CustomVector2}
 import com.easternsauce.game.spawn.PlayerRespawnPoint
 import com.easternsauce.game.utils.Timer
 
@@ -40,8 +40,6 @@ object GameSystem {
   val TiledMapCellSize = 64
 
   var cameraFocussedCreature: Option[Creature] = None
-
-//  var areaList: ListBuffer[Area] = _
 
   var inventoryWindow = new InventoryWindow()
 
@@ -70,10 +68,6 @@ object GameSystem {
   val textureRegionName: String = textureRegionPrefix + "1"
 
 
-
-
-  var testPolygon: Polygon = new Polygon()
-
   val dirKeysMap: mutable.Map[Int, Boolean] = mutable.Map(
     Input.Keys.A -> false,
     Input.Keys.D -> false,
@@ -81,11 +75,7 @@ object GameSystem {
     Input.Keys.S -> false
   )
 
-//  var grassyArea: Area = _
-
   var shapeRenderer: ShapeRenderer = _
-
-//  var anim: Animation = _
 
   val ScreenProportion: Float = 3 / 4f
 
@@ -105,13 +95,13 @@ object GameSystem {
     case None => throw new RuntimeException("currentArea is not set")
   }
 
-  def adjustCamera(rect: Rectangle): Unit = {
+  def adjustCamera(rect: CustomRectangle): Unit = {
     camera.position.x = rect.x + rect.width / 2
     camera.position.y = rect.y + rect.height / 2 - Gdx.graphics.getHeight * (1 - ScreenProportion) / 2
     camera.update()
   }
 
-  def distance(rect1: Rectangle, rect2: Rectangle): Float = {
+  def distance(rect1: CustomRectangle, rect2: CustomRectangle): Float = {
     val center1 = rect1.center
     val x1 = center1.x
     val y1 = center1.y
@@ -121,19 +111,24 @@ object GameSystem {
     Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)).toFloat
   }
 
-  def getVectorPerpendicular(vector: Vector2): Vector2 = {
-    new Vector2(-vector.y, vector.x)
+  def getVectorPerpendicular(vector: Vector2): CustomVector2 = {
+    CustomVector2(-vector.y, vector.x)
   }
 
-  def checkCollision(polygon: Polygon, rect: Rectangle): Boolean = { // TODO: to improve
-    val points = List(
-      new Vector2(rect.x, rect.y),
-      new Vector2(rect.x, rect.y + rect.width),
-      new Vector2(rect.x+rect.width, rect.y),
-      new Vector2(rect.x+rect.width, rect.y+rect.height)
-    )
+  def checkCollision(polygon1: CustomPolygon, rect: CustomRectangle): Boolean = { // TODO: to improve, use Box2d for collision in future?
 
-    points.exists(point => polygon.contains(point))
+
+    val polygon2 = new CustomPolygon(rect)
+
+    val v1 = new Vector2
+    polygon1.getBoundingRectangle.getCenter(v1)
+
+    val v2 = new Vector2
+    polygon2.getBoundingRectangle.getCenter(v2)
+
+    val result = Intersector.intersectPolygons(polygon1, polygon2, null)
+
+    result
   }
 
   def create(): Unit = {
@@ -148,24 +143,6 @@ object GameSystem {
 
     loadGame() // TODO: move to main menu
 
-
-    //    grassyArea = new Area(Assets.grassyMap, 4.0f)
-//    grassyArea.creatures += player.id -> player
-//    grassyArea.creatures += skele.id -> skele
-
-//    player.area = grassyArea
-//    skele.area = grassyArea
-
-//    grassyArea.creatures.values.foreach(creature => creature.onInit())
-//
-//    currentArea = Some(grassyArea)
-//
-//    val w = Gdx.graphics.getWidth
-//    val h = Gdx.graphics.getHeight
-//    camera = new OrthographicCamera
-//    camera.setToOrtho(false, w, h)
-//
-//    anim = new Animation(Assets.slashWindup, 0.1f, 40, 40)
   }
 
   def init(): Unit = {
@@ -182,7 +159,6 @@ object GameSystem {
         area.addNewCreature(playerCharacter, 1000f, 1000f)
         area.addNewCreature(skele, 600f, 600f) // TODO: load from file
 
-        println("setting current area")
         currentArea = Some(area) // TODO: load from file
         area.creatures.values.foreach(creature => creature.onInit()) // TODO: do it while loading saves
 
@@ -252,46 +228,9 @@ object GameSystem {
 
     //anim.currentFrame().draw(batch)
 
+    gateList.foreach(_.renderShapes(spriteBatch))
 
     spriteBatch.end()
-
-    val pix = new Pixmap(1, 1, Pixmap.Format.RGBA8888)
-    pix.setColor(0xDEADBEFF)
-
-    pix.fill()
-    val textureSolid = new Texture(pix)
-
-    val poly = testPolygon
-
-    val polygonRegion = new PolygonRegion(new TextureRegion(textureSolid), poly.getVertices, Array[Short](0, 1, 2, 0, 2, 3))
-
-
-    val polygonSprite = new PolygonSprite(polygonRegion)
-
-    polygonBatch.begin()
-
-    polygonSprite.setPosition(poly.getX, poly.getY)
-    polygonSprite.setOrigin(poly.getOriginX, poly.getOriginY)
-    polygonSprite.setRotation(poly.getRotation)
-
-    //polygonSprite.draw(polygonBatch)
-
-    polygonBatch.end()
-
-    shapeRenderer.begin(ShapeType.Filled)
-
-
-    gateList.foreach(_.renderShapes(shapeRenderer))
-
-
-    shapeRenderer.rect(0, 0, 500, 500)
-
-
-
-
-    //shapeRenderer.polygon(poly.getVertices)
-
-    shapeRenderer.end()
 
     hudBatch.begin()
 
@@ -409,7 +348,6 @@ object GameSystem {
   }
 
   def saveGame(): Unit = {
-    println("saving")
     val writer = new PrintWriter(new File("saves/savegame.sav"))
 
     for (area <- areas.values) {
