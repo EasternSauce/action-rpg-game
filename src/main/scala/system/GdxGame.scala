@@ -37,6 +37,11 @@ class GdxGame extends ApplicationAdapter with InputProcessor {
     keycode match {
       case W | A | S | D => dirKeysMap(keycode) = true
       case SHIFT_LEFT => playerCharacter.sprinting = true
+      case SPACE => if (playerCharacter.dashAbility.canPerform) {
+        playerCharacter.dashAbility.setDashVector(playerCharacter.movementVector.normal)
+        playerCharacter.dashAbility.perform()
+
+      }
       case _ =>
     }
     false

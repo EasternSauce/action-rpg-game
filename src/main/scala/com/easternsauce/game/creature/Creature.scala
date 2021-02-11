@@ -60,8 +60,6 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
   protected val onGettingHitSound: Sound = null
 
-  protected var baseSpeed = 0f
-
   protected var creatureType: String = "regularCreature"
 
   protected var effectMap: mutable.Map[String, Effect] = mutable.Map()
@@ -116,10 +114,11 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   protected var wasMoving = false
   protected var totalDirections = 0
   protected var movementIncrement: Float = 0
-  protected var movementVector: CustomVector2 = CustomVector2(0f, 0f)
   protected var runningStoppedTimer: Timer = Timer()
 
-  val speed: Float = 400.0f
+  var movementVector: CustomVector2 = CustomVector2(0f, 0f)
+
+  val baseSpeed: Float = 400.0f
 
   protected val walkAnimationFrameDuration = 0.1f
   protected val walkAnimationTimer: Timer = Timer()
@@ -158,6 +157,11 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   def update(): Unit = {
     if (alive) {
       onUpdateStart()
+
+      for (ability <- abilityList) {
+        ability.performOnUpdateStart()
+      }
+      currentAttack.performOnUpdateStart()
 
       performActions()
 
@@ -379,7 +383,9 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   }
 
   def reset(): Unit = {
-    // TODO
+    healthPoints = maxHealthPoints
+    rect.x = startingPosX
+    rect.y = startingPosY
   }
 
   def onAttack(): Unit = {
@@ -387,12 +393,14 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   }
 
   def isNoAbilityActive: Boolean = {
-    // TODO
-    false
+    for (ability <- abilityList) {
+      if (ability.active) return false
+    }
+    true
   }
 
   def onAggroed(): Unit = {
-    // TODO
+
   }
 
   def getEffect(effectName: String): Effect = {
@@ -490,7 +498,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     collided
   }
 
-  def move(dir: WalkDirection): Unit = {
+  def moveInDirection(dir: WalkDirection): Unit = {
     import com.easternsauce.game.creature.util.WalkDirection._
     dir match {
       case Left =>
@@ -526,11 +534,11 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     movingDir.x = 0
     movingDir.y = 0
 
-    var adjustedSpeed = this.speed
+    var adjustedSpeed = this.baseSpeed
 
     if (isAttacking) adjustedSpeed = adjustedSpeed / 3
     else if (sprinting && staminaPoints > 0) {
-      adjustedSpeed = adjustedSpeed * 2
+      adjustedSpeed = adjustedSpeed * 1.65f
       staminaDrain += Gdx.graphics.getDeltaTime
     }
 
@@ -545,15 +553,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     val tiledMap = GameSystem.currentArea.get.tiledMap
     val blockadeList = GameSystem.currentArea.get.blockadeList
 
-    def isMovementAllowedXAxis(newPosX: Float, newPosY: Float): Boolean = {
-      !isCollidingX(tiledMap, blockadeList, newPosX, newPosY) && newPosX + hitboxBounds.x >= 0 && newPosX <
-        GameSystem.getTiledMapRealWidth(tiledMap) - (hitboxBounds.x + hitboxBounds.width)
-    }
 
-    def isMovementAllowedYAxis(newPosX: Float, newPosY: Float): Boolean = {
-      !isCollidingY(tiledMap, blockadeList, newPosX, newPosY) && newPosY + hitboxBounds.y >= 0 && newPosY <
-        GameSystem.getTiledMapRealHeight(tiledMap) - (hitboxBounds.y + hitboxBounds.height)
-    }
 
     if (!isEffectActive("immobilized") && !knockback) {
 
@@ -562,13 +562,13 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
       val newPosY = rect.getY + movementIncrement * movingDir.y
 
 
-      if (isMovementAllowedXAxis(newPosX, newPosY)) {
+      if (isMovementAllowedXAxis(newPosX, newPosY, tiledMap, blockadeList)) {
         move(movementIncrement * movingDir.x, 0)
         movementVector.x = movementIncrement * movingDir.x
       }
       else movementVector.x = 0
 
-      if (isMovementAllowedYAxis(newPosX, newPosY)) {
+      if (isMovementAllowedYAxis(newPosX, newPosY, tiledMap, blockadeList)) {
         move(0, movementIncrement * movingDir.y)
         movementVector.y = movementIncrement * movingDir.y
       }
@@ -597,13 +597,29 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
       val newPosX: Float = rect.getX + knockbackSpeed * knockbackVector.x
       val newPosY: Float = rect.getY + knockbackSpeed * knockbackVector.y
       val blockadeList: ListBuffer[Blockade] = GameSystem.currentArea.get.blockadeList
-      if (isMovementAllowedXAxis(newPosX, newPosY)) move(knockbackSpeed * knockbackVector.x, 0)
-      if (isMovementAllowedYAxis(newPosX, newPosY)) move(0, knockbackSpeed * knockbackVector.y)
-      if (knockbackTimer.time > 0.2f) knockback = false
+      if (isMovementAllowedXAxis(newPosX, newPosY, tiledMap, blockadeList)) move(knockbackSpeed * knockbackVector.x, 0)
+      if (isMovementAllowedYAxis(newPosX, newPosY, tiledMap, blockadeList)) move(0, knockbackSpeed * knockbackVector.y)
+      if (knockbackTimer.time > 0.15f) knockback = false
     }
+
+    for (ability <- abilityList) {
+      ability.performMovement()
+    }
+
+    currentAttack.performMovement()
   }
 
-  private def move(dx: Float, dy: Float): Unit = {
+  def isMovementAllowedXAxis(newPosX: Float, newPosY: Float, tiledMap: TiledMap, blockadeList: ListBuffer[Blockade]): Boolean = {
+    !isCollidingX(tiledMap, blockadeList, newPosX, newPosY) && newPosX + hitboxBounds.x >= 0 && newPosX <
+      GameSystem.getTiledMapRealWidth(tiledMap) - (hitboxBounds.x + hitboxBounds.width)
+  }
+
+  def isMovementAllowedYAxis(newPosX: Float, newPosY: Float, tiledMap: TiledMap, blockadeList: ListBuffer[Blockade]): Boolean = {
+    !isCollidingY(tiledMap, blockadeList, newPosX, newPosY) && newPosY + hitboxBounds.y >= 0 && newPosY <
+      GameSystem.getTiledMapRealHeight(tiledMap) - (hitboxBounds.y + hitboxBounds.height)
+  }
+
+  def move(dx: Float, dy: Float): Unit = {
     rect.x = rect.x + dx
     rect.y = rect.y + dy
 

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys._
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.math.Vector2
+import com.easternsauce.game.ability.DashAbility
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up}
@@ -15,6 +16,9 @@ class PlayerCharacter(id: String) extends Creature(id) {
   override val hitboxBounds = new CustomRectangle(18, 0, 28, 64)
   override val isPlayer = true
 
+  var dashAbility: DashAbility = _
+
+
   override protected val onGettingHitSound: Sound = Assets.painSound
 
   loadSprites(Assets.male1, Map(Left -> 2, Right -> 3, Up -> 4, Down -> 1), 1)
@@ -23,10 +27,10 @@ class PlayerCharacter(id: String) extends Creature(id) {
     super.controlMovement()
 
     import com.easternsauce.game.creature.util.WalkDirection._
-    if (GameSystem.dirKeysMap(A)) move(Left)
-    if (GameSystem.dirKeysMap(D)) move(Right)
-    if (GameSystem.dirKeysMap(W)) move(Up)
-    if (GameSystem.dirKeysMap(S)) move(Down)
+    if (GameSystem.dirKeysMap(A)) moveInDirection(Left)
+    if (GameSystem.dirKeysMap(D)) moveInDirection(Right)
+    if (GameSystem.dirKeysMap(W)) moveInDirection(Up)
+    if (GameSystem.dirKeysMap(S)) moveInDirection(Down)
 
 
   }
@@ -48,5 +52,18 @@ class PlayerCharacter(id: String) extends Creature(id) {
 
   override def onDeath(): Unit = {
     super.onDeath()
+  }
+
+  override protected def defineCustomAbilities(): Unit = {
+    dashAbility = DashAbility(this)
+
+    dashAbility.onPerformAction = () => {
+      //Assets.flybySound.play(1.0f, 0.1f)
+    }
+
+    abilityList += dashAbility
+    //        swordAttackAbility.setAimed(true);
+    //        unarmedAttackAbility.setAimed(true);
+    //        tridentAttackAbility.setAimed(true);
   }
 }

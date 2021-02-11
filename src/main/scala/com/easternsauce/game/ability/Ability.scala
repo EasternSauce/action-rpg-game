@@ -8,8 +8,6 @@ import com.easternsauce.game.shapes.{CustomPolygon, CustomRectangle}
 import com.easternsauce.game.utils.Timer
 
 abstract class Ability(protected val abilityCreature: Creature) {
-  protected var onPerformAction: () => Unit = () => {}
-  protected var onChannelAction: () => Unit = () => {}
 
   protected var activeTimer: Timer = Timer()
   protected var channelTimer: Timer = Timer()
@@ -28,6 +26,9 @@ abstract class Ability(protected val abilityCreature: Creature) {
 
   var state: AbilityState = Inactive
   var onCooldown = false
+
+  var onPerformAction: () => Unit = () => {}
+  var onChannelAction: () => Unit = () => {}
 
 
   def init()
@@ -93,7 +94,7 @@ abstract class Ability(protected val abilityCreature: Creature) {
   def performMovement(): Unit = {
   }
 
-  def performOnUpdateStart(i: Int): Unit = {
+  def performOnUpdateStart(): Unit = {
   }
 
   def canPerform: Boolean = {

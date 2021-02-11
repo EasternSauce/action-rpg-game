@@ -72,11 +72,11 @@ abstract class Mob(id: String) extends Creature(id) {
 
     import com.easternsauce.game.creature.util.WalkDirection._
 
-    if (creatureCenter.x < gotoPosX - 5f) move(Right)
-    else if (creatureCenter.x > gotoPosX + 5f) move(Left)
+    if (creatureCenter.x < gotoPosX - 5f) moveInDirection(Right)
+    else if (creatureCenter.x > gotoPosX + 5f) moveInDirection(Left)
 
-    else if (creatureCenter.y > gotoPosY + 5f) move(Down)
-    if (creatureCenter.y < gotoPosY - 5f) move(Up)
+    else if (creatureCenter.y > gotoPosY + 5f) moveInDirection(Down)
+    if (creatureCenter.y < gotoPosY - 5f) moveInDirection(Up)
 
 
     val distX = Math.abs(creatureCenter.x - gotoPosX)
@@ -175,7 +175,7 @@ abstract class Mob(id: String) extends Creature(id) {
     }
 
     if (!stayInPlace) {
-      move(currentDirection)
+      moveInDirection(currentDirection)
     }
 
   }
