@@ -18,7 +18,7 @@ class Ghost(id: String) extends Mob(id) {
   dropTable.put("steelHelmet", 0.05f)
 
 
-  loadSprites(Assets.ghost, Map(Left -> 2, Right -> 4, Up -> 1, Down -> 3), 0)
+  loadSprites(Assets.ghostSpriteSheet, Map(Left -> 2, Right -> 4, Up -> 1, Down -> 3), 0)
 
 
   override val hitbox = new CustomRectangle(17, 15, 30, 46)

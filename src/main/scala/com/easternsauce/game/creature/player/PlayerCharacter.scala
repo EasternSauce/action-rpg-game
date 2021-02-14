@@ -21,7 +21,7 @@ class PlayerCharacter(id: String) extends Creature(id) {
 
   override protected val onGettingHitSound: Sound = Assets.painSound
 
-  loadSprites(Assets.male1, Map(Left -> 2, Right -> 3, Up -> 4, Down -> 1), 1)
+  loadSprites(Assets.male1SpriteSheet, Map(Left -> 2, Right -> 3, Up -> 4, Down -> 1), 1)
 
   override def controlMovement(): Unit = {
     super.controlMovement()
@@ -58,12 +58,28 @@ class PlayerCharacter(id: String) extends Creature(id) {
     dashAbility = DashAbility(this)
 
     dashAbility.onPerformAction = () => {
-      //Assets.flybySound.play(1.0f, 0.1f)
+      Assets.flybySound.play(0.1f)
     }
 
     abilityList += dashAbility
     //        swordAttackAbility.setAimed(true);
     //        unarmedAttackAbility.setAimed(true);
     //        tridentAttackAbility.setAimed(true);
+  }
+
+  override def processMovement(): Unit = {
+
+    if (isMoving && !wasMoving) {
+      Assets.runningSound.loop(0.1f)
+    }
+
+
+
+    if (wasMoving && !isMoving) {
+      Assets.runningSound.stop()
+    }
+
+    super.processMovement()
+
   }
 }

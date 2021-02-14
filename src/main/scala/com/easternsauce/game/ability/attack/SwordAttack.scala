@@ -31,8 +31,8 @@ class SwordAttack(override protected val abilityCreature: Creature) extends Mele
     val spriteWidth = 40 // TODO
     val spriteHeight = 40
 
-    windupAnimation = new Animation(Assets.slashWindup, channelFrameDuration, spriteWidth, spriteHeight)
-    attackAnimation = new Animation(Assets.slash, frameDuration, spriteWidth, spriteHeight)
+    windupAnimation = new Animation(Assets.slashWindupSpriteSheet, channelFrameDuration, spriteWidth, spriteHeight)
+    attackAnimation = new Animation(Assets.slashSpriteSheet, frameDuration, spriteWidth, spriteHeight)
 
     meleeAttackRect = new CustomRectangle(-999, -999, 1, 1)
 

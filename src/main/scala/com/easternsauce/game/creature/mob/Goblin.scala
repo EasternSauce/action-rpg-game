@@ -17,7 +17,7 @@ class Goblin(id: String) extends Mob(id) {
   dropTable.put("steelGloves", 0.05f)
   dropTable.put("steelHelmet", 0.05f)
 
-  loadSprites(Assets.goblin, Map(Left -> 1, Right -> 3, Up -> 2, Down -> 4), 0)
+  loadSprites(Assets.goblinSpriteSheet, Map(Left -> 1, Right -> 3, Up -> 2, Down -> 4), 0)
 
   override val hitbox = new CustomRectangle(17, 15, 30, 46)
 

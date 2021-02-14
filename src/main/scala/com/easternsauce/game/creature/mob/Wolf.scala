@@ -22,19 +22,17 @@ class Wolf(id: String) extends Mob(id) {
   dropTable.put("leatherHelmet", 0.1f)
   dropTable.put("healingPowder", 0.5f)
 
-  loadSprites(Assets.wolf, Map(Left -> 2, Right -> 3, Up -> 4, Down -> 1), 0)
+  loadSprites(Assets.wolfSpriteSheet, Map(Left -> 2, Right -> 3, Up -> 4, Down -> 1), 0)
 
   override def hitbox: CustomRectangle = new CustomRectangle(17, 15, 30, 46)
 
-  override protected val onGettingHitSound: Sound = Assets.painSound // change to wolf sound
+  override protected val onGettingHitSound: Sound = Assets.dogWhineSound
 
 
   maxHealthPoints = 150f
   healthPoints = maxHealthPoints
 
   unarmedDamage = 30f
-
-  //onGettingHitSound = Assets.dogWhimperSound
 
   creatureType = "wolf"
 
@@ -46,7 +44,7 @@ class Wolf(id: String) extends Mob(id) {
     dashAbility = DashAbility(this)
 
     dashAbility.onPerformAction = () => {
-      //Assets.dogBarkSound.play(1.0f, 0.1f)
+      Assets.dogBarkSound.play(0.1f)
     }
 
     abilityList += dashAbility

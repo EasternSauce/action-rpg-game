@@ -11,9 +11,9 @@ class Skeleton(id: String) extends Mob(id) {
   override val hitboxBounds = new CustomRectangle(18, 0, 28, 64)
   override val baseSpeed = 300f
 
-  override protected val onGettingHitSound: Sound = Assets.painSound
+  override protected val onGettingHitSound: Sound = Assets.boneClickSound
 
-  loadSprites(Assets.skeleton, Map(Left -> 2, Right -> 4, Up -> 1, Down -> 3), 0)
+  loadSprites(Assets.skeletonSpriteSheet, Map(Left -> 2, Right -> 4, Up -> 1, Down -> 3), 0)
 
 
   actionTimer = Timer(true)
@@ -25,11 +25,9 @@ class Skeleton(id: String) extends Mob(id) {
   dropTable.put("woodenSword", 0.1f)
   dropTable.put("healingPowder", 0.5f)
 
-  loadSprites(Assets.skeleton, Map(Left -> 2, Right -> 4, Up -> 1, Down -> 3), 0)
+  loadSprites(Assets.skeletonSpriteSheet, Map(Left -> 2, Right -> 4, Up -> 1, Down -> 3), 0)
 
   override def hitbox: CustomRectangle = new CustomRectangle(17, 15, 30, 46);
-
-  //onGettingHitSound = Assets.boneClickSound
 
   creatureType = "skeleton"
 
