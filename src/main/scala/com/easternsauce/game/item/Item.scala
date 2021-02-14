@@ -5,6 +5,7 @@ import com.easternsauce.game.item.util.ItemType
 import system.GameSystem
 
 class Item(val itemType: ItemType, val lootPileBackref: LootPile = null, var damage: Float = null.asInstanceOf[Float], var armor: Float = null.asInstanceOf[Float], var quantity: Int = 1) {
+  def setLootPileBackref(newLootPile: LootPile) = ???
 
   if (damage == null && armor == null) {
     if (itemType.maxDamage != null.asInstanceOf[Float]) {

@@ -14,6 +14,7 @@ import com.easternsauce.game.projectile.Arrow
 import com.easternsauce.game.spawn.{Blockade, EnemyRespawnArea, MobSpawnPoint, PlayerRespawnPoint, SpawnLocationsContainer}
 
 import scala.collection.mutable
+import scala.collection.mutable.ListBuffer
 
 class Area(val id: String, val tiledMap: TiledMap, scale: Float) {
 //  val creatures: mutable.Map[String, Creature] = mutable.Map()
@@ -31,15 +32,14 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float) {
 
   private var arrowList: mutable.ListBuffer[Arrow] = null
 
-  private var lootPileList: mutable.ListBuffer[LootPile] = null
-
-  private var treasureList: mutable.ListBuffer[Treasure] = null
-
-  private var remainingTreasureList: mutable.ListBuffer[Treasure] = null
-
   private var abandonedPlains = null //music
 
   var blockadeList: mutable.ListBuffer[Blockade] = null
+
+  var lootPileList: ListBuffer[LootPile] = ListBuffer()
+  var remainingTreasureList: ListBuffer[Treasure] = ListBuffer()
+  var treasureList: ListBuffer[Treasure] = ListBuffer()
+
 
   private def loadSpawns(): Unit = {
     // TODO
