@@ -7,7 +7,7 @@ import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.npc.NonPlayerCharacter
 import com.easternsauce.game.creature.player.PlayerCharacter
 import com.easternsauce.game.item.Item
-import com.easternsauce.game.shapes.CustomRectangle
+import com.easternsauce.game.shapes.{CustomBatch, CustomRectangle}
 import system.GameSystem
 
 import scala.collection.mutable
@@ -62,13 +62,17 @@ class CreaturesManager(private val area: Area) {
     creatures.put(creature.id, creature)
   }
 
-  def renderCreatures(spriteBatch: SpriteBatch): Unit = {
+  def renderCreatures(spriteBatch: CustomBatch): Unit = {
     if (renderPriorityQueue != null) while (renderPriorityQueue.nonEmpty) {
       val creature = renderPriorityQueue.dequeue()
       creature.render(spriteBatch)
     }
     for (creature <- creatures.values) {
       creature.renderAbilities(spriteBatch)
+    }
+
+    for (creature <- creatures.values) {
+      creature.renderHealthBar(spriteBatch)
     }
   }
 

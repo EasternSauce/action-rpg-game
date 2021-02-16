@@ -5,6 +5,7 @@ import java.util.List
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.{Sprite, SpriteBatch}
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
 import com.badlogic.gdx.math.Vector2
@@ -18,7 +19,7 @@ import com.easternsauce.game.creature.util.WalkDirection
 import com.easternsauce.game.creature.util.WalkDirection.WalkDirection
 import com.easternsauce.game.effect.Effect
 import com.easternsauce.game.item.Item
-import com.easternsauce.game.shapes.{CustomRectangle, CustomVector2}
+import com.easternsauce.game.shapes.{CustomBatch, CustomRectangle, CustomVector2}
 import com.easternsauce.game.spawn.Blockade
 import com.easternsauce.game.utils.{IntPair, Timer}
 import system.GameSystem
@@ -196,11 +197,20 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     }
   }
 
-  def render(batch: SpriteBatch): Unit = {
+  def render(batch: CustomBatch): Unit = {
     drawRunningAnimation(batch)
 
     abilityList.foreach(ability => ability.renderSprites(batch))
     currentAttack.renderSprites(batch)
+  }
+
+  def renderHealthBar(batch: CustomBatch): Unit = {
+    val healthBarHeight = 5
+    val healthBarWidth = 50
+    val currentHealthBarWidth = healthBarWidth * healthPoints/maxHealthPoints
+    batch.drawRect(new CustomRectangle(rect.x + (rect.width/2 - healthBarWidth/2), rect.y + rect.width + 10, healthBarWidth, healthBarHeight), Color.ORANGE)
+    batch.drawRect(new CustomRectangle(rect.x + (rect.width/2 - healthBarWidth/2), rect.y + rect.width + 10, currentHealthBarWidth, healthBarHeight), Color.RED)
+
   }
 
   def performActions(): Unit

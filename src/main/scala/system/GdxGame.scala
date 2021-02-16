@@ -7,15 +7,15 @@ import com.easternsauce.game.shapes.CustomBatch
 import system.GameSystem._
 
 class GdxGame extends ApplicationAdapter with InputProcessor {
+
+  import com.badlogic.gdx.graphics.g2d.BitmapFont
+
   private var spriteBatch: CustomBatch = _
   private var hudBatch: CustomBatch = _
-  private var polygonBatch: PolygonSpriteBatch = _
 
   override def create() {
     spriteBatch = new CustomBatch()
     hudBatch = new CustomBatch()
-    polygonBatch = new PolygonSpriteBatch()
-    shapeRenderer = new ShapeRenderer()
 
     GameSystem.create()
 
@@ -24,8 +24,7 @@ class GdxGame extends ApplicationAdapter with InputProcessor {
 
   override def render() {
     GameSystem.update()
-    GameSystem.render(spriteBatch, hudBatch, shapeRenderer, polygonBatch)
-
+    GameSystem.render(spriteBatch, hudBatch)
   }
 
   override def dispose(): Unit = {

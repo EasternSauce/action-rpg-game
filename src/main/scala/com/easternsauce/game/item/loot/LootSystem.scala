@@ -58,7 +58,7 @@ class LootSystem {
     for ((key, value) <- dropTable) {
       if (GameSystem.random.nextFloat < value) {
         val item = new Item(ItemType.getItemType(key), newLootPile)
-        newLootPile.addItem(item)
+        newLootPile.itemList += item
       }
     }
     if (newLootPile.itemList.nonEmpty) area.lootPileList += newLootPile
@@ -66,7 +66,7 @@ class LootSystem {
 
   def spawnLootPile(area: Area, x: Float, y: Float, item: Item): Unit = {
     val newLootPile = new LootPile(area, x, y)
-    newLootPile.addItem(item)
+    newLootPile.itemList += item
     if (newLootPile.itemList.nonEmpty) {
       item.setLootPileBackref(newLootPile)
       area.lootPileList += newLootPile
@@ -75,7 +75,7 @@ class LootSystem {
 
   def placeTreasure(area: Area, x: Float, y: Float, itemType: ItemType): Unit = {
     val treasure = new Treasure(area, x, y)
-    treasure.addItem(new Item(itemType, treasure))
+    treasure.itemList += new Item(itemType, treasure)
     area.treasureList += treasure
     area.remainingTreasureList += treasure
   }

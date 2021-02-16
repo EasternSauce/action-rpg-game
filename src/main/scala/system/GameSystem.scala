@@ -67,6 +67,7 @@ object GameSystem {
   val textureRegionPrefix = "Tile_"
   val textureRegionName: String = textureRegionPrefix + "1"
 
+  val font = new BitmapFont
 
   val dirKeysMap: mutable.Map[Int, Boolean] = mutable.Map(
     Input.Keys.A -> false,
@@ -74,8 +75,6 @@ object GameSystem {
     Input.Keys.W -> false,
     Input.Keys.S -> false
   )
-
-  var shapeRenderer: ShapeRenderer = _
 
   val ScreenProportion: Float = 3 / 4f
 
@@ -211,10 +210,8 @@ object GameSystem {
     hud.update()
   }
 
-  def render(spriteBatch: CustomBatch, hudBatch: CustomBatch, shapeRenderer: ShapeRenderer, polygonBatch: PolygonSpriteBatch): Unit = {
+  def render(spriteBatch: CustomBatch, hudBatch: CustomBatch): Unit = {
     spriteBatch.setProjectionMatrix(camera.combined)
-    polygonBatch.setProjectionMatrix(camera.combined)
-    shapeRenderer.setProjectionMatrix(camera.combined)
 
     Gdx.gl.glClearColor(0, 0, 0, 1)
 
