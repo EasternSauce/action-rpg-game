@@ -68,7 +68,7 @@ class LootSystem {
     val newLootPile = new LootPile(area, x, y)
     newLootPile.itemList += item
     if (newLootPile.itemList.nonEmpty) {
-      item.setLootPileBackref(newLootPile)
+      item.lootPileBackref = newLootPile
       area.lootPileList += newLootPile
     }
   }

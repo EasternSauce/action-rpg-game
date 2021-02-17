@@ -4,8 +4,12 @@ import com.easternsauce.game.item.loot.LootPile
 import com.easternsauce.game.item.util.ItemType
 import system.GameSystem
 
-class Item(val itemType: ItemType, val lootPileBackref: LootPile = null, var damage: Float = null.asInstanceOf[Float], var armor: Float = null.asInstanceOf[Float], var quantity: Int = 1) {
-  def setLootPileBackref(newLootPile: LootPile) = ???
+class Item(val itemType: ItemType, var lootPileBackref: LootPile = null, var damage: Float = null.asInstanceOf[Float], var armor: Float = null.asInstanceOf[Float], var quantity: Int = 1) {
+
+  val name: String = if (itemType == null) null else itemType.name
+
+  val description: String = if (itemType == null) null else itemType.description
+
 
   if (damage == null && armor == null) {
     if (itemType.maxDamage != null.asInstanceOf[Float]) {
@@ -18,7 +22,21 @@ class Item(val itemType: ItemType, val lootPileBackref: LootPile = null, var dam
     quantity = 1
   }
 
+  def removeFromLoot(): Unit = {
+    lootPileBackref.itemList -= this
+    lootPileBackref = null.asInstanceOf[LootPile]
+  }
 
 
-
+  def getItemInformation(trader: Boolean): String =
+    if (trader)
+      (if (this.damage != null) "Damage: " + damage.intValue + "\n" else "") +
+        (if (this.armor != null) "Armor: " + armor.intValue + "\n" else "") +
+        this.description +
+        "\n" + "Worth " + this.itemType.worth.toInt + " Gold" + "\n"
+    else
+      (if (this.damage != null) "Damage: " + damage.intValue + "\n" else "") +
+        (if (this.armor != null) "Armor: " + armor.intValue + "\n" else "") +
+        this.description +
+        "\n" + "Worth " + (this.itemType.worth * 0.3).toInt + " Gold" + "\n"
 }

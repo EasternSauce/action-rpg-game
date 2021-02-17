@@ -119,10 +119,80 @@ class InventoryWindow {
   }
 
 
-  def renderInventory(batch: CustomBatch) = ???
+  def renderInventory(batch: CustomBatch): Unit = {
+    for (i <- 0 until inventorySlots) {
+      var color = Color.BLACK
+      if (moving && currentMoved == i && !movingInEquipment) color = Color.ORANGE
+      else if (!inEquipment && !inTraderInventory) if (currentSelected == i) Color.RED
 
-  def renderItemDescription(batch: CustomBatch) = ???
+      batch.drawRect(slotList(i), color)
 
-  def renderEquipment(batch: CustomBatch) = ???
+      if (inventoryItems.get(i) != null) {
+        batch.draw(inventoryItems(i).itemType.texture, slotList(i).getX, slotList(i).getY, slotWidth, slotHeight)
+        if (inventoryItems(i).quantity > 1) {
+          GameSystem.font.setColor(Color.CYAN)
+          GameSystem.font.draw(batch, "" + inventoryItems(i).quantity, slotList(i).getX, slotList(i).getY)
+        }
+      }
+    }
+    GameSystem.font.setColor(Color.YELLOW)
+    GameSystem.font.draw(batch, "Gold: " + gold, background.getX + 5, background.getY + 20f + (space + slotHeight) * inventorySlots.toFloat / inventoryColumns + 110f)
+  }
 
+  def renderItemDescription(batch: CustomBatch): Unit = {
+    GameSystem.font.setColor(Color.WHITE)
+    if (inEquipment) {
+      val item = equipmentItems(currentSelected)
+      if (item != null) {
+        GameSystem.font.setColor(Color.ORANGE)
+        GameSystem.font.draw(batch, item.name, background.getX + space, background.getY + margin + (space + slotHeight) * inventoryRows + space)
+      }
+      if (item != null) {
+        GameSystem.font.draw(batch, item.getItemInformation(false), background.getX + space, background.getY + margin + (space + slotHeight) * inventoryRows + space + 25)
+      }
+    }
+    else if (inTraderInventory) {
+      val item = traderInventoryItems(currentSelected)
+      if (item != null) {
+        GameSystem.font.setColor(Color.ORANGE)
+        GameSystem.font.draw(batch, item.name, background.getX + space, background.getY + margin + (space + slotHeight) * inventoryRows + space)
+      }
+      if (item != null) {
+        GameSystem.font.draw(batch, item.getItemInformation(trader = true), background.getX + space, background.getY + margin + (space + slotHeight) * inventoryRows + space + 25)
+      }
+    }
+    else {
+      val item = inventoryItems(currentSelected)
+      if (item != null) {
+        GameSystem.font.setColor(Color.ORANGE)
+        GameSystem.font.draw(batch, item.name, background.getX + space, background.getY + margin + (space + slotHeight) * inventoryRows + space)
+      }
+      if (item != null) {
+        GameSystem.font.draw(batch, item.getItemInformation(false), background.getX + space, background.getY + margin + (space + slotHeight) * inventoryRows + space + 25)
+      }
+    }
+  }
+
+  def renderEquipment(batch: CustomBatch): Unit = {
+    if (!trading) {
+
+      for (i <- 0 until equipmentSlots) {
+        var color = Color.BLACK
+        if (moving && currentMoved == i && movingInEquipment) color = Color.ORANGE
+        else if (inEquipment) if (currentSelected == i) color = Color.RED
+
+        batch.drawRect(equipmentSlotList(i), color)
+
+        if (equipmentItems.get(i) != null) {
+          batch.draw(equipmentItems(i).itemType.texture, equipmentSlotList(i).getX, equipmentSlotList(i).getY, slotWidth, slotHeight)
+          if (equipmentItems(i).quantity > 1) {
+            batch.setColor(Color.CYAN)
+            GameSystem.font.draw(batch, "" + equipmentItems(i).quantity, equipmentSlotList(i).getX, equipmentSlotList(i).getY)
+          }
+        }
+        batch.setColor(Color.WHITE)
+        GameSystem.font.draw(batch, equipmentSlotNameList(i), equipmentSlotList(i).getX - 60, equipmentSlotList(i).getY)
+      }
+    }
+  }
 }
