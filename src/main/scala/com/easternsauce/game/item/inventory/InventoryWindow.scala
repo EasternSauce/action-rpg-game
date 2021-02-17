@@ -31,11 +31,11 @@ class InventoryWindow {
   private var currentMoved: Int = 0
   private var movingInEquipment: Boolean = false
 
-  private var inventoryItems: mutable.Map[Integer, Item] = mutable.Map()
+  private var inventoryItems: mutable.Map[Int, Item] = mutable.Map()
 
 
 
-  private var traderInventoryItems: mutable.Map[Integer, Item] = mutable.Map()
+  private var traderInventoryItems: mutable.Map[Int, Item] = mutable.Map()
 
 
   private var equipmentSlotNameList: ListBuffer[String] = ListBuffer("Weapon", "Helmet", "Body", "Gloves", "Ring", "Boots")
@@ -85,7 +85,7 @@ class InventoryWindow {
     traderInventorySlotList += slot
   }
 
-  private def equipmentItems: mutable.Map[Integer, Item] = GameSystem.playerCharacter.equipmentItems
+  private def equipmentItems: mutable.Map[Int, Item] = GameSystem.playerCharacter.equipmentItems
 
 
   def render(batch: CustomBatch): Unit = {
@@ -345,7 +345,7 @@ class InventoryWindow {
   }
 
   def sellSelectedItem(): Unit = {
-    gold += inventoryItems(currentSelected).itemType.worth * 0.3f
+    gold += (inventoryItems(currentSelected).itemType.worth * 0.3f).asInstanceOf[Int]
     inventoryItems.remove(currentSelected)
   }
 

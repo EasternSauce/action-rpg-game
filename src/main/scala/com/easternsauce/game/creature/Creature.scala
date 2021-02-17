@@ -108,7 +108,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
   var sprinting = false
 
-  var equipmentItems: mutable.Map[Integer, Item] = mutable.Map()
+  var equipmentItems: mutable.Map[Int, Item] = mutable.Map()
 
   protected var movingDir: IntPair = IntPair(0, 0)
   protected var isMoving = false
