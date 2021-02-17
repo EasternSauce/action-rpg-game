@@ -76,6 +76,8 @@ object GameSystem {
     Input.Keys.S -> false
   )
 
+  var escRecently = false
+
   val ScreenProportion: Float = 3 / 4f
 
 
@@ -374,4 +376,6 @@ object GameSystem {
 
 
   }
+
+
 }
