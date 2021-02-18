@@ -1,14 +1,10 @@
 package system
 
-import com.badlogic.gdx.graphics.g2d._
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.{ApplicationAdapter, Gdx, Input, InputProcessor}
 import com.easternsauce.game.shapes.CustomBatch
 import system.GameSystem._
 
 class GdxGame extends ApplicationAdapter with InputProcessor {
-
-  import com.badlogic.gdx.graphics.g2d.BitmapFont
 
   private var spriteBatch: CustomBatch = _
   private var hudBatch: CustomBatch = _
@@ -36,7 +32,7 @@ class GdxGame extends ApplicationAdapter with InputProcessor {
     keycode match {
       case W | A | S | D => dirKeysMap(keycode) = true
       case SHIFT_LEFT => playerCharacter.sprinting = true
-      case SPACE => if (playerCharacter.dashAbility.canPerform) {
+      case SPACE => if (playerCharacter.dashAbility.canPerform && !playerCharacter.inMenus) {
         playerCharacter.dashAbility.setDashVector(playerCharacter.movementVector.normal)
         playerCharacter.dashAbility.perform()
 

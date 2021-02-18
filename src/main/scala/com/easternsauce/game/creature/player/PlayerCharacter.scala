@@ -3,7 +3,6 @@ package com.easternsauce.game.creature.player
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys._
 import com.badlogic.gdx.audio.Sound
-import com.badlogic.gdx.math.Vector2
 import com.easternsauce.game.ability.DashAbility
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
@@ -12,6 +11,7 @@ import com.easternsauce.game.shapes.{CustomRectangle, CustomVector2}
 import system.GameSystem
 
 class PlayerCharacter(id: String) extends Creature(id) {
+
   override val rect = new CustomRectangle(0,5000,64,64)
   override val hitboxBounds = new CustomRectangle(18, 0, 28, 64)
   override val isPlayer = true
@@ -21,16 +21,21 @@ class PlayerCharacter(id: String) extends Creature(id) {
 
   override protected val onGettingHitSound: Sound = Assets.painSound
 
+  def inMenus: Boolean = GameSystem.inventoryWindow.inventoryOpen
+
   loadSprites(Assets.male1SpriteSheet, Map(Left -> 2, Right -> 3, Up -> 4, Down -> 1), 1)
 
   override def controlMovement(): Unit = {
-    super.controlMovement()
 
-    import com.easternsauce.game.creature.util.WalkDirection._
-    if (GameSystem.dirKeysMap(A)) moveInDirection(Left)
-    if (GameSystem.dirKeysMap(D)) moveInDirection(Right)
-    if (GameSystem.dirKeysMap(W)) moveInDirection(Up)
-    if (GameSystem.dirKeysMap(S)) moveInDirection(Down)
+    if (!inMenus) {
+      super.controlMovement()
+
+      import com.easternsauce.game.creature.util.WalkDirection._
+      if (GameSystem.dirKeysMap(A)) moveInDirection(Left)
+      if (GameSystem.dirKeysMap(D)) moveInDirection(Right)
+      if (GameSystem.dirKeysMap(W)) moveInDirection(Up)
+      if (GameSystem.dirKeysMap(S)) moveInDirection(Down)
+    }
 
 
   }
@@ -68,18 +73,17 @@ class PlayerCharacter(id: String) extends Creature(id) {
   }
 
   override def processMovement(): Unit = {
-
-    if (isMoving && !wasMoving) {
-      Assets.runningSound.loop(0.1f)
-    }
-
+      if (isMoving && !wasMoving) {
+        Assets.runningSound.loop(0.1f)
+      }
 
 
-    if (wasMoving && !isMoving) {
-      Assets.runningSound.stop()
-    }
 
-    super.processMovement()
+      if (wasMoving && !isMoving) {
+        Assets.runningSound.stop()
+      }
+
+      super.processMovement()
 
   }
 }

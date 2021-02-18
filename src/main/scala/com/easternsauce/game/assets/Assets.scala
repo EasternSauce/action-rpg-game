@@ -39,6 +39,8 @@ object Assets {
   var strongPunchSound: Sound = _
   var swooshSound: Sound = _
 
+  var niceItemIcons: SpriteSheet = _
+
 
   var arrowTexture: Texture = _
 
@@ -78,4 +80,9 @@ object Assets {
 
     arrowTexture = new Texture(Gdx.files.internal("assets/projectiles/arrow.png"))
   }
+
+  def getItemIcon(x: Int, y: Int): Texture = {
+    arrowTexture
+  }
+
 }

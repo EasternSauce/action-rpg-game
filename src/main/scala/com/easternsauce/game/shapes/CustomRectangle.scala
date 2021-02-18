@@ -1,6 +1,6 @@
 package com.easternsauce.game.shapes
 
-import com.badlogic.gdx.math.{Intersector, Vector2}
+import com.badlogic.gdx.math.Intersector
 
 class CustomRectangle(x: Float, y: Float, width: Float, height: Float) extends com.badlogic.gdx.math.Rectangle(x, y, width, height) {
 

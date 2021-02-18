@@ -1,8 +1,5 @@
 package com.easternsauce.game.item.loot
 
-import java.util
-import java.util.{ArrayList, Map}
-
 import com.easternsauce.game.area.Area
 import com.easternsauce.game.item.Item
 import com.easternsauce.game.item.util.ItemType

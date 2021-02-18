@@ -1,20 +1,15 @@
 package com.easternsauce.game.creature
 
-import java.util
-import java.util.List
-
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.{Sprite, SpriteBatch}
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
-import com.badlogic.gdx.math.Vector2
 import com.easternsauce.game.ability.Ability
-import com.easternsauce.game.ability.attack.{Attack, BowAttack, SwordAttack, TridentAttack, UnarmedAttack}
+import com.easternsauce.game.ability.attack._
 import com.easternsauce.game.animation.Animation
 import com.easternsauce.game.area.{Area, AreaGate}
-import com.easternsauce.game.assets.{Assets, SpriteSheet}
-import com.easternsauce.game.creature.player.PlayerCharacter
+import com.easternsauce.game.assets.SpriteSheet
 import com.easternsauce.game.creature.util.WalkDirection
 import com.easternsauce.game.creature.util.WalkDirection.WalkDirection
 import com.easternsauce.game.effect.Effect

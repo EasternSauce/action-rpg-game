@@ -1,17 +1,12 @@
 package com.easternsauce.game.area
 
-import java.io.{FileWriter, PrintWriter}
-import java.util
-import java.util.{LinkedList, List, Map}
-
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
-import com.easternsauce.game.item.Item
 import com.easternsauce.game.item.loot.{LootPile, Treasure}
 import com.easternsauce.game.projectile.Arrow
-import com.easternsauce.game.spawn.{Blockade, EnemyRespawnArea, MobSpawnPoint, PlayerRespawnPoint, SpawnLocationsContainer}
+import com.easternsauce.game.spawn._
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer

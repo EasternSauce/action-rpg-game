@@ -15,14 +15,13 @@ import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 class InventoryWindow {
-  private val background: CustomRectangle = new CustomRectangle((Gdx.graphics.getWidth * 0.1).toInt, (Gdx.graphics.getHeight * 0.1).toInt, (Gdx.graphics.getWidth * 0.6).toInt, (Gdx.graphics.getHeight * 0.6).toInt)
+  private val background: CustomRectangle = new CustomRectangle((Gdx.graphics.getWidth * 0.2).toInt, (Gdx.graphics.getHeight * 0.3).toInt, (Gdx.graphics.getWidth * 0.6).toInt, (Gdx.graphics.getHeight * 0.6).toInt)
 
   private var slotList: ListBuffer[CustomRectangle] = ListBuffer()
   private var equipmentSlotList: ListBuffer[CustomRectangle] = ListBuffer()
   private var traderInventorySlotList: ListBuffer[CustomRectangle] = ListBuffer()
 
 
-  private var inventoryOpen: Boolean = false
 
 
   private var currentSelected: Int = 0
@@ -30,9 +29,6 @@ class InventoryWindow {
   private var moving: Boolean = false
   private var currentMoved: Int = 0
   private var movingInEquipment: Boolean = false
-
-  private var inventoryItems: mutable.Map[Int, Item] = mutable.Map()
-
 
 
   private var traderInventoryItems: mutable.Map[Int, Item] = mutable.Map()
@@ -61,27 +57,36 @@ class InventoryWindow {
   private val tradeInventoryColumns: Int = 2
   private val tradeInventorySlots: Int = tradeInventoryRows * tradeInventoryColumns
 
+  var inventoryItems: mutable.Map[Int, Item] = mutable.Map()
+
+  var inventoryOpen: Boolean = false
+
   var gold: Int = 0
 
-  ItemType.loadItemTypes()
+  implicit class InventoryMapImprovements(map: mutable.Map[Int, Item]) {
+    def containsNonNull(n: Int): Boolean = {
+      map.contains(n) && map(n) != null.asInstanceOf[Item]
+    }
+  }
+
 
   for (i <- 0 until inventorySlots) {
     val col = i % inventoryColumns
     val row = i / inventoryColumns
-    val slot = new CustomRectangle(background.getX + margin + (space + slotWidth) * col, background.getY + margin + (space + slotHeight) * row, slotWidth, slotHeight)
+    val slot = new CustomRectangle(background.getX + margin + (space + slotWidth) * col, background.getY + background.getHeight - (margin + (space + slotHeight) * (row + 1)), slotWidth, slotHeight)
     slotList += slot
   }
 
   for (i <- 0 until equipmentSlots) {
     val col = inventoryColumns + 2
-    val slot = new CustomRectangle(background.getX + margin + (space + slotWidth) * col, background.getY + margin + (space + slotHeight) * i, slotWidth, slotHeight)
+    val slot = new CustomRectangle(background.getX + margin + (space + slotWidth) * col, background.getY + background.getHeight - (margin + (space + slotHeight) * (i + 1)), slotWidth, slotHeight)
     equipmentSlotList += slot
   }
 
   for (i <- 0 until tradeInventorySlots) {
     val col = inventoryColumns + 1 + i % tradeInventoryColumns
     val row = i / tradeInventoryColumns
-    val slot = new CustomRectangle(background.getX + margin + (space + slotWidth) * col, background.getY + margin + (space + slotHeight) * row + 30, slotWidth, slotHeight)
+    val slot = new CustomRectangle(background.getX + margin + (space + slotWidth) * col, background.getY + background.getHeight - (margin + (space + slotHeight) * (row + 1) + 30), slotWidth, slotHeight)
     traderInventorySlotList += slot
   }
 
@@ -91,7 +96,7 @@ class InventoryWindow {
   def render(batch: CustomBatch): Unit = {
     if (inventoryOpen) {
 
-      batch.drawRect(background, Color.DARK_GRAY)
+      batch.drawRect(background, Color.LIGHT_GRAY)
 
       renderInventory(batch)
       renderEquipment(batch)
@@ -106,7 +111,7 @@ class InventoryWindow {
         var color = Color.BLACK
         if (inTraderInventory) if (currentSelected == i) color = Color.RED
 
-        batch.drawRect(traderInventorySlotList(i), color)
+        batch.drawRectBorder(traderInventorySlotList(i), color)
         if (traderInventoryItems.get(i) != null) {
           batch.draw(traderInventoryItems(i).itemType.texture, traderInventorySlotList(i).getX, traderInventorySlotList(i).getY, slotWidth, slotHeight)
           if (traderInventoryItems(i).quantity > 1) {
@@ -125,11 +130,11 @@ class InventoryWindow {
     for (i <- 0 until inventorySlots) {
       var color = Color.BLACK
       if (moving && currentMoved == i && !movingInEquipment) color = Color.ORANGE
-      else if (!inEquipment && !inTraderInventory) if (currentSelected == i) Color.RED
+      else if (!inEquipment && !inTraderInventory) if (currentSelected == i) color = Color.RED
 
-      batch.drawRect(slotList(i), color)
+      batch.drawRectBorder(slotList(i), color)
 
-      if (inventoryItems.get(i) != null) {
+      if (inventoryItems.containsNonNull(i)) {
         batch.draw(inventoryItems(i).itemType.texture, slotList(i).getX, slotList(i).getY, slotWidth, slotHeight)
         if (inventoryItems(i).quantity > 1) {
           GameSystem.font.setColor(Color.CYAN)
@@ -138,39 +143,43 @@ class InventoryWindow {
       }
     }
     GameSystem.font.setColor(Color.YELLOW)
-    GameSystem.font.draw(batch, "Gold: " + gold, background.getX + 5, background.getY + 20f + (space + slotHeight) * inventorySlots.toFloat / inventoryColumns + 110f)
+    GameSystem.font.draw(batch, "Gold: " + gold, background.getX + 5, background.getY + 20f)
   }
 
   def renderItemDescription(batch: CustomBatch): Unit = {
     GameSystem.font.setColor(Color.WHITE)
     if (inEquipment) {
-      val item = equipmentItems(currentSelected)
-      if (item != null) {
+      if (equipmentItems.containsNonNull(currentSelected)) {
+        val item = equipmentItems(currentSelected)
+
         GameSystem.font.setColor(Color.ORANGE)
-        GameSystem.font.draw(batch, item.name, background.getX + space, background.getY + margin + (space + slotHeight) * inventoryRows + space)
-      }
-      if (item != null) {
-        GameSystem.font.draw(batch, item.getItemInformation(false), background.getX + space, background.getY + margin + (space + slotHeight) * inventoryRows + space + 25)
+        GameSystem.font.draw(batch, item.name, background.getX + space, background.getY + background.getHeight - (margin + (space + slotHeight) * inventoryRows + space))
+
+        GameSystem.font.draw(batch, item.getItemInformation(false), background.getX + space, background.getY + background.getHeight - (margin + (space + slotHeight) * inventoryRows + space + 50))
+
       }
     }
     else if (inTraderInventory) {
-      val item = traderInventoryItems(currentSelected)
-      if (item != null) {
+      if (traderInventoryItems.containsNonNull(currentSelected)) {
+        val item = traderInventoryItems(currentSelected)
+
         GameSystem.font.setColor(Color.ORANGE)
-        GameSystem.font.draw(batch, item.name, background.getX + space, background.getY + margin + (space + slotHeight) * inventoryRows + space)
+        GameSystem.font.draw(batch, item.name, background.getX + space, background.getY + background.getHeight - (margin + (space + slotHeight) * inventoryRows + space))
+
+        GameSystem.font.draw(batch, item.getItemInformation(trader = true), background.getX + space, background.getY + background.getHeight - (margin + (space + slotHeight) * inventoryRows + space + 50))
+
       }
-      if (item != null) {
-        GameSystem.font.draw(batch, item.getItemInformation(trader = true), background.getX + space, background.getY + margin + (space + slotHeight) * inventoryRows + space + 25)
-      }
+
     }
     else {
-      val item = inventoryItems(currentSelected)
-      if (item != null) {
+      if (inventoryItems.containsNonNull(currentSelected)) {
+        val item = inventoryItems(currentSelected)
+
         GameSystem.font.setColor(Color.ORANGE)
-        GameSystem.font.draw(batch, item.name, background.getX + space, background.getY + margin + (space + slotHeight) * inventoryRows + space)
-      }
-      if (item != null) {
-        GameSystem.font.draw(batch, item.getItemInformation(false), background.getX + space, background.getY + margin + (space + slotHeight) * inventoryRows + space + 25)
+        GameSystem.font.draw(batch, item.name, background.getX + space, background.getY + background.getHeight - (margin + (space + slotHeight) * inventoryRows + space))
+
+        GameSystem.font.draw(batch, item.getItemInformation(false), background.getX + space, background.getY + background.getHeight - (margin + (space + slotHeight) * inventoryRows + space + 50))
+
       }
     }
   }
@@ -183,9 +192,9 @@ class InventoryWindow {
         if (moving && currentMoved == i && movingInEquipment) color = Color.ORANGE
         else if (inEquipment) if (currentSelected == i) color = Color.RED
 
-        batch.drawRect(equipmentSlotList(i), color)
+        batch.drawRectBorder(equipmentSlotList(i), color)
 
-        if (equipmentItems.get(i) != null) {
+        if (equipmentItems.containsNonNull(i)) {
           batch.draw(equipmentItems(i).itemType.texture, equipmentSlotList(i).getX, equipmentSlotList(i).getY, slotWidth, slotHeight)
           if (equipmentItems(i).quantity > 1) {
             batch.setColor(Color.CYAN)
@@ -193,7 +202,7 @@ class InventoryWindow {
           }
         }
         batch.setColor(Color.WHITE)
-        GameSystem.font.draw(batch, equipmentSlotNameList(i), equipmentSlotList(i).getX - 60, equipmentSlotList(i).getY)
+        GameSystem.font.draw(batch, equipmentSlotNameList(i), equipmentSlotList(i).getX - 60, equipmentSlotList(i).getY + 30)
       }
     }
   }
@@ -202,43 +211,80 @@ class InventoryWindow {
   def update(): Unit = {
     val player = GameSystem.playerCharacter
 
-    if (Gdx.input.isKeyPressed(Input.Keys.I)) if (!inventoryOpen) openInventory()
+    if (Gdx.input.isKeyJustPressed(Input.Keys.I)) if (!inventoryOpen) openInventory()
     else closeInventory()
     if (inventoryOpen) {
-      if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) if (!GameSystem.escRecently) {
+
+      if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) if (!GameSystem.escRecently) {
         closeInventory()
         GameSystem.escRecently = true
       }
-      if (Gdx.input.isKeyPressed(Input.Keys.W)) if (inEquipment) if (currentSelected > 0) currentSelected -= 1
-      else if (inTraderInventory) if (currentSelected >= tradeInventoryColumns) currentSelected = currentSelected - tradeInventoryColumns
-      else if (currentSelected >= inventoryColumns) currentSelected = currentSelected - inventoryColumns
-      if (Gdx.input.isKeyPressed(Input.Keys.A)) if (inEquipment) if (currentSelected * inventoryColumns + (inventoryColumns - 1) < inventorySlots) {
-        inEquipment = false
-        currentSelected = currentSelected * inventoryColumns + (inventoryColumns - 1)
+      if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+        if (inEquipment) {
+          if (currentSelected > 0) currentSelected -= 1
+        }
+        else if (inTraderInventory) {
+          if (currentSelected >= tradeInventoryColumns) currentSelected = currentSelected - tradeInventoryColumns
+        }
+        else if (currentSelected >= inventoryColumns) currentSelected = currentSelected - inventoryColumns
+
+
       }
-      else if (inTraderInventory) if (currentSelected % tradeInventoryColumns == 0) if (currentSelected / tradeInventoryColumns < inventoryColumns - 1) {
-        inTraderInventory = false
-        currentSelected = currentSelected / tradeInventoryColumns * inventoryColumns + (inventoryColumns - 1)
+      if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
+        if (inEquipment) {
+          if (currentSelected * inventoryColumns + (inventoryColumns - 1) < inventorySlots) {
+            inEquipment = false
+            currentSelected = currentSelected * inventoryColumns + (inventoryColumns - 1)
+          }
+        } else if (inTraderInventory) {
+          if (currentSelected % tradeInventoryColumns == 0) {
+            if (currentSelected / tradeInventoryColumns < inventoryColumns - 1) {
+              inTraderInventory = false
+              currentSelected = currentSelected / tradeInventoryColumns * inventoryColumns + (inventoryColumns - 1)
+            }
+          }
+          else if (currentSelected >= 1) currentSelected -= 1
+
+        }
+        else if (currentSelected >= 1) currentSelected -= 1
+
       }
-      else if (currentSelected >= 1) currentSelected -= 1
-      else if (currentSelected >= 1) currentSelected -= 1
-      if (Gdx.input.isKeyPressed(Input.Keys.S)) if (inEquipment) if (currentSelected < equipmentSlots - 1) currentSelected += 1
-      else if (inTraderInventory) if (currentSelected <= tradeInventorySlots - tradeInventoryColumns - 1) currentSelected = currentSelected + tradeInventoryColumns
-      else if (currentSelected <= inventorySlots - inventoryColumns - 1) currentSelected = currentSelected + inventoryColumns
-      if (Gdx.input.isKeyPressed(Input.Keys.D)) if (inTraderInventory) if (currentSelected < tradeInventorySlots - 1) currentSelected += 1
-      else if (!inEquipment) if ((currentSelected + 1) % inventoryColumns == 0) if (!trading) {
-        inEquipment = true
-        currentSelected = currentSelected / inventoryColumns
+
+      if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+        if (inEquipment) {
+          if (currentSelected < equipmentSlots - 1) currentSelected += 1
+        }
+        else if (inTraderInventory) {
+          if (currentSelected <= tradeInventorySlots - tradeInventoryColumns - 1) currentSelected = currentSelected + tradeInventoryColumns
+        }
+        else if (currentSelected <= inventorySlots - inventoryColumns - 1) currentSelected = currentSelected + inventoryColumns
       }
-      else {
-        inTraderInventory = true
-        currentSelected = currentSelected / inventoryColumns * tradeInventoryColumns
+
+      if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+        if (inTraderInventory) {
+          if (currentSelected < tradeInventorySlots - 1) currentSelected += 1
+        }
+        else if (!inEquipment) {
+          if ((currentSelected + 1) % inventoryColumns == 0) {
+            if (!trading) {
+              inEquipment = true
+              currentSelected = currentSelected / inventoryColumns
+            }
+            else {
+              inTraderInventory = true
+              currentSelected = currentSelected / inventoryColumns * tradeInventoryColumns
+            }
+          }
+          else if (currentSelected < inventorySlots - 1) currentSelected += 1
+        }
       }
-      else if (currentSelected < inventorySlots - 1) currentSelected += 1
-      if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) if (!trading) if (!moving) {
+
+      if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) if (!trading) if (!moving) {
         var itemExistsInSlot = false
-        if (inEquipment) itemExistsInSlot = equipmentItems(currentSelected) != null
-        else itemExistsInSlot = inventoryItems(currentSelected) != null
+        if (inEquipment) {
+          itemExistsInSlot = equipmentItems(currentSelected) != null
+        }
+        else itemExistsInSlot = inventoryItems.containsNonNull(currentSelected)
         if (itemExistsInSlot) {
           currentMoved = currentSelected
           moving = true
@@ -247,8 +293,8 @@ class InventoryWindow {
       }
       else {
         if (movingInEquipment) if (inEquipment) {
-          val from = equipmentItems(currentMoved)
-          val to = equipmentItems(currentSelected)
+          val from = equipmentItems.getOrElse(currentMoved, null)
+          val to = equipmentItems.getOrElse(currentSelected, null)
           val currentEquipmentType = getEquipmentSlotName(currentSelected)
           if (from == null || from.itemType.equipmentType == currentEquipmentType) {
             equipmentItems.put(currentMoved, to)
@@ -258,8 +304,8 @@ class InventoryWindow {
           }
         }
         else {
-          val from = equipmentItems(currentMoved)
-          val to = inventoryItems(currentSelected)
+          val from = equipmentItems.getOrElse(currentMoved, null)
+          val to = inventoryItems.getOrElse(currentSelected, null)
           val currentEquipmentType = getEquipmentSlotName(currentMoved)
           if (to == null || to.itemType.equipmentType == currentEquipmentType) {
             equipmentItems.put(currentMoved, to)
@@ -269,8 +315,8 @@ class InventoryWindow {
           }
         }
         else if (inEquipment) {
-          val from = inventoryItems(currentMoved)
-          val to = equipmentItems(currentSelected)
+          val from = inventoryItems.getOrElse(currentMoved, null)
+          val to = equipmentItems.getOrElse(currentSelected, null)
           val currentEquipmentType = getEquipmentSlotName(currentSelected)
           if (from == null || from.itemType.equipmentType == currentEquipmentType) {
             inventoryItems.put(currentMoved, to)
@@ -281,15 +327,16 @@ class InventoryWindow {
         }
         else {
           val from = inventoryItems(currentMoved)
-          val to = inventoryItems(currentSelected)
+          val to = inventoryItems.getOrElse(currentSelected, null.asInstanceOf[Item])
           inventoryItems.put(currentMoved, to)
           inventoryItems.put(currentSelected, from)
           moving = false
           player.updateAttackType()
         }
+
         if (player.healthPoints > player.maxHealthPoints) player.healthPoints = player.maxHealthPoints
       }
-      if (Gdx.input.isKeyPressed(Input.Keys.E)) if (inventoryOpen) if (trading) if (!inTraderInventory) if (inventoryItems(currentSelected) != null) sellSelectedItem()
+      if (Gdx.input.isKeyJustPressed(Input.Keys.E)) if (inventoryOpen) if (trading) if (!inTraderInventory) if (inventoryItems(currentSelected) != null) sellSelectedItem()
       else if (traderInventoryItems(currentSelected) != null) if (gold - traderInventoryItems(currentSelected).itemType.worth >= 0) {
         takeItem(traderInventoryItems(currentSelected))
         gold -= traderInventoryItems(currentSelected).itemType.worth
@@ -303,10 +350,11 @@ class InventoryWindow {
           else item.quantity = item.quantity - 1
         }
       }
-      if (Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT)) { // drop item
+      if (Gdx.input.isKeyJustPressed(Input.Keys.ALT_LEFT)) { // drop item
         if (inventoryOpen) if (!inEquipment && !inTraderInventory) {
-          val item = inventoryItems(currentSelected)
-          if (item != null) {
+          if (inventoryItems.containsNonNull(currentSelected)) {
+            val item = inventoryItems(currentSelected)
+
             assert(GameSystem.currentArea.nonEmpty)
             GameSystem.lootSystem.spawnLootPile(GameSystem.currentArea.get, player.rect.center.x, player.rect.center.y, item)
             inventoryItems.remove(currentSelected)

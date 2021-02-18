@@ -1,12 +1,9 @@
 package com.easternsauce.game.gui
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.graphics.{Color, Pixmap, Texture}
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer
-import com.easternsauce.game.shapes.CustomRectangle
+import com.badlogic.gdx.graphics.Color
+import com.easternsauce.game.shapes.{CustomBatch, CustomRectangle}
 import system.GameSystem
-import com.easternsauce.game.shapes.CustomBatch
 
 class Hud {
   private val w = Gdx.graphics.getWidth

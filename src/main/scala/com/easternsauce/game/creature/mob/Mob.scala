@@ -1,13 +1,10 @@
 package com.easternsauce.game.creature.mob
 
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.math.Vector2
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.util.WalkDirection.WalkDirection
 import com.easternsauce.game.creature.util.{Unarmed, WalkDirection}
 import com.easternsauce.game.shapes.CustomVector2
 import com.easternsauce.game.utils.Timer
-import org.lwjgl.util.vector.Vector2f
 import system.GameSystem
 
 abstract class Mob(id: String) extends Creature(id) {

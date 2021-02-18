@@ -1,8 +1,7 @@
 package com.easternsauce.game.area
 
-import java.io.{FileWriter, PrintWriter}
+import java.io.PrintWriter
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.npc.NonPlayerCharacter
 import com.easternsauce.game.creature.player.PlayerCharacter

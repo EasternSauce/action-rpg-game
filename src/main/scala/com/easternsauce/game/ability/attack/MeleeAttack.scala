@@ -1,7 +1,6 @@
 package com.easternsauce.game.ability.attack
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.math.Vector2
 import com.easternsauce.game.ability.util.AbilityState
 import com.easternsauce.game.animation.Animation
 import com.easternsauce.game.assets.Assets

@@ -3,12 +3,10 @@ package system
 import java.io.{File, PrintWriter}
 
 import com.badlogic.gdx.Input.{Buttons, Keys}
-import com.badlogic.gdx.graphics.g2d._
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType
 import com.badlogic.gdx.graphics._
+import com.badlogic.gdx.graphics.g2d._
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
-import com.badlogic.gdx.math.{Intersector, Polygon, Vector2}
+import com.badlogic.gdx.math.{Intersector, Vector2}
 import com.badlogic.gdx.{Gdx, Input}
 import com.easternsauce.game.area.{Area, AreaGate}
 import com.easternsauce.game.assets.Assets
@@ -135,6 +133,12 @@ object GameSystem {
   def create(): Unit = {
     Assets.createAssets()
 
+    ItemType.loadItemTypes()
+
+    //TODO: temp
+    inventoryWindow.inventoryItems.put(0, new Item(ItemType.getItemType("woodenSword")))
+
+
     //init()
 
     val w = Gdx.graphics.getWidth
@@ -209,6 +213,8 @@ object GameSystem {
       case _ => throw new RuntimeException("current area not set")
     }
 
+    inventoryWindow.update()
+
     hud.update()
   }
 
@@ -241,6 +247,8 @@ object GameSystem {
     hudBatch.begin()
 
     hud.render(hudBatch)
+    inventoryWindow.render(hudBatch)
+
 
     hudBatch.end()
 
