@@ -215,11 +215,14 @@ object GameSystem {
 
     inventoryWindow.update()
 
+    lootSystem.update()
+
     hud.update()
+
   }
 
-  def render(spriteBatch: CustomBatch, hudBatch: CustomBatch): Unit = {
-    spriteBatch.setProjectionMatrix(camera.combined)
+  def render(worldBatch: CustomBatch, hudBatch: CustomBatch): Unit = {
+    worldBatch.setProjectionMatrix(camera.combined)
 
     Gdx.gl.glClearColor(0, 0, 0, 1)
 
@@ -233,21 +236,27 @@ object GameSystem {
 
     area.tiledMapRenderer.render()
 
-    spriteBatch.begin()
+    worldBatch.begin()
 
-    area.creaturesManager.renderCreatures(spriteBatch)
+    lootSystem.render(worldBatch)
+
+    area.creaturesManager.renderCreatures(worldBatch)
 //    areaCreatures.foreach(_.render(spriteBatch))
 
     //anim.currentFrame().draw(batch)
 
-    gateList.foreach(_.renderShapes(spriteBatch))
+    gateList.foreach(_.renderShapes(worldBatch))
 
-    spriteBatch.end()
+    worldBatch.end()
 
     hudBatch.begin()
 
-    hud.render(hudBatch)
     inventoryWindow.render(hudBatch)
+
+
+    hud.render(hudBatch)
+
+    lootOptionWindow.render(hudBatch)
 
 
     hudBatch.end()

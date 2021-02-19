@@ -16,6 +16,8 @@ class LootSystem {
 
     assert(GameSystem.currentArea.nonEmpty)
 
+    println(GameSystem.currentArea.get.lootPileList)
+
     for (lootPile <- GameSystem.currentArea.get.lootPileList) {
       lootPile.render(spriteBatch)
     }
@@ -34,7 +36,7 @@ class LootSystem {
 
     for (lootPile <- GameSystem.currentArea.get.lootPileList) {
       if (GameSystem.currentArea.get == lootPile.area) if (GameSystem.distance(GameSystem.playerCharacter.rect, lootPile.rect) < 40f) {
-        GameSystem.lootOptionWindow.setVisible(true)
+        GameSystem.lootOptionWindow.visible = true
         //                    visibleLootPile.add(lootPile);
         visibleItems.addAll(lootPile.itemList)
       }
@@ -42,7 +44,7 @@ class LootSystem {
 
     for (treasure <- GameSystem.currentArea.get.remainingTreasureList) {
       if (GameSystem.currentArea.get == treasure.area) if (GameSystem.distance(GameSystem.playerCharacter.rect, treasure.rect) < 40f) {
-        GameSystem.lootOptionWindow.setVisible(true)
+        GameSystem.lootOptionWindow.visible = true
         visibleItems.addAll(treasure.itemList)
       }
     }
