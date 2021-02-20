@@ -238,12 +238,14 @@ object GameSystem {
 
     worldBatch.begin()
 
-    lootSystem.render(worldBatch)
 
     area.creaturesManager.renderCreatures(worldBatch)
 //    areaCreatures.foreach(_.render(spriteBatch))
 
     //anim.currentFrame().draw(batch)
+
+    lootSystem.render(worldBatch)
+
 
     gateList.foreach(_.renderShapes(worldBatch))
 

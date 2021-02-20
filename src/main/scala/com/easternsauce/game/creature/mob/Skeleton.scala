@@ -31,7 +31,7 @@ class Skeleton(id: String) extends Mob(id) {
 
   creatureType = "skeleton"
 
-  maxHealthPoints = 200f
+  maxHealthPoints = 10f
   healthPoints = maxHealthPoints
 
   //grantWeapon(weapon)

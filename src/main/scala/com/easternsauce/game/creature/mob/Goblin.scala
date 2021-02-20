@@ -27,7 +27,7 @@ class Goblin(id: String) extends Mob(id) {
 
   creatureType = "goblin"
 
-  maxHealthPoints = 300f
+  maxHealthPoints = 10f
   healthPoints = maxHealthPoints
 
   //grantWeapon(weapon)

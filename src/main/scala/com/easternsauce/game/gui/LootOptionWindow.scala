@@ -1,8 +1,6 @@
 package com.easternsauce.game.gui
 
-import java.util
-import java.util.List
-
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.{Gdx, Input}
 import com.easternsauce.game.item.Item
 import com.easternsauce.game.shapes.CustomBatch
@@ -28,6 +26,7 @@ class LootOptionWindow {
   def render(batch: CustomBatch): Unit = {
     if (visible) for (i <- 0 until Math.min(4, itemList.size)) {
 
+      GameSystem.font.setColor(Color.WHITE)
       GameSystem.font.draw(batch, (if (currentSelected == (i + scroll) && activated) ">"
       else "") + itemList(i + scroll).name, 10, Gdx.graphics.getHeight - (Gdx.graphics.getHeight * GameSystem.ScreenProportion + 10 + 30 * i))
     }

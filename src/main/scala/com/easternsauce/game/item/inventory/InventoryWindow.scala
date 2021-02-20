@@ -398,6 +398,7 @@ class InventoryWindow {
   }
 
   def pickUpItem(item: Item, itemList: ListBuffer[Item]): Boolean = {
+    println("pick up item")
     val itemType: ItemType = item.itemType
     val stackable: Boolean = itemType.stackable
     if (stackable) {
@@ -407,7 +408,7 @@ class InventoryWindow {
           invPos = key
         }
       }
-      if (invPos != -(1)) { // add quantity to existing item
+      if (invPos != -1) { // add quantity to existing item
         inventoryItems(invPos).quantity = inventoryItems(invPos).quantity + item.quantity
         if (item.lootPileBackref.itemList.size == 1) {
           item.lootPileBackref.visible = false
@@ -418,7 +419,8 @@ class InventoryWindow {
       }
     }
     for (i <- 0 until inventorySlots) {
-      if (inventoryItems.get(i) == null) { // if slot empty
+      if (!inventoryItems.contains(i)) { // if slot empty
+        println("putting item in")
         inventoryItems.put(i, item)
         item.lootPileBackref match {
           case treasure: Treasure => //register treasure picked up, dont spawn it again for this save

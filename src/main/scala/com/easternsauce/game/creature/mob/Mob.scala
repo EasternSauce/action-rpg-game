@@ -180,7 +180,7 @@ abstract class Mob(id: String) extends Creature(id) {
   override def onDeath(): Unit = {
     super.onDeath()
 
-    //gameSystem.getLootSystem.spawnLootPile(area, rect.getCenterX, rect.getCenterY, dropTable)
+    GameSystem.lootSystem.spawnLootPile(area, rect.center.x, rect.center.y, dropTable)
 
     for (ability <- abilityList) {
       ability.stopAbility()

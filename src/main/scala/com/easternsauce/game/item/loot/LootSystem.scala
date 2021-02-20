@@ -16,8 +16,6 @@ class LootSystem {
 
     assert(GameSystem.currentArea.nonEmpty)
 
-    println(GameSystem.currentArea.get.lootPileList)
-
     for (lootPile <- GameSystem.currentArea.get.lootPileList) {
       lootPile.render(spriteBatch)
     }

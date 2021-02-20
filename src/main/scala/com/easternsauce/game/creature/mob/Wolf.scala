@@ -29,7 +29,7 @@ class Wolf(id: String) extends Mob(id) {
   override protected val onGettingHitSound: Sound = Assets.dogWhineSound
 
 
-  maxHealthPoints = 150f
+  maxHealthPoints = 10f
   healthPoints = maxHealthPoints
 
   unarmedDamage = 30f
