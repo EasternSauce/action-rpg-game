@@ -64,8 +64,11 @@ class InventoryWindow {
   var gold: Int = 0
 
   implicit class InventoryMapImprovements(map: mutable.Map[Int, Item]) {
-    def containsNonNull(n: Int): Boolean = {
-      map.contains(n) && map(n) != null.asInstanceOf[Item]
+
+    def putNonNull(key: Int, item: Item): Unit = {
+      if (item != null.asInstanceOf[Item]) {
+        map.put(key, item)
+      }
     }
   }
 
@@ -134,7 +137,7 @@ class InventoryWindow {
 
       batch.drawRectBorder(slotList(i), color)
 
-      if (inventoryItems.containsNonNull(i)) {
+      if (inventoryItems.contains(i)) {
         batch.draw(inventoryItems(i).itemType.texture, slotList(i).getX, slotList(i).getY, slotWidth, slotHeight)
         if (inventoryItems(i).quantity > 1) {
           GameSystem.font.setColor(Color.CYAN)
@@ -149,7 +152,7 @@ class InventoryWindow {
   def renderItemDescription(batch: CustomBatch): Unit = {
     GameSystem.font.setColor(Color.WHITE)
     if (inEquipment) {
-      if (equipmentItems.containsNonNull(currentSelected)) {
+      if (equipmentItems.contains(currentSelected)) {
         val item = equipmentItems(currentSelected)
 
         GameSystem.font.setColor(Color.ORANGE)
@@ -160,7 +163,7 @@ class InventoryWindow {
       }
     }
     else if (inTraderInventory) {
-      if (traderInventoryItems.containsNonNull(currentSelected)) {
+      if (traderInventoryItems.contains(currentSelected)) {
         val item = traderInventoryItems(currentSelected)
 
         GameSystem.font.setColor(Color.ORANGE)
@@ -172,7 +175,7 @@ class InventoryWindow {
 
     }
     else {
-      if (inventoryItems.containsNonNull(currentSelected)) {
+      if (inventoryItems.contains(currentSelected)) {
         val item = inventoryItems(currentSelected)
 
         GameSystem.font.setColor(Color.ORANGE)
@@ -194,7 +197,7 @@ class InventoryWindow {
 
         batch.drawRectBorder(equipmentSlotList(i), color)
 
-        if (equipmentItems.containsNonNull(i)) {
+        if (equipmentItems.contains(i)) {
           batch.draw(equipmentItems(i).itemType.texture, equipmentSlotList(i).getX, equipmentSlotList(i).getY, slotWidth, slotHeight)
           if (equipmentItems(i).quantity > 1) {
             batch.setColor(Color.CYAN)
@@ -209,6 +212,9 @@ class InventoryWindow {
 
 
   def update(): Unit = {
+
+    println(inventoryItems)
+
     val player = GameSystem.playerCharacter
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.I)) if (!inventoryOpen) openInventory()
@@ -284,7 +290,7 @@ class InventoryWindow {
         if (inEquipment) {
           itemExistsInSlot = equipmentItems(currentSelected) != null
         }
-        else itemExistsInSlot = inventoryItems.containsNonNull(currentSelected)
+        else itemExistsInSlot = inventoryItems.contains(currentSelected)
         if (itemExistsInSlot) {
           currentMoved = currentSelected
           moving = true
@@ -297,8 +303,10 @@ class InventoryWindow {
           val to = equipmentItems.getOrElse(currentSelected, null)
           val currentEquipmentType = getEquipmentSlotName(currentSelected)
           if (from == null || from.itemType.equipmentType == currentEquipmentType) {
-            equipmentItems.put(currentMoved, to)
-            equipmentItems.put(currentSelected, from)
+            equipmentItems.remove(currentMoved)
+            equipmentItems.remove(currentSelected)
+            equipmentItems.putNonNull(currentMoved, to)
+            equipmentItems.putNonNull(currentSelected, from)
             moving = false
             player.updateAttackType()
           }
@@ -308,8 +316,10 @@ class InventoryWindow {
           val to = inventoryItems.getOrElse(currentSelected, null)
           val currentEquipmentType = getEquipmentSlotName(currentMoved)
           if (to == null || to.itemType.equipmentType == currentEquipmentType) {
-            equipmentItems.put(currentMoved, to)
-            inventoryItems.put(currentSelected, from)
+            equipmentItems.remove(currentMoved)
+            inventoryItems.remove(currentSelected)
+            equipmentItems.putNonNull(currentMoved, to)
+            inventoryItems.putNonNull(currentSelected, from)
             moving = false
             player.updateAttackType()
           }
@@ -319,8 +329,10 @@ class InventoryWindow {
           val to = equipmentItems.getOrElse(currentSelected, null)
           val currentEquipmentType = getEquipmentSlotName(currentSelected)
           if (from == null || from.itemType.equipmentType == currentEquipmentType) {
-            inventoryItems.put(currentMoved, to)
-            equipmentItems.put(currentSelected, from)
+            inventoryItems.remove(currentMoved)
+            equipmentItems.remove(currentSelected)
+            inventoryItems.putNonNull(currentMoved, to)
+            equipmentItems.putNonNull(currentSelected, from)
             moving = false
             player.updateAttackType()
           }
@@ -328,8 +340,10 @@ class InventoryWindow {
         else {
           val from = inventoryItems(currentMoved)
           val to = inventoryItems.getOrElse(currentSelected, null.asInstanceOf[Item])
-          inventoryItems.put(currentMoved, to)
-          inventoryItems.put(currentSelected, from)
+          inventoryItems.remove(currentMoved)
+          inventoryItems.remove(currentSelected)
+          inventoryItems.putNonNull(currentMoved, to)
+          inventoryItems.putNonNull(currentSelected, from)
           moving = false
           player.updateAttackType()
         }
@@ -352,7 +366,7 @@ class InventoryWindow {
       }
       if (Gdx.input.isKeyJustPressed(Input.Keys.ALT_LEFT)) { // drop item
         if (inventoryOpen) if (!inEquipment && !inTraderInventory) {
-          if (inventoryItems.containsNonNull(currentSelected)) {
+          if (inventoryItems.contains(currentSelected)) {
             val item = inventoryItems(currentSelected)
 
             assert(GameSystem.currentArea.nonEmpty)
@@ -419,7 +433,7 @@ class InventoryWindow {
     }
     for (i <- 0 until inventorySlots) {
       if (!inventoryItems.contains(i)) { // if slot empty
-        inventoryItems.put(i, item)
+        inventoryItems.putNonNull(i, item)
         item.lootPileBackref match {
           case treasure: Treasure => //register treasure picked up, dont spawn it again for this save
             try {
@@ -462,7 +476,7 @@ class InventoryWindow {
     }
     for (i <- 0 until inventorySlots) {
       if (inventoryItems.get(i) == null) { // if slot empty
-        inventoryItems.put(i, item)
+        inventoryItems.putNonNull(i, item)
         return true
       }
     }
@@ -478,7 +492,7 @@ class InventoryWindow {
     traderInventoryItems = mutable.Map()
     var i: Int = 0
     for (traderItem <- traderInventory) {
-      traderInventoryItems.put(i, traderItem)
+      traderInventoryItems.putNonNull(i, traderItem)
       i += 1
     }
   }
