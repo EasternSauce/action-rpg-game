@@ -25,7 +25,6 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float) {
 
   private var respawnList: mutable.ListBuffer[PlayerRespawnPoint] = null
 
-  private var arrowList: mutable.ListBuffer[Arrow] = null
 
   private var abandonedPlains = null //music
 
@@ -34,6 +33,8 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float) {
   var lootPileList: ListBuffer[LootPile] = ListBuffer()
   var remainingTreasureList: ListBuffer[Treasure] = ListBuffer()
   var treasureList: ListBuffer[Treasure] = ListBuffer()
+
+  var arrowList: mutable.ListBuffer[Arrow] = ListBuffer()
 
 
   private def loadSpawns(): Unit = {
@@ -109,7 +110,20 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float) {
   }
 
   def update(): Unit = {
-    // TODO
+    val toBeDeleted = ListBuffer[Arrow]()
+    for (arrow <- arrowList) {
+      arrow.update()
+      if (arrow.markedForDeletion) {
+        toBeDeleted += arrow
+      }
+    }
+
+    arrowList.filterInPlace(!toBeDeleted.contains(_))
+
+    val areaCreatures: mutable.Map[String, Creature] = creatures
+
+    areaCreatures.values.foreach((creature: Creature) => creature.update())
+
   }
 
   def creatures: mutable.Map[String, Creature] = {

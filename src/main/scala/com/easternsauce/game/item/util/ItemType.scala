@@ -13,7 +13,7 @@ class ItemType(val id: String, val name: String, val description: String, val te
   val weaponSpeed = 1.0f
   var poisonChance = 0.0f
 
-  private var attackType: AttackType = null.asInstanceOf[AttackType]
+  var attackType: AttackType = null.asInstanceOf[AttackType]
 
 }
 

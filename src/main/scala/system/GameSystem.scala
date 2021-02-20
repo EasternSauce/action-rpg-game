@@ -19,6 +19,7 @@ import com.easternsauce.game.item.Item
 import com.easternsauce.game.item.inventory.InventoryWindow
 import com.easternsauce.game.item.loot.LootSystem
 import com.easternsauce.game.item.util.ItemType
+import com.easternsauce.game.projectile.Arrow
 import com.easternsauce.game.shapes.{CustomBatch, CustomPolygon, CustomRectangle, CustomVector2}
 import com.easternsauce.game.spawn.PlayerRespawnPoint
 import com.easternsauce.game.utils.Timer
@@ -136,7 +137,7 @@ object GameSystem {
     ItemType.loadItemTypes()
 
     //TODO: temp
-    inventoryWindow.inventoryItems.put(0, new Item(ItemType.getItemType("woodenSword")))
+    inventoryWindow.inventoryItems.put(0, new Item(ItemType.getItemType("crossbow")))
 
 
     //init()
@@ -192,12 +193,11 @@ object GameSystem {
   def update(): Unit = {
     Timer.updateTimers()
 
-    if (Gdx.input.isButtonPressed(Buttons.LEFT)) if (playerCharacter.currentAttack.canPerform) playerCharacter.currentAttack.perform()
+    if (Gdx.input.isButtonPressed(Buttons.LEFT)) if (playerCharacter.currentAttack.canPerform) {
+      playerCharacter.currentAttack.perform()
+    }
 
     if (Gdx.input.isKeyJustPressed(Keys.F5)) saveGame()
-
-
-    areaCreatures.foreach(c => c.update())
 
     camera.update()
 
@@ -206,12 +206,12 @@ object GameSystem {
       case None => throw new RuntimeException("currentArea is not set")
     }
 
+
     area.tiledMapRenderer.setView(camera)
 
-    currentArea match {
-      case Some(area) => area.creaturesManager.updateRenderPriorityQueue()
-      case _ => throw new RuntimeException("current area not set")
-    }
+    area.update()
+
+    area.creaturesManager.updateRenderPriorityQueue()
 
     inventoryWindow.update()
 
@@ -249,6 +249,9 @@ object GameSystem {
 
     gateList.foreach(_.renderShapes(worldBatch))
 
+    area.arrowList.foreach((arrow: Arrow) => arrow.render(worldBatch))
+
+
     worldBatch.end()
 
     hudBatch.begin()
@@ -259,7 +262,6 @@ object GameSystem {
     hud.render(hudBatch)
 
     lootOptionWindow.render(hudBatch)
-
 
     hudBatch.end()
 

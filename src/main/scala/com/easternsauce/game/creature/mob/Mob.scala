@@ -197,7 +197,7 @@ abstract class Mob(id: String) extends Creature(id) {
   override def setFacingDirection(): Unit = {
     if (aggroedCreature.nonEmpty) {
       val aggroed = aggroedCreature.get
-      facingVector = CustomVector2(aggroed.rect.center.x - rect.center.x, -(aggroed.rect.center.y - rect.center.y))
+      facingVector = CustomVector2(aggroed.rect.center.x - rect.center.x, aggroed.rect.center.y - rect.center.y)
     }
   }
 

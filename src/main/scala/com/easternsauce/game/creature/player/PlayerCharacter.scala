@@ -49,9 +49,9 @@ class PlayerCharacter(id: String) extends Creature(id) {
     val mouseY = Gdx.input.getY
 
     val centerX = Gdx.graphics.getWidth / 2f
-    val centerY = Gdx.graphics.getHeight / 2f - Gdx.graphics.getHeight * (1 - GameSystem.ScreenProportion) / 2
+    val centerY = (1 - GameSystem.ScreenProportion) * Gdx.graphics.getHeight + GameSystem.ScreenProportion * Gdx.graphics.getHeight / 2f
 
-    facingVector = CustomVector2(mouseX - centerX, mouseY - centerY)
+    facingVector = CustomVector2(mouseX - centerX, (Gdx.graphics.getHeight - mouseY) - centerY) // we need to reverse y due to mouse coordinates being in different system
   }
 
 

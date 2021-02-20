@@ -61,17 +61,17 @@ class CreaturesManager(private val area: Area) {
     creatures.put(creature.id, creature)
   }
 
-  def renderCreatures(spriteBatch: CustomBatch): Unit = {
+  def renderCreatures(batch: CustomBatch): Unit = {
     if (renderPriorityQueue != null) while (renderPriorityQueue.nonEmpty) {
       val creature = renderPriorityQueue.dequeue()
-      creature.render(spriteBatch)
+      creature.render(batch)
     }
     for (creature <- creatures.values) {
-      creature.renderAbilities(spriteBatch)
+      creature.renderAbilities(batch)
     }
 
     for (creature <- creatures.values) {
-      creature.renderHealthBar(spriteBatch)
+      creature.renderHealthBar(batch)
     }
   }
 

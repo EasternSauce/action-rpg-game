@@ -1,11 +1,12 @@
 package com.easternsauce.game.ability.attack
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.easternsauce.game.ability.util.AbilityState
 import com.easternsauce.game.animation.Animation
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
-import com.easternsauce.game.shapes.{CustomPolygon, CustomRectangle, CustomVector2}
+import com.easternsauce.game.shapes.{CustomBatch, CustomPolygon, CustomRectangle, CustomVector2}
 import system.GameSystem
 
 abstract class MeleeAttack(override protected val abilityCreature: Creature) extends Attack(abilityCreature) {
@@ -82,7 +83,7 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
 //    meleeAttackHitbox.translate(0, height / 2 * scale)
 //  }
 
-  override def renderSprites(batch: SpriteBatch): Unit = {
+  override def renderSprites(batch: CustomBatch): Unit = {
     super.renderSprites(batch)
 
 //    val image = windupAnimation.getFrameByIndex(5)
@@ -110,14 +111,14 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
     if (state == AbilityState.Channeling) {
       val image = windupAnimation.currentFrame()
       var attackVector = abilityCreature.attackVector
-      val theta = -new CustomVector2(attackVector.x, attackVector.y).angleDeg()
+      val theta = new CustomVector2(attackVector.x, attackVector.y).angleDeg()
 
       if (attackVector.len() > 0f) {
         attackVector = CustomVector2(attackVector.x / attackVector.len(), attackVector.y / attackVector.len())
       }
 
       val attackShiftX = attackVector.x * attackRange
-      val attackShiftY = -attackVector.y * attackRange
+      val attackShiftY = attackVector.y * attackRange
 
       val attackRectX = attackShiftX + abilityCreature.rect.center.x
       val attackRectY = attackShiftY + abilityCreature.rect.center.y
@@ -127,19 +128,25 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
       image.setPosition(attackRectX, attackRectY)
       image.translate(0, -height / 2  * scale)
 
+      // ----> useful testing rect <----
+//      val testX = attackRectX
+//      val testY = attackRectY
+//
+//      batch.drawRect(new CustomRectangle(testX - 3, testY - 3, 6, 6), Color.CYAN)
+
       image.draw(batch)
     }
     if (state == AbilityState.Active) {
       val image = attackAnimation.currentFrame()
       var attackVector = abilityCreature.attackVector
-      val theta = -CustomVector2(attackVector.x, attackVector.y).angleDeg()
+      val theta = CustomVector2(attackVector.x, attackVector.y).angleDeg()
 
       if (attackVector.len() > 0f) {
         attackVector = CustomVector2(attackVector.x / attackVector.len(), attackVector.y / attackVector.len())
       }
 
       val attackShiftX = attackVector.x * attackRange
-      val attackShiftY = -attackVector.y * attackRange
+      val attackShiftY = attackVector.y * attackRange
 
       val attackRectX = attackShiftX + abilityCreature.rect.center.x
       val attackRectY = attackShiftY + abilityCreature.rect.center.y
@@ -159,7 +166,6 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
       image.translate(0, -height / 2  * scale)
 
       image.draw(batch)
-
     }
   }
 
@@ -173,6 +179,5 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
   override def update(): Unit = {
     super.update()
 
-//    updateAttackRect()
   }
 }

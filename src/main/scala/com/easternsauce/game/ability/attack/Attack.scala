@@ -6,8 +6,6 @@ import com.easternsauce.game.creature.util.{AttackType, Unarmed}
 
 abstract class Attack(override protected val abilityCreature: Creature) extends Ability(abilityCreature) {
 
-  val attackType: AttackType = Unarmed
-
   isAttack = true
 
 

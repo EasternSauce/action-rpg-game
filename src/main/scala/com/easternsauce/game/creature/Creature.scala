@@ -10,7 +10,7 @@ import com.easternsauce.game.ability.attack._
 import com.easternsauce.game.animation.Animation
 import com.easternsauce.game.area.{Area, AreaGate}
 import com.easternsauce.game.assets.SpriteSheet
-import com.easternsauce.game.creature.util.WalkDirection
+import com.easternsauce.game.creature.util.{Bow, Sword, Trident, WalkDirection}
 import com.easternsauce.game.creature.util.WalkDirection.WalkDirection
 import com.easternsauce.game.effect.Effect
 import com.easternsauce.game.item.Item
@@ -133,8 +133,6 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   var abilityList: mutable.ListBuffer[Ability] = _
   var attackList: mutable.ListBuffer[Attack] = _
 
-  var currentAttack: Attack = _
-
   protected var healthRegenTimer: Timer = Timer(true)
   protected var staminaRegenTimer: Timer = Timer(true)
   protected var poisonTickTimer: Timer = Timer()
@@ -145,6 +143,18 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
   def alive: Boolean = healthPoints > 0f
 
+  def currentAttack: Attack = {
+    if (equipmentItems.contains(0)) {
+      equipmentItems(0).itemType.attackType match {
+        case Sword => swordAttack
+        case Bow => bowAttack
+        case Trident => tridentAttack
+      }
+    }
+    else {
+      unarmedAttack
+    }
+  }
 
   def setFacingDirection(): Unit = {
 
@@ -240,7 +250,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     }
   }
 
-  def renderAbilities(batch: SpriteBatch): Unit = {
+  def renderAbilities(batch: CustomBatch): Unit = {
     for (ability <- abilityList) {
       ability.renderSprites(batch)
     }
@@ -260,8 +270,6 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     attackList += unarmedAttack
     attackList += swordAttack
     attackList += tridentAttack
-
-    currentAttack = swordAttack
   }
 
   def onInit(): Unit = {
