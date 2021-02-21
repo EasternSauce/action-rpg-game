@@ -1,5 +1,6 @@
 package system
 
-class GameState {
-
+object GameState extends Enumeration {
+  type GameState = Value
+  val MainMenu, Gameplay = Value
 }

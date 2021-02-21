@@ -14,7 +14,7 @@ import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.mob.{Ghost, Goblin, Skeleton, Wolf}
 import com.easternsauce.game.creature.player.PlayerCharacter
 import com.easternsauce.game.dialogue.DialogueWindow
-import com.easternsauce.game.gui.{Hud, LootOptionWindow}
+import com.easternsauce.game.gui.{Hud, LootOptionWindow, MainMenu}
 import com.easternsauce.game.item.Item
 import com.easternsauce.game.item.inventory.InventoryWindow
 import com.easternsauce.game.item.loot.LootSystem
@@ -23,6 +23,7 @@ import com.easternsauce.game.projectile.Arrow
 import com.easternsauce.game.shapes.{CustomBatch, CustomPolygon, CustomRectangle, CustomVector2}
 import com.easternsauce.game.spawn.PlayerRespawnPoint
 import com.easternsauce.game.utils.Timer
+import system.GameState.{GameState, MainMenu}
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
@@ -79,6 +80,9 @@ object GameSystem {
 
   val ScreenProportion: Float = 3 / 4f
 
+  var state: GameState = MainMenu
+
+  var mainMenu: MainMenu = new MainMenu()
 
   def getTiledMapRealWidth(tiledMap: TiledMap): Int = {
     val layer = tiledMap.getLayers.get(0).asInstanceOf[TiledMapTileLayer]
@@ -191,34 +195,46 @@ object GameSystem {
   }
 
   def update(): Unit = {
-    Timer.updateTimers()
 
-    if (Gdx.input.isButtonPressed(Buttons.LEFT)) if (playerCharacter.currentAttack.canPerform) {
-      playerCharacter.currentAttack.perform()
+    escRecently = false
+
+    if (state == GameState.MainMenu) {
+      mainMenu.update()
     }
+    else if (state == GameState.Gameplay) {
+      Timer.updateTimers()
 
-    if (Gdx.input.isKeyJustPressed(Keys.F5)) saveGame()
+      if (Gdx.input.isButtonPressed(Buttons.LEFT)) if (playerCharacter.currentAttack.canPerform) {
+        playerCharacter.currentAttack.perform()
+      }
 
-    camera.update()
+      if (Gdx.input.isKeyJustPressed(Keys.F5)) saveGame()
 
-    val area: Area = currentArea match {
-      case Some(value) => value
-      case None => throw new RuntimeException("currentArea is not set")
+      camera.update()
+
+      val area: Area = currentArea match {
+        case Some(value) => value
+        case None => throw new RuntimeException("currentArea is not set")
+      }
+
+
+      area.tiledMapRenderer.setView(camera)
+
+      area.update()
+
+      area.creaturesManager.updateRenderPriorityQueue()
+
+      inventoryWindow.update()
+
+      lootSystem.update()
+
+      hud.update()
+
+      if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) if (!escRecently) if (!inventoryWindow.inventoryOpen && !lootOptionWindow.activated) {
+        escRecently = true
+        state = GameState.MainMenu
+      }
     }
-
-
-    area.tiledMapRenderer.setView(camera)
-
-    area.update()
-
-    area.creaturesManager.updateRenderPriorityQueue()
-
-    inventoryWindow.update()
-
-    lootSystem.update()
-
-    hud.update()
-
   }
 
   def render(worldBatch: CustomBatch, hudBatch: CustomBatch): Unit = {
@@ -234,37 +250,45 @@ object GameSystem {
       case None => throw new RuntimeException("currentArea is not set")
     }
 
-    area.tiledMapRenderer.render()
+    if (state == GameState.MainMenu) {
+      hudBatch.begin()
 
-    worldBatch.begin()
+      mainMenu.render(hudBatch)
 
+      hudBatch.end()
+    }
+    else if (state == GameState.Gameplay) {
+      area.tiledMapRenderer.render()
 
-    area.creaturesManager.renderCreatures(worldBatch)
-//    areaCreatures.foreach(_.render(spriteBatch))
-
-    //anim.currentFrame().draw(batch)
-
-    lootSystem.render(worldBatch)
-
-
-    gateList.foreach(_.renderShapes(worldBatch))
-
-    area.arrowList.foreach((arrow: Arrow) => arrow.render(worldBatch))
+      worldBatch.begin()
 
 
-    worldBatch.end()
+      area.creaturesManager.renderCreatures(worldBatch)
+      //    areaCreatures.foreach(_.render(spriteBatch))
 
-    hudBatch.begin()
+      //anim.currentFrame().draw(batch)
 
-    inventoryWindow.render(hudBatch)
+      lootSystem.render(worldBatch)
 
 
-    hud.render(hudBatch)
+      gateList.foreach(_.renderShapes(worldBatch))
 
-    lootOptionWindow.render(hudBatch)
+      area.arrowList.foreach((arrow: Arrow) => arrow.render(worldBatch))
 
-    hudBatch.end()
 
+      worldBatch.end()
+
+      hudBatch.begin()
+
+      inventoryWindow.render(hudBatch)
+
+
+      hud.render(hudBatch)
+
+      lootOptionWindow.render(hudBatch)
+
+      hudBatch.end()
+    }
 
   }
 

@@ -212,9 +212,6 @@ class InventoryWindow {
 
 
   def update(): Unit = {
-
-    println(inventoryItems)
-
     val player = GameSystem.playerCharacter
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.I)) if (!inventoryOpen) openInventory()
