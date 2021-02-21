@@ -1,6 +1,6 @@
 package system
 
-import java.io.{File, PrintWriter}
+import java.io.{File, FileWriter, PrintWriter}
 
 import com.badlogic.gdx.Input.{Buttons, Keys}
 import com.badlogic.gdx.graphics._
@@ -140,19 +140,12 @@ object GameSystem {
 
     ItemType.loadItemTypes()
 
-    //TODO: temp
-    inventoryWindow.inventoryItems.put(0, new Item(ItemType.getItemType("crossbow")))
-
-
-    //init()
-
     val w = Gdx.graphics.getWidth
     val h = Gdx.graphics.getHeight
     camera = new OrthographicCamera
     camera.setToOrtho(false, w, h)
 
-    loadGame() // TODO: move to main menu
-
+    init()
   }
 
   def init(): Unit = {
@@ -287,17 +280,12 @@ object GameSystem {
 
       lootOptionWindow.render(hudBatch)
 
-      //Assets.iconsSpriteSheet.getSprite(2,2).draw(hudBatch)
-      //Assets.male1SpriteSheet.getSprite(0,0).draw(hudBatch)
-
       hudBatch.end()
     }
 
   }
 
   def loadGame(): Unit = {
-    init()
-
     var creature: Creature = null
 
     val fileContents = Source.fromFile("saves/savegame.sav")
@@ -355,12 +343,30 @@ object GameSystem {
       for (line <- invFileContents.getLines) {
         val s = line.split(" ")
 
-        if (s(0) == "inventory_item") {
-          // TODO
+        if (s(0).equals("inventory_item")) {
+          if (creature != null) {
+            val inventoryItems: mutable.Map[Int, Item] = inventoryWindow.inventoryItems
+            inventoryItems.put(s(1).toInt, new Item(ItemType.getItemType(s(2)), null, (if (s(3) == "0") {
+              null.asInstanceOf[Float]
+            }
+            else {
+              (s(3).toInt).toFloat
+            }), (if (s(4) == "0") {
+              null.asInstanceOf[Float]
+            }
+            else {
+              (s(4).toInt).toFloat
+            }), (if (s(5) == "0") {
+              null.asInstanceOf[Int]
+            }
+            else {
+              (s(5).toInt)
+            })))  // TODO : fix copypasted mess!
+          }
         }
 
-        if (s(0) == "gold") {
-          // TODO
+        if (s(0).equals("gold")) {
+          inventoryWindow.gold = s(1).toInt
         }
       }
     }
@@ -412,15 +418,28 @@ object GameSystem {
 
     val inventoryWriter = new PrintWriter(new File("saves/inventory.sav"))
 
-    // TODO
+    for ((key, value) <- inventoryWindow.inventoryItems) {
+      if (value != null.asInstanceOf[Item]) {
+        val slotId = key
+        val damage = if (value.damage == null.asInstanceOf[Float]) "0"
+        else "" + value.damage.intValue
+        val armor = if (value.armor == null.asInstanceOf[Float]) "0"
+        else "" + value.armor.intValue
+        val quantity = if (value.quantity == null.asInstanceOf[Float]) "0"
+        else "" + value.quantity
+        inventoryWriter.write("inventory_item " + slotId + " " + value.itemType.id + " " + damage + " " + armor + " " + quantity + "\n")
+      }
+    }
 
-    writer.close()
+    inventoryWriter.write("gold " + inventoryWindow.gold + "\n")
+    inventoryWriter.close()
+
 
     val respawnWriter = new PrintWriter(new File("saves/respawn_points.sav"))
 
     // TODO
 
-    writer.close()
+    respawnWriter.close()
 
 
   }

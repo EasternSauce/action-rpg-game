@@ -347,18 +347,28 @@ class InventoryWindow {
 
         if (player.healthPoints > player.maxHealthPoints) player.healthPoints = player.maxHealthPoints
       }
-      if (Gdx.input.isKeyJustPressed(Input.Keys.E)) if (inventoryOpen) if (trading) if (!inTraderInventory) if (inventoryItems(currentSelected) != null) sellSelectedItem()
-      else if (traderInventoryItems(currentSelected) != null) if (gold - traderInventoryItems(currentSelected).itemType.worth >= 0) {
-        takeItem(traderInventoryItems(currentSelected))
-        gold -= traderInventoryItems(currentSelected).itemType.worth
-        traderInventoryItems.remove(currentSelected)
-      }
-      else if (!inEquipment && !inTraderInventory) {
-        val item = inventoryItems(currentSelected)
-        if (item != null && item.itemType.consumable) {
-          player.useItem(item)
-          if (item.quantity <= 1) inventoryItems.remove(currentSelected)
-          else item.quantity = item.quantity - 1
+      if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+        if (inventoryOpen) {
+          if (trading) {
+            if (!inTraderInventory){
+              if (inventoryItems(currentSelected) != null) sellSelectedItem()
+            }
+            else {
+              if (traderInventoryItems(currentSelected) != null) if (gold - traderInventoryItems(currentSelected).itemType.worth >= 0) {
+                takeItem(traderInventoryItems(currentSelected))
+                gold -= traderInventoryItems(currentSelected).itemType.worth
+                traderInventoryItems.remove(currentSelected)
+              }
+            }
+          }
+          else if (!inEquipment && !inTraderInventory) {
+            val item = inventoryItems(currentSelected)
+            if (item != null && item.itemType.consumable) {
+              player.useItem(item)
+              if (item.quantity <= 1) inventoryItems.remove(currentSelected)
+              else item.quantity = item.quantity - 1
+            }
+          }
         }
       }
       if (Gdx.input.isKeyJustPressed(Input.Keys.ALT_LEFT)) { // drop item

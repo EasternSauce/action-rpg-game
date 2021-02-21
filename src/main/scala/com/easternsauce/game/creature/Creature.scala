@@ -388,11 +388,14 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   }
 
   def useItem(item: Item): Unit = {
-    // TODO
+    if (item.itemType.id.equals("healingPowder")) startHealing(10f)
   }
 
   private def startHealing(healingPower: Float): Unit = {
-    // TODO
+    healingTimer.resetStart()
+    healingTickTimer.resetStart()
+    healing = true
+    this.healingPower = healingPower
   }
 
   def reset(): Unit = {

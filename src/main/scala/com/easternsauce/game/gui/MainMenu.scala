@@ -5,6 +5,7 @@ import java.nio.file.{Files, Paths}
 import java.util
 import java.util.LinkedList
 
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.{Gdx, Input}
 import com.easternsauce.game.shapes.CustomBatch
 import system.{GameState, GameSystem}
@@ -39,12 +40,15 @@ class MainMenu {
 
   def render(batch: CustomBatch): Unit = {
     if (!prompt) for (i <- 0 until Math.min(4, optionList.size)) {
+      GameSystem.font.setColor(Color.WHITE)
       GameSystem.font.draw(batch, (if (currentSelected == i) ">"
       else "") + optionList(i), 100, Gdx.graphics.getHeight - (100 + 30 * i))
     }
     else {
+      GameSystem.font.setColor(Color.WHITE)
       GameSystem.font.draw(batch, promptText, 100, Gdx.graphics.getHeight - 100)
       for (i <- 0 until Math.min(4, optionList.size)) {
+        GameSystem.font.setColor(Color.WHITE)
         GameSystem.font.draw(batch, (if (currentSelected == i) ">"
         else "") + optionList(i), 100, Gdx.graphics.getHeight - (130 + 30 * i))
       }
