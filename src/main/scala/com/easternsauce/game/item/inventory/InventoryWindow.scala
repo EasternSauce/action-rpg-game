@@ -116,7 +116,7 @@ class InventoryWindow {
 
         batch.drawRectBorder(traderInventorySlotList(i), color)
         if (traderInventoryItems.get(i) != null) {
-          batch.draw(traderInventoryItems(i).itemType.texture, traderInventorySlotList(i).getX, traderInventorySlotList(i).getY, slotWidth, slotHeight)
+          batch.draw(traderInventoryItems(i).itemType.sprite, traderInventorySlotList(i).getX, traderInventorySlotList(i).getY, slotWidth, slotHeight)
           if (traderInventoryItems(i).quantity > 1) {
             GameSystem.font.setColor(Color.CYAN)
             GameSystem.font.draw(batch, "" + traderInventoryItems(i).quantity, traderInventorySlotList(i).getX, traderInventorySlotList(i).getY)
@@ -138,7 +138,7 @@ class InventoryWindow {
       batch.drawRectBorder(slotList(i), color)
 
       if (inventoryItems.contains(i)) {
-        batch.draw(inventoryItems(i).itemType.texture, slotList(i).getX, slotList(i).getY, slotWidth, slotHeight)
+        batch.draw(inventoryItems(i).itemType.sprite, slotList(i).getX, slotList(i).getY, slotWidth, slotHeight)
         if (inventoryItems(i).quantity > 1) {
           GameSystem.font.setColor(Color.CYAN)
           GameSystem.font.draw(batch, "" + inventoryItems(i).quantity, slotList(i).getX, slotList(i).getY)
@@ -198,7 +198,7 @@ class InventoryWindow {
         batch.drawRectBorder(equipmentSlotList(i), color)
 
         if (equipmentItems.contains(i)) {
-          batch.draw(equipmentItems(i).itemType.texture, equipmentSlotList(i).getX, equipmentSlotList(i).getY, slotWidth, slotHeight)
+          batch.draw(equipmentItems(i).itemType.sprite, equipmentSlotList(i).getX, equipmentSlotList(i).getY, slotWidth, slotHeight)
           if (equipmentItems(i).quantity > 1) {
             batch.setColor(Color.CYAN)
             GameSystem.font.draw(batch, "" + equipmentItems(i).quantity, equipmentSlotList(i).getX, equipmentSlotList(i).getY)

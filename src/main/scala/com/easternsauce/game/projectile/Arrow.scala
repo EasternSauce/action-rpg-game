@@ -22,7 +22,7 @@ import scala.collection.mutable.ListBuffer
 
 class Arrow(var x: Float, var y: Float, val area: Area, var speedVector: CustomVector2, var arrowList: ListBuffer[Arrow], val tiledMap: TiledMap, val creatures: mutable.Map[String, Creature], val shooter: Creature) {
 
-  private val arrowSpeed: Float = 200f
+  private val arrowSpeed: Float = 700f
 
   private val arrowTexture: Texture = Assets.arrowTexture
 

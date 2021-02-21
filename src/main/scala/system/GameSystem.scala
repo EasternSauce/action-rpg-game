@@ -287,6 +287,9 @@ object GameSystem {
 
       lootOptionWindow.render(hudBatch)
 
+      //Assets.iconsSpriteSheet.getSprite(2,2).draw(hudBatch)
+      //Assets.male1SpriteSheet.getSprite(0,0).draw(hudBatch)
+
       hudBatch.end()
     }
 

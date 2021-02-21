@@ -15,5 +15,7 @@ class SpriteSheet(var atlasFileLocation: String) {
     textureAtlas.createSprite("Tile_" + dirMap(dir), frame)
   }
 
-
+  def getSprite(x: Int, y: Int): Sprite = {
+    textureAtlas.createSprite("Tile_" + (y + 1), x + 1)
+  }
 }

@@ -3,6 +3,7 @@ package com.easternsauce.game.assets
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.maps.tiled.{TiledMap, TmxMapLoader}
 
 object Assets {
@@ -14,6 +15,8 @@ object Assets {
   var ghostSpriteSheet: SpriteSheet = _
   var slashSpriteSheet: SpriteSheet = _
   var slashWindupSpriteSheet: SpriteSheet = _
+
+  var iconsSpriteSheet: SpriteSheet = _
 
   var attackSound: Sound = _
   var painSound: Sound = _
@@ -51,6 +54,8 @@ object Assets {
     goblinSpriteSheet = new SpriteSheet("assets/packed/goblin_pack.atlas")
     ghostSpriteSheet = new SpriteSheet("assets/packed/ghost_pack.atlas")
 
+    iconsSpriteSheet = new SpriteSheet("assets/packed/icon_pack.atlas")
+
     slashSpriteSheet = new SpriteSheet("assets/packed/slash_pack.atlas")
     slashWindupSpriteSheet = new SpriteSheet("assets/packed/slash_windup_pack.atlas")
 
@@ -81,8 +86,8 @@ object Assets {
     arrowTexture = new Texture(Gdx.files.internal("assets/projectiles/arrow.png"))
   }
 
-  def getItemIcon(x: Int, y: Int): Texture = {
-    arrowTexture
+  def getItemIcon(x: Int, y: Int): Sprite = {
+    iconsSpriteSheet.getSprite(x, y)
   }
 
 }
