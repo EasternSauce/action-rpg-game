@@ -4,6 +4,7 @@ import java.io.{File, FileWriter, PrintWriter}
 
 import com.badlogic.gdx.Input.{Buttons, Keys}
 import com.badlogic.gdx.graphics._
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.TextureAtlasData.Region
 import com.badlogic.gdx.graphics.g2d._
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
 import com.badlogic.gdx.math.{Intersector, Vector2}
@@ -20,9 +21,10 @@ import com.easternsauce.game.item.inventory.InventoryWindow
 import com.easternsauce.game.item.loot.LootSystem
 import com.easternsauce.game.item.util.ItemType
 import com.easternsauce.game.projectile.Arrow
-import com.easternsauce.game.shapes.{CustomBatch, CustomPolygon, CustomRectangle, CustomVector2}
+import com.easternsauce.game.shapes.{CustomPolygon, CustomRectangle, CustomVector2}
 import com.easternsauce.game.spawn.PlayerRespawnPoint
 import com.easternsauce.game.utils.Timer
+import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameState.{GameState, MainMenu}
 
 import scala.collection.mutable
@@ -84,6 +86,12 @@ object GameSystem {
 
   var mainMenu: MainMenu = new MainMenu()
 
+  var hudShapeDrawer: ShapeDrawer = _
+  var worldShapeDrawer: ShapeDrawer = _
+
+  var worldBatch: SpriteBatch = _
+  var hudBatch: SpriteBatch = _
+
   def getTiledMapRealWidth(tiledMap: TiledMap): Int = {
     val layer = tiledMap.getLayers.get(0).asInstanceOf[TiledMapTileLayer]
     layer.getWidth * TiledMapCellSize
@@ -135,7 +143,7 @@ object GameSystem {
     result
   }
 
-  def create(): Unit = {
+  def create(worldBatch: SpriteBatch, hudBatch: SpriteBatch): Unit = {
     Assets.createAssets()
 
     ItemType.loadItemTypes()
@@ -144,6 +152,15 @@ object GameSystem {
     val h = Gdx.graphics.getHeight
     camera = new OrthographicCamera
     camera.setToOrtho(false, w, h)
+
+    this.hudBatch = hudBatch
+    this.worldBatch = worldBatch
+
+    val (hudTexture, hudRegion) = createTextureAndRegion()
+    hudShapeDrawer = new ShapeDrawer(hudBatch, hudRegion)
+
+    val (worldTexture, worldRegion) = createTextureAndRegion()
+    worldShapeDrawer = new ShapeDrawer(worldBatch, worldRegion)
 
     init()
   }
@@ -185,6 +202,22 @@ object GameSystem {
     hud = new Hud()
 
     cameraFocussedCreature = Some(playerCharacter)
+
+  }
+
+  private def createTextureAndRegion(): (Texture, TextureRegion) = {
+    import com.badlogic.gdx.graphics.Pixmap
+    import com.badlogic.gdx.graphics.Pixmap.Format
+    import com.badlogic.gdx.graphics.Texture
+    import com.badlogic.gdx.graphics.g2d.TextureRegion
+    val pixmap = new Pixmap(1, 1, Format.RGBA8888)
+    pixmap.setColor(Color.WHITE)
+    pixmap.drawPixel(0, 0)
+    val texture = new Texture(pixmap) //remember to dispose of later
+
+    pixmap.dispose()
+    val region = new TextureRegion(texture, 0, 0, 1, 1)
+    (texture, region)
   }
 
   def update(): Unit = {
@@ -230,7 +263,7 @@ object GameSystem {
     }
   }
 
-  def render(worldBatch: CustomBatch, hudBatch: CustomBatch): Unit = {
+  def render(): Unit = {
     worldBatch.setProjectionMatrix(camera.combined)
 
     Gdx.gl.glClearColor(0, 0, 0, 1)
@@ -255,16 +288,11 @@ object GameSystem {
 
       worldBatch.begin()
 
+      area.creaturesManager.renderCreatures(worldBatch, worldShapeDrawer)
 
-      area.creaturesManager.renderCreatures(worldBatch)
-      //    areaCreatures.foreach(_.render(spriteBatch))
+      lootSystem.render(worldShapeDrawer)
 
-      //anim.currentFrame().draw(batch)
-
-      lootSystem.render(worldBatch)
-
-
-      gateList.foreach(_.renderShapes(worldBatch))
+      gateList.foreach(_.render(worldShapeDrawer))
 
       area.arrowList.foreach((arrow: Arrow) => arrow.render(worldBatch))
 
@@ -273,10 +301,9 @@ object GameSystem {
 
       hudBatch.begin()
 
-      inventoryWindow.render(hudBatch)
+      inventoryWindow.render(hudBatch, hudShapeDrawer)
 
-
-      hud.render(hudBatch)
+      hud.render(hudShapeDrawer)
 
       lootOptionWindow.render(hudBatch)
 

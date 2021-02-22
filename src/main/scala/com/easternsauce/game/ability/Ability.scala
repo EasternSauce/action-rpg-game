@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.easternsauce.game.ability.util.AbilityState
 import com.easternsauce.game.ability.util.AbilityState.{AbilityState, Inactive}
 import com.easternsauce.game.creature.Creature
-import com.easternsauce.game.shapes.{CustomBatch, CustomPolygon, CustomRectangle}
+import com.easternsauce.game.shapes.{CustomPolygon, CustomRectangle}
 import com.easternsauce.game.utils.Timer
 
 abstract class Ability(protected val abilityCreature: Creature) {
@@ -66,7 +66,7 @@ abstract class Ability(protected val abilityCreature: Creature) {
   protected def onUpdateChanneling(): Unit = {
   }
 
-  def renderSprites(batch: CustomBatch): Unit = {
+  def renderSprites(batch: SpriteBatch): Unit = {
 
   }
 

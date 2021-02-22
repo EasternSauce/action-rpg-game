@@ -2,7 +2,8 @@ package com.easternsauce.game.gui
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
-import com.easternsauce.game.shapes.{CustomBatch, CustomRectangle}
+import com.easternsauce.game.shapes.CustomRectangle
+import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
 class Hud {
@@ -20,13 +21,12 @@ class Hud {
   private var staminaRect = new CustomRectangle(10, h * proportion + 25, 100 * pc.healthPoints / pc.maxHealthPoints, 10)
   private var bossHealthBar = new BossHealthBar
 
-  def render(spriteBatch: CustomBatch): Unit = {
-
-    spriteBatch.drawRect(bottomRect, Color.DARK_GRAY)
-    spriteBatch.drawRect(maxHealthRect, Color.ORANGE)
-    spriteBatch.drawRect(healthRect, Color.RED)
-    spriteBatch.drawRect(maxStaminaRect, Color.ORANGE)
-    spriteBatch.drawRect(staminaRect, Color.GREEN)
+  def render(shapeDrawer: ShapeDrawer): Unit = {
+    shapeDrawer.filledRectangle(bottomRect, Color.DARK_GRAY)
+    shapeDrawer.filledRectangle(maxHealthRect, Color.ORANGE)
+    shapeDrawer.filledRectangle(healthRect, Color.RED)
+    shapeDrawer.filledRectangle(maxStaminaRect, Color.ORANGE)
+    shapeDrawer.filledRectangle(staminaRect, Color.GREEN)
   }
 
 

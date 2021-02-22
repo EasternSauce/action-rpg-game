@@ -1,9 +1,10 @@
 package com.easternsauce.game.item.loot
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.easternsauce.game.area.Area
 import com.easternsauce.game.item.Item
 import com.easternsauce.game.item.util.ItemType
-import com.easternsauce.game.shapes.CustomBatch
+import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
 import scala.collection.mutable
@@ -12,16 +13,16 @@ import scala.collection.mutable.ListBuffer
 class LootSystem {
   private var visibleItems: ListBuffer[Item] = ListBuffer()
 
-  def render(spriteBatch: CustomBatch): Unit = {
+  def render(shapeDrawer: ShapeDrawer): Unit = {
 
     assert(GameSystem.currentArea.nonEmpty)
 
     for (lootPile <- GameSystem.currentArea.get.lootPileList) {
-      lootPile.render(spriteBatch)
+      lootPile.render(shapeDrawer)
     }
 
     for (treasure <- GameSystem.currentArea.get.remainingTreasureList) {
-      treasure.render(spriteBatch)
+      treasure.render(shapeDrawer)
     }
   }
 

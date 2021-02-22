@@ -3,12 +3,14 @@ package com.easternsauce.game.item.inventory
 import java.io.{FileWriter, IOException}
 
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.{Gdx, Input}
 import com.easternsauce.game.area.Area
 import com.easternsauce.game.item.Item
 import com.easternsauce.game.item.loot.Treasure
 import com.easternsauce.game.item.util.ItemType
-import com.easternsauce.game.shapes.{CustomBatch, CustomRectangle}
+import com.easternsauce.game.shapes.CustomRectangle
+import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
 import scala.collection.mutable
@@ -96,69 +98,69 @@ class InventoryWindow {
   private def equipmentItems: mutable.Map[Int, Item] = GameSystem.playerCharacter.equipmentItems
 
 
-  def render(batch: CustomBatch): Unit = {
+  def render(hudBatch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
     if (inventoryOpen) {
 
-      batch.drawRect(background, Color.LIGHT_GRAY)
+      shapeDrawer.filledRectangle(background, Color.LIGHT_GRAY)
 
-      renderInventory(batch)
-      renderEquipment(batch)
-      renderTraderInventory(batch)
-      renderItemDescription(batch)
+      renderInventory(hudBatch, shapeDrawer)
+      renderEquipment(hudBatch, shapeDrawer)
+      renderTraderInventory(hudBatch, shapeDrawer)
+      renderItemDescription(hudBatch)
     }
   }
 
-  private def renderTraderInventory(batch: CustomBatch): Unit = {
+  private def renderTraderInventory(hudBatch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
     if (trading) {
       for (i <- 0 until tradeInventorySlots) {
         var color = Color.BLACK
         if (inTraderInventory) if (currentSelected == i) color = Color.RED
 
-        batch.drawRectBorder(traderInventorySlotList(i), color)
+        shapeDrawer.rectangle(traderInventorySlotList(i), color)
         if (traderInventoryItems.get(i) != null) {
-          batch.draw(traderInventoryItems(i).itemType.sprite, traderInventorySlotList(i).getX, traderInventorySlotList(i).getY, slotWidth, slotHeight)
+          hudBatch.draw(traderInventoryItems(i).itemType.sprite, traderInventorySlotList(i).getX, traderInventorySlotList(i).getY, slotWidth, slotHeight)
           if (traderInventoryItems(i).quantity > 1) {
             GameSystem.font.setColor(Color.CYAN)
-            GameSystem.font.draw(batch, "" + traderInventoryItems(i).quantity, traderInventorySlotList(i).getX, traderInventorySlotList(i).getY)
+            GameSystem.font.draw(hudBatch, "" + traderInventoryItems(i).quantity, traderInventorySlotList(i).getX, traderInventorySlotList(i).getY)
           }
         }
       }
       GameSystem.font.setColor(Color.WHITE)
-      GameSystem.font.draw(batch, "Trader:", traderInventorySlotList.head.getX + 5f, background.getY + 15f)
+      GameSystem.font.draw(hudBatch, "Trader:", traderInventorySlotList.head.getX + 5f, background.getY + 15f)
     }
   }
 
 
-  def renderInventory(batch: CustomBatch): Unit = {
+  def renderInventory(hudBatch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
     for (i <- 0 until inventorySlots) {
       var color = Color.BLACK
       if (moving && currentMoved == i && !movingInEquipment) color = Color.ORANGE
       else if (!inEquipment && !inTraderInventory) if (currentSelected == i) color = Color.RED
 
-      batch.drawRectBorder(slotList(i), color)
+      shapeDrawer.rectangle(slotList(i), color)
 
       if (inventoryItems.contains(i)) {
-        batch.draw(inventoryItems(i).itemType.sprite, slotList(i).getX, slotList(i).getY, slotWidth, slotHeight)
+        hudBatch.draw(inventoryItems(i).itemType.sprite, slotList(i).getX, slotList(i).getY, slotWidth, slotHeight)
         if (inventoryItems(i).quantity > 1) {
           GameSystem.font.setColor(Color.CYAN)
-          GameSystem.font.draw(batch, "" + inventoryItems(i).quantity, slotList(i).getX, slotList(i).getY)
+          GameSystem.font.draw(hudBatch, "" + inventoryItems(i).quantity, slotList(i).getX, slotList(i).getY)
         }
       }
     }
     GameSystem.font.setColor(Color.YELLOW)
-    GameSystem.font.draw(batch, "Gold: " + gold, background.getX + 5, background.getY + 20f)
+    GameSystem.font.draw(hudBatch, "Gold: " + gold, background.getX + 5, background.getY + 20f)
   }
 
-  def renderItemDescription(batch: CustomBatch): Unit = {
+  def renderItemDescription(hudBatch: SpriteBatch): Unit = {
     GameSystem.font.setColor(Color.WHITE)
     if (inEquipment) {
       if (equipmentItems.contains(currentSelected)) {
         val item = equipmentItems(currentSelected)
 
         GameSystem.font.setColor(Color.ORANGE)
-        GameSystem.font.draw(batch, item.name, background.getX + space, background.getY + background.getHeight - (margin + (space + slotHeight) * inventoryRows + space))
+        GameSystem.font.draw(hudBatch, item.name, background.getX + space, background.getY + background.getHeight - (margin + (space + slotHeight) * inventoryRows + space))
 
-        GameSystem.font.draw(batch, item.getItemInformation(false), background.getX + space, background.getY + background.getHeight - (margin + (space + slotHeight) * inventoryRows + space + 50))
+        GameSystem.font.draw(hudBatch, item.getItemInformation(false), background.getX + space, background.getY + background.getHeight - (margin + (space + slotHeight) * inventoryRows + space + 50))
 
       }
     }
@@ -167,9 +169,9 @@ class InventoryWindow {
         val item = traderInventoryItems(currentSelected)
 
         GameSystem.font.setColor(Color.ORANGE)
-        GameSystem.font.draw(batch, item.name, background.getX + space, background.getY + background.getHeight - (margin + (space + slotHeight) * inventoryRows + space))
+        GameSystem.font.draw(hudBatch, item.name, background.getX + space, background.getY + background.getHeight - (margin + (space + slotHeight) * inventoryRows + space))
 
-        GameSystem.font.draw(batch, item.getItemInformation(trader = true), background.getX + space, background.getY + background.getHeight - (margin + (space + slotHeight) * inventoryRows + space + 50))
+        GameSystem.font.draw(hudBatch, item.getItemInformation(trader = true), background.getX + space, background.getY + background.getHeight - (margin + (space + slotHeight) * inventoryRows + space + 50))
 
       }
 
@@ -179,15 +181,15 @@ class InventoryWindow {
         val item = inventoryItems(currentSelected)
 
         GameSystem.font.setColor(Color.ORANGE)
-        GameSystem.font.draw(batch, item.name, background.getX + space, background.getY + background.getHeight - (margin + (space + slotHeight) * inventoryRows + space))
+        GameSystem.font.draw(hudBatch, item.name, background.getX + space, background.getY + background.getHeight - (margin + (space + slotHeight) * inventoryRows + space))
 
-        GameSystem.font.draw(batch, item.getItemInformation(false), background.getX + space, background.getY + background.getHeight - (margin + (space + slotHeight) * inventoryRows + space + 50))
+        GameSystem.font.draw(hudBatch, item.getItemInformation(false), background.getX + space, background.getY + background.getHeight - (margin + (space + slotHeight) * inventoryRows + space + 50))
 
       }
     }
   }
 
-  def renderEquipment(batch: CustomBatch): Unit = {
+  def renderEquipment(hudBatch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
     if (!trading) {
 
       for (i <- 0 until equipmentSlots) {
@@ -195,17 +197,17 @@ class InventoryWindow {
         if (moving && currentMoved == i && movingInEquipment) color = Color.ORANGE
         else if (inEquipment) if (currentSelected == i) color = Color.RED
 
-        batch.drawRectBorder(equipmentSlotList(i), color)
+        shapeDrawer.rectangle(equipmentSlotList(i), color)
 
         if (equipmentItems.contains(i)) {
-          batch.draw(equipmentItems(i).itemType.sprite, equipmentSlotList(i).getX, equipmentSlotList(i).getY, slotWidth, slotHeight)
+          hudBatch.draw(equipmentItems(i).itemType.sprite, equipmentSlotList(i).getX, equipmentSlotList(i).getY, slotWidth, slotHeight)
           if (equipmentItems(i).quantity > 1) {
-            batch.setColor(Color.CYAN)
-            GameSystem.font.draw(batch, "" + equipmentItems(i).quantity, equipmentSlotList(i).getX, equipmentSlotList(i).getY)
+            GameSystem.font.setColor(Color.CYAN)
+            GameSystem.font.draw(hudBatch, "" + equipmentItems(i).quantity, equipmentSlotList(i).getX, equipmentSlotList(i).getY)
           }
         }
-        batch.setColor(Color.WHITE)
-        GameSystem.font.draw(batch, equipmentSlotNameList(i), equipmentSlotList(i).getX - 60, equipmentSlotList(i).getY + 30)
+        GameSystem.font.setColor(Color.WHITE)
+        GameSystem.font.draw(hudBatch, equipmentSlotNameList(i), equipmentSlotList(i).getX - 60, equipmentSlotList(i).getY + 30)
       }
     }
   }

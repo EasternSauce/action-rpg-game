@@ -1,9 +1,9 @@
 package com.easternsauce.game.gui
 
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.{Gdx, Input}
 import com.easternsauce.game.item.Item
-import com.easternsauce.game.shapes.CustomBatch
 import system.GameSystem
 
 import scala.collection.mutable.ListBuffer
@@ -23,7 +23,7 @@ class LootOptionWindow {
   var visible = false
 
 
-  def render(batch: CustomBatch): Unit = {
+  def render(batch: SpriteBatch): Unit = {
     if (visible) for (i <- 0 until Math.min(4, itemList.size)) {
 
       GameSystem.font.setColor(Color.WHITE)

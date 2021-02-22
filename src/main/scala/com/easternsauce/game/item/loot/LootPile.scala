@@ -3,7 +3,8 @@ package com.easternsauce.game.item.loot
 import com.badlogic.gdx.graphics.Color
 import com.easternsauce.game.area.Area
 import com.easternsauce.game.item.Item
-import com.easternsauce.game.shapes.{CustomBatch, CustomRectangle}
+import com.easternsauce.game.shapes.CustomRectangle
+import space.earlygrey.shapedrawer.ShapeDrawer
 
 import scala.collection.mutable.ListBuffer
 
@@ -18,9 +19,9 @@ class LootPile(val area: Area, x: Float, y: Float) {
 
   val itemList: ListBuffer[Item] = ListBuffer()
 
-  def render(spriteBatch: CustomBatch): Unit = {
+  def render(shapeDrawer: ShapeDrawer): Unit = {
     if (visible) {
-      spriteBatch.drawRect(rect, Color.GREEN)
+      shapeDrawer.filledRectangle(rect, Color.GREEN)
     }
   }
 

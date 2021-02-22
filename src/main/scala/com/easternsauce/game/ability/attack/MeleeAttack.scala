@@ -6,7 +6,7 @@ import com.easternsauce.game.ability.util.AbilityState
 import com.easternsauce.game.animation.Animation
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
-import com.easternsauce.game.shapes.{CustomBatch, CustomPolygon, CustomRectangle, CustomVector2}
+import com.easternsauce.game.shapes.{CustomPolygon, CustomRectangle, CustomVector2}
 import system.GameSystem
 
 abstract class MeleeAttack(override protected val abilityCreature: Creature) extends Attack(abilityCreature) {
@@ -83,7 +83,7 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
 //    meleeAttackHitbox.translate(0, height / 2 * scale)
 //  }
 
-  override def renderSprites(batch: CustomBatch): Unit = {
+  override def renderSprites(batch: SpriteBatch): Unit = {
     super.renderSprites(batch)
 
 //    val image = windupAnimation.getFrameByIndex(5)

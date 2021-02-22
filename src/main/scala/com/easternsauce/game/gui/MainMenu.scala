@@ -6,8 +6,8 @@ import java.util
 import java.util.LinkedList
 
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.{Gdx, Input}
-import com.easternsauce.game.shapes.CustomBatch
 import system.{GameState, GameSystem}
 
 import scala.collection.mutable.ListBuffer
@@ -38,7 +38,7 @@ class MainMenu {
   optionList += "New game"
   optionList += "Exit"
 
-  def render(batch: CustomBatch): Unit = {
+  def render(batch: SpriteBatch): Unit = {
     if (!prompt) for (i <- 0 until Math.min(4, optionList.size)) {
       GameSystem.font.setColor(Color.WHITE)
       GameSystem.font.draw(batch, (if (currentSelected == i) ">"

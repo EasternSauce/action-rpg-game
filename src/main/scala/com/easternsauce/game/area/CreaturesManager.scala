@@ -2,11 +2,13 @@ package com.easternsauce.game.area
 
 import java.io.PrintWriter
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.npc.NonPlayerCharacter
 import com.easternsauce.game.creature.player.PlayerCharacter
 import com.easternsauce.game.item.Item
-import com.easternsauce.game.shapes.{CustomBatch, CustomRectangle}
+import com.easternsauce.game.shapes.CustomRectangle
+import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
 import scala.collection.mutable
@@ -61,7 +63,7 @@ class CreaturesManager(private val area: Area) {
     creatures.put(creature.id, creature)
   }
 
-  def renderCreatures(batch: CustomBatch): Unit = {
+  def renderCreatures(batch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
     if (renderPriorityQueue != null) while (renderPriorityQueue.nonEmpty) {
       val creature = renderPriorityQueue.dequeue()
       creature.render(batch)
@@ -71,7 +73,7 @@ class CreaturesManager(private val area: Area) {
     }
 
     for (creature <- creatures.values) {
-      creature.renderHealthBar(batch)
+      creature.renderHealthBar(shapeDrawer)
     }
   }
 

@@ -1,30 +1,31 @@
 package system
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.{ApplicationAdapter, Gdx, Input, InputProcessor}
-import com.easternsauce.game.shapes.CustomBatch
 import system.GameSystem._
 
 class GdxGame extends ApplicationAdapter with InputProcessor {
 
-  private var spriteBatch: CustomBatch = _
-  private var hudBatch: CustomBatch = _
+  private var spriteBatch: SpriteBatch = _
+  private var hudBatch: SpriteBatch = _
 
   override def create() {
-    spriteBatch = new CustomBatch()
-    hudBatch = new CustomBatch()
+    spriteBatch = new SpriteBatch()
+    hudBatch = new SpriteBatch()
 
-    GameSystem.create()
+    GameSystem.create(spriteBatch, hudBatch)
 
     Gdx.input.setInputProcessor(this)
   }
 
   override def render() {
     GameSystem.update()
-    GameSystem.render(spriteBatch, hudBatch)
+    GameSystem.render()
   }
 
   override def dispose(): Unit = {
     spriteBatch.dispose()
+    hudBatch.dispose()
   }
 
   override def keyDown(keycode: Int): Boolean = {

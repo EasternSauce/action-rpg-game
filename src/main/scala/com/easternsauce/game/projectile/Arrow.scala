@@ -6,6 +6,7 @@ import java.util.{List, Map}
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.files.FileHandle
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.scenes.scene2d.ui.Image
@@ -13,7 +14,7 @@ import com.easternsauce.game.area.Area
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.mob.Mob
-import com.easternsauce.game.shapes.{CustomBatch, CustomRectangle, CustomVector2}
+import com.easternsauce.game.shapes.{CustomRectangle, CustomVector2}
 import org.lwjgl.util.vector.Vector2f
 import system.GameSystem
 
@@ -39,7 +40,7 @@ class Arrow(var x: Float, var y: Float, val area: Area, var speedVector: CustomV
   arrowImage.setOriginY(arrowTexture.getHeight / 2)
   arrowImage.rotateBy(speedVector.angleDeg())
 
-  def render(batch: CustomBatch): Unit = {
+  def render(batch: SpriteBatch): Unit = {
 
     arrowImage.draw(batch, 1.0f)
   }

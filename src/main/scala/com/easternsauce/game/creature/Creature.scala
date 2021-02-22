@@ -14,9 +14,10 @@ import com.easternsauce.game.creature.util.{Bow, Sword, Trident, WalkDirection}
 import com.easternsauce.game.creature.util.WalkDirection.WalkDirection
 import com.easternsauce.game.effect.Effect
 import com.easternsauce.game.item.Item
-import com.easternsauce.game.shapes.{CustomBatch, CustomRectangle, CustomVector2}
+import com.easternsauce.game.shapes.{CustomRectangle, CustomVector2}
 import com.easternsauce.game.spawn.Blockade
 import com.easternsauce.game.utils.{IntPair, Timer}
+import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
 import scala.collection.mutable
@@ -202,19 +203,19 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     }
   }
 
-  def render(batch: CustomBatch): Unit = {
+  def render(batch: SpriteBatch): Unit = {
     drawRunningAnimation(batch)
 
     abilityList.foreach(ability => ability.renderSprites(batch))
     currentAttack.renderSprites(batch)
   }
 
-  def renderHealthBar(batch: CustomBatch): Unit = {
+  def renderHealthBar(shapeDrawer: ShapeDrawer): Unit = {
     val healthBarHeight = 5
     val healthBarWidth = 50
     val currentHealthBarWidth = healthBarWidth * healthPoints/maxHealthPoints
-    batch.drawRect(new CustomRectangle(rect.x + (rect.width/2 - healthBarWidth/2), rect.y + rect.width + 10, healthBarWidth, healthBarHeight), Color.ORANGE)
-    batch.drawRect(new CustomRectangle(rect.x + (rect.width/2 - healthBarWidth/2), rect.y + rect.width + 10, currentHealthBarWidth, healthBarHeight), Color.RED)
+    shapeDrawer.filledRectangle(new CustomRectangle(rect.x + (rect.width/2 - healthBarWidth/2), rect.y + rect.width + 10, healthBarWidth, healthBarHeight), Color.ORANGE)
+    shapeDrawer.filledRectangle(new CustomRectangle(rect.x + (rect.width/2 - healthBarWidth/2), rect.y + rect.width + 10, currentHealthBarWidth, healthBarHeight), Color.RED)
 
   }
 
@@ -250,7 +251,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     }
   }
 
-  def renderAbilities(batch: CustomBatch): Unit = {
+  def renderAbilities(batch: SpriteBatch): Unit = {
     for (ability <- abilityList) {
       ability.renderSprites(batch)
     }
