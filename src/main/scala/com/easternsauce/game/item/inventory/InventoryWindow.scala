@@ -42,7 +42,6 @@ class InventoryWindow {
 
   private var inTraderInventory: Boolean = false
 
-  private var trading: Boolean = false
 
   private val inventoryRows: Int = 4
   private val inventoryColumns: Int = 5
@@ -64,6 +63,8 @@ class InventoryWindow {
   var inventoryOpen: Boolean = false
 
   var gold: Int = 0
+
+  var trading: Boolean = false
 
   implicit class InventoryMapImprovements(map: mutable.Map[Int, Item]) {
 
@@ -497,7 +498,7 @@ class InventoryWindow {
     trading = true
   }
 
-  def setTraderInventory(traderInventory: List[Item]): Unit = {
+  def setTraderInventory(traderInventory: ListBuffer[Item]): Unit = {
     traderInventoryItems = mutable.Map()
     var i: Int = 0
     for (traderItem <- traderInventory) {

@@ -23,10 +23,12 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float) {
   private var mobSpawnPointList: mutable.ListBuffer[MobSpawnPoint] = null
 
 
-  private var respawnList: mutable.ListBuffer[PlayerRespawnPoint] = null
 
 
   private var abandonedPlains = null //music
+
+  var respawnList: mutable.ListBuffer[PlayerRespawnPoint] = ListBuffer()
+
 
   var blockadeList: mutable.ListBuffer[Blockade] = null
 

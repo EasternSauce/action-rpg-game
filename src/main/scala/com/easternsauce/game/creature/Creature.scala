@@ -287,10 +287,10 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   }
 
   protected def defineEffects(): Unit = {
-    effectMap.put("immune", new Effect(this))
-    effectMap.put("immobilized", new Effect(this))
-    effectMap.put("staminaRegenStopped", new Effect(this))
-    effectMap.put("poisoned", new Effect(this))
+    effectMap.put("immune", new Effect())
+    effectMap.put("immobilized", new Effect())
+    effectMap.put("staminaRegenStopped", new Effect())
+    effectMap.put("poisoned", new Effect())
 
   }
 

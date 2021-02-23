@@ -2,6 +2,8 @@ package com.easternsauce.game.gui
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.easternsauce.game.creature.npc.NonPlayerCharacter
 import com.easternsauce.game.shapes.CustomRectangle
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
@@ -21,12 +23,31 @@ class Hud {
   private var staminaRect = new CustomRectangle(10, h * proportion + 25, 100 * pc.healthPoints / pc.maxHealthPoints, 10)
   private var bossHealthBar = new BossHealthBar
 
-  def render(shapeDrawer: ShapeDrawer): Unit = {
+  def render(hudBatch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
     shapeDrawer.filledRectangle(bottomRect, Color.DARK_GRAY)
     shapeDrawer.filledRectangle(maxHealthRect, Color.ORANGE)
     shapeDrawer.filledRectangle(healthRect, Color.RED)
     shapeDrawer.filledRectangle(maxStaminaRect, Color.ORANGE)
     shapeDrawer.filledRectangle(staminaRect, Color.GREEN)
+
+    if (!GameSystem.dialogueWindow.activated) {
+      if (GameSystem.lootSystem.getVisibleItemsCount == 0) {
+        assert(GameSystem.currentArea.nonEmpty)
+        GameSystem.font.setColor(Color.WHITE)
+        var triggerMessage = ""
+        for (creature <- GameSystem.currentArea.get.creatures.values) {
+          if (creature != GameSystem.playerCharacter) {
+            if (GameSystem.playerCharacter.rect.intersects(creature.rect) && creature.isInstanceOf[NonPlayerCharacter] && creature.healthPoints > 0) triggerMessage = "> Talk"
+          }
+        }
+
+        for (playerRespawnPoint <- GameSystem.currentArea.get.respawnList) {
+          if (GameSystem.playerCharacter.rect.intersects(playerRespawnPoint.rect)) triggerMessage = "> Set respawn"
+        }
+        GameSystem.font.draw(hudBatch, triggerMessage, 10, Gdx.graphics.getHeight * GameSystem.ScreenProportion + 10)
+      }
+      bossHealthBar.render()
+    }
   }
 
 

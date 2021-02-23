@@ -6,6 +6,7 @@ import com.badlogic.gdx.audio.Sound
 import com.easternsauce.game.ability.DashAbility
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
+import com.easternsauce.game.creature.npc.NonPlayerCharacter
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up}
 import com.easternsauce.game.shapes.{CustomRectangle, CustomVector2}
 import system.GameSystem
@@ -85,5 +86,27 @@ class PlayerCharacter(id: String) extends Creature(id) {
 
       super.processMovement()
 
+  }
+
+  def interact(): Unit = {
+    if (GameSystem.lootSystem.getVisibleItemsCount == 0) {
+      for (creature <- area.creatures.values) {
+        if (creature != this) {
+          if (rect.intersects(creature.rect) && creature.isInstanceOf[NonPlayerCharacter] && creature.healthPoints > 0) {
+            creature.asInstanceOf[NonPlayerCharacter].triggerDialogue()
+          }
+        }
+      }
+
+      for (playerRespawnPoint <- area.respawnList) {
+        if (rect.intersects(playerRespawnPoint.rect)) {
+          // TODO
+//          currentRespawnPoint = playerRespawnPoint
+//          currentRespawnPoint.onRespawnSet()
+//          if (getHealthPoints < getMaxHealthPoints / 2) setHealthPoints(getMaxHealthPoints / 2)
+//          gameSystem.getCurrentArea.softReset()
+        }
+      }
+    }
   }
 }

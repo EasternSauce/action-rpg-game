@@ -13,6 +13,7 @@ import com.easternsauce.game.area.{Area, AreaGate}
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.mob.{Ghost, Goblin, Skeleton, Wolf}
+import com.easternsauce.game.creature.npc.NonPlayerCharacter
 import com.easternsauce.game.creature.player.PlayerCharacter
 import com.easternsauce.game.dialogue.DialogueWindow
 import com.easternsauce.game.gui.{Hud, LootOptionWindow, MainMenu}
@@ -171,6 +172,7 @@ object GameSystem {
     val wolf: Wolf = new Wolf("wolf352") // TODO: load from file
     val ghost: Ghost = new Ghost("32532") // TODO: load from file
     val goblin: Goblin = new Goblin("3255323523") // TODO: load from file
+    val npc: NonPlayerCharacter = new NonPlayerCharacter("asfasffassaf", true, Assets.male1SpriteSheet, "a1") // TODO: load from file
 
 
     areas += ("area1" -> new Area("area1", Assets.grassyMap, 4.0f))
@@ -185,6 +187,7 @@ object GameSystem {
         area.addNewCreature(wolf, 1200f, 1000f)
         area.addNewCreature(ghost, 1200f, 1000f)
         area.addNewCreature(goblin, 1200f, 1000f)
+        area.addNewCreature(npc, 900, 900)
 
         currentArea = Some(area) // TODO: load from file
         area.creatures.values.foreach(creature => creature.onInit()) // TODO: do it while loading saves
@@ -234,6 +237,10 @@ object GameSystem {
         playerCharacter.currentAttack.perform()
       }
 
+      if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+        playerCharacter.interact()
+      }
+
       if (Gdx.input.isKeyJustPressed(Keys.F5)) saveGame()
 
       camera.update()
@@ -251,6 +258,8 @@ object GameSystem {
       area.creaturesManager.updateRenderPriorityQueue()
 
       inventoryWindow.update()
+
+      dialogueWindow.update()
 
       lootSystem.update()
 
@@ -303,7 +312,9 @@ object GameSystem {
 
       inventoryWindow.render(hudBatch, hudShapeDrawer)
 
-      hud.render(hudShapeDrawer)
+      hud.render(hudBatch, hudShapeDrawer)
+
+      dialogueWindow.render(hudBatch)
 
       lootOptionWindow.render(hudBatch)
 
