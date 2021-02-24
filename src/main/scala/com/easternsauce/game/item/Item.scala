@@ -10,7 +10,6 @@ class Item(val itemType: ItemType, var lootPileBackref: LootPile = null, var dam
 
   val description: String = if (itemType == null.asInstanceOf[ItemType]) null else itemType.description
 
-
   if (damage == null.asInstanceOf[Float] && armor == null.asInstanceOf[Float]) {
     if (itemType.maxDamage != null.asInstanceOf[Float]) {
       this.damage = Math.ceil(itemType.maxDamage * (0.5f + 0.5f * GameSystem.random.nextFloat())).toFloat
@@ -18,8 +17,6 @@ class Item(val itemType: ItemType, var lootPileBackref: LootPile = null, var dam
     if (itemType.maxArmor != null.asInstanceOf[Float]) {
       this.armor = Math.ceil(itemType.maxArmor * (0.5f + 0.5f * GameSystem.random.nextFloat())).toFloat
     }
-
-    quantity = 1
   }
 
   def removeFromLoot(): Unit = {

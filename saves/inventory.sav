@@ -1,7 +1,8 @@
 inventory_item 0 woodenSword 31 0 1
 inventory_item 16 crossbow 70 0 1
-inventory_item 3 crossbow 47 0 1
+inventory_item 1 leatherHelmet 0 7 1
+inventory_item 2 crossbow 47 0 1
+inventory_item 3 ringmailGreaves 0 7 1
 inventory_item 4 crossbow 65 0 1
-inventory_item 7 healingPowder 0 0 1
-inventory_item 8 crossbow 38 0 1
-gold 0
+inventory_item 7 healingPowder 0 0 30
+gold 15

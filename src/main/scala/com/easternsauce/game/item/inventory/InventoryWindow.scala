@@ -118,7 +118,7 @@ class InventoryWindow {
         if (inTraderInventory) if (currentSelected == i) color = Color.RED
 
         shapeDrawer.rectangle(traderInventorySlotList(i), color)
-        if (traderInventoryItems.get(i) != null) {
+        if (traderInventoryItems.contains(i)) {
           hudBatch.draw(traderInventoryItems(i).itemType.sprite, traderInventorySlotList(i).getX, traderInventorySlotList(i).getY, slotWidth, slotHeight)
           if (traderInventoryItems(i).quantity > 1) {
             GameSystem.font.setColor(Color.CYAN)
@@ -144,7 +144,7 @@ class InventoryWindow {
         hudBatch.draw(inventoryItems(i).itemType.sprite, slotList(i).getX, slotList(i).getY, slotWidth, slotHeight)
         if (inventoryItems(i).quantity > 1) {
           GameSystem.font.setColor(Color.CYAN)
-          GameSystem.font.draw(hudBatch, "" + inventoryItems(i).quantity, slotList(i).getX, slotList(i).getY)
+          GameSystem.font.draw(hudBatch, "" + inventoryItems(i).quantity, slotList(i).getX, slotList(i).getY + 15)
         }
       }
     }

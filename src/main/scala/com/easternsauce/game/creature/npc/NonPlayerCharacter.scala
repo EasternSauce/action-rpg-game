@@ -3,6 +3,7 @@ package com.easternsauce.game.creature.npc
 import java.util
 import java.util.{List, Random}
 
+import com.badlogic.gdx.audio.Sound
 import com.easternsauce.game.assets.{Assets, SpriteSheet}
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.util.WalkDirection
@@ -20,6 +21,9 @@ class NonPlayerCharacter(id: String, trader: Boolean, spriteSheet: SpriteSheet, 
   private var traderInventory: ListBuffer[Item] = ListBuffer()
 
   var random: scala.util.Random = GameSystem.random
+
+  override protected val onGettingHitSound: Sound = Assets.painSound
+
 
   loadSprites(spriteSheet, Map(Left -> 2, Right -> 3, Up -> 4, Down -> 1), 1)
 

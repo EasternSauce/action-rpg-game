@@ -384,22 +384,10 @@ object GameSystem {
         if (s(0).equals("inventory_item")) {
           if (creature != null) {
             val inventoryItems: mutable.Map[Int, Item] = inventoryWindow.inventoryItems
-            inventoryItems.put(s(1).toInt, new Item(ItemType.getItemType(s(2)), null, (if (s(3) == "0") {
-              null.asInstanceOf[Float]
-            }
-            else {
-              (s(3).toInt).toFloat
-            }), (if (s(4) == "0") {
-              null.asInstanceOf[Float]
-            }
-            else {
-              (s(4).toInt).toFloat
-            }), (if (s(5) == "0") {
-              null.asInstanceOf[Int]
-            }
-            else {
-              (s(5).toInt)
-            })))  // TODO : fix copypasted mess!
+            inventoryItems.put(s(1).toInt, new Item(ItemType.getItemType(s(2)), lootPileBackref = null,
+              damage = if (s(3) == "0") {null.asInstanceOf[Float]} else {s(3).toInt.toFloat},
+              armor = if (s(4) == "0") {null.asInstanceOf[Float]} else {s(4).toInt.toFloat},
+              quantity = if (s(5) == "0") {null.asInstanceOf[Int]} else {s(5).toInt}))
           }
         }
 
@@ -443,6 +431,7 @@ object GameSystem {
       case Some(area) => area.onEntry()
       case _ => throw new RuntimeException("current area is not set")
     }
+
   }
 
   def saveGame(): Unit = {

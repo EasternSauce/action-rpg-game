@@ -44,7 +44,7 @@ class Hud {
         for (playerRespawnPoint <- GameSystem.currentArea.get.respawnList) {
           if (GameSystem.playerCharacter.rect.intersects(playerRespawnPoint.rect)) triggerMessage = "> Set respawn"
         }
-        GameSystem.font.draw(hudBatch, triggerMessage, 10, Gdx.graphics.getHeight * GameSystem.ScreenProportion + 10)
+        GameSystem.font.draw(hudBatch, triggerMessage, 10, Gdx.graphics.getHeight - (Gdx.graphics.getHeight * GameSystem.ScreenProportion + 10))
       }
       bossHealthBar.render()
     }

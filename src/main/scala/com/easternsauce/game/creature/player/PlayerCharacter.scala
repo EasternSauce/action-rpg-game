@@ -22,7 +22,7 @@ class PlayerCharacter(id: String) extends Creature(id) {
 
   override protected val onGettingHitSound: Sound = Assets.painSound
 
-  def inMenus: Boolean = GameSystem.inventoryWindow.inventoryOpen
+  def inMenus: Boolean = GameSystem.inventoryWindow.inventoryOpen || GameSystem.dialogueWindow.activated
 
   loadSprites(Assets.male1SpriteSheet, Map(Left -> 2, Right -> 3, Up -> 4, Down -> 1), 1)
 

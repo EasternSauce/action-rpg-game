@@ -68,12 +68,12 @@ class DialogueWindow {
   def render(hudBatch: SpriteBatch): Unit = {
     GameSystem.font.setColor(Color.WHITE)
     if (activated) {
-      GameSystem.font.draw(hudBatch, currentDialogue.text, 10, Gdx.graphics.getWidth * GameSystem.ScreenProportion + 10)
+      GameSystem.font.draw(hudBatch, currentDialogue.text, 10, Gdx.graphics.getHeight - (Gdx.graphics.getHeight * GameSystem.ScreenProportion + 10))
       if (currentDialogueChoices != null) for (i <- currentDialogueChoices.indices) {
         val text = currentDialogueChoices(i).text
 
         GameSystem.font.draw(hudBatch, (if (currentSelected == i) ">"
-        else "") + text, 10, Gdx.graphics.getHeight * GameSystem.ScreenProportion + 10 + 30 * (i + 1))
+        else "") + text, 10, Gdx.graphics.getHeight - (Gdx.graphics.getHeight * GameSystem.ScreenProportion + 10 + 30 * (i + 1)))
       }
     }
   }

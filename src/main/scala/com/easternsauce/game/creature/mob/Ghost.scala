@@ -23,7 +23,7 @@ class Ghost(id: String) extends Mob(id) {
 
   override val hitbox = new CustomRectangle(17, 15, 30, 46)
 
-  override val onGettingHitSound: Sound = Assets.painSound//TODO: Assets.evilYellingSound
+  override val onGettingHitSound: Sound = Assets.evilYellingSound
 
   override val baseSpeed = 300f
 
