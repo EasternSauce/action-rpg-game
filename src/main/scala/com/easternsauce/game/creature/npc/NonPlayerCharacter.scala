@@ -60,6 +60,8 @@ class NonPlayerCharacter(id: String, trader: Boolean, spriteSheet: SpriteSheet, 
   }
 
   override def onDeath(): Unit = {
+    isRunningAnimationActive = false
+
     for (ability <- abilityList) {
       ability.stopAbility()
     }

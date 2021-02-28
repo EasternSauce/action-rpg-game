@@ -16,6 +16,9 @@ object Assets {
   var slashSpriteSheet: SpriteSheet = _
   var slashWindupSpriteSheet: SpriteSheet = _
 
+  var explosionSpriteSheet: SpriteSheet = _
+  var explosionWindupSpriteSheet: SpriteSheet = _
+
   var iconsSpriteSheet: SpriteSheet = _
 
   var attackSound: Sound = _
@@ -59,6 +62,10 @@ object Assets {
     slashSpriteSheet = new SpriteSheet("assets/packed/slash_pack.atlas")
     slashWindupSpriteSheet = new SpriteSheet("assets/packed/slash_windup_pack.atlas")
 
+    explosionSpriteSheet = new SpriteSheet("assets/packed/explosion_pack.atlas")
+    explosionWindupSpriteSheet = new SpriteSheet("assets/packed/explosion_windup_pack.atlas")
+
+
     grassyMap = new TmxMapLoader().load("assets/grassy_terrain/tile_map.tmx")
 
     attackSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/swoosh.wav"))
@@ -73,6 +80,7 @@ object Assets {
     dogBarkSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/dogbark.wav"))
     dogWhineSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/dogwhine.wav"))
     evilYellingSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/evil-yelling.wav"))
+    explosionSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/explosion.wav"))
     flybySound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/flyby.wav"))
     glassBreakSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/glass-break.wav"))
     gruntSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/grunt.wav"))

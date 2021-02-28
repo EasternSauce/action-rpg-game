@@ -2,14 +2,14 @@ package com.easternsauce.game.creature.mob
 
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.util.WalkDirection.WalkDirection
-import com.easternsauce.game.creature.util.{Unarmed, WalkDirection}
+import com.easternsauce.game.creature.util.{AttackType, Unarmed, WalkDirection}
 import com.easternsauce.game.shapes.CustomVector2
 import com.easternsauce.game.utils.Timer
 import system.GameSystem
 
 abstract class Mob(id: String) extends Creature(id) {
   protected var aggroedCreature: Option[Creature] = None
-  protected var aggroDistance: Float = 400
+  protected var aggroDistance: Float = 800
 
   protected var destinationX = 0f
   protected var destinationY = 0f
@@ -36,6 +36,9 @@ abstract class Mob(id: String) extends Creature(id) {
 
   protected var attackDistance: Float = null.asInstanceOf[Float]
   protected var walkUpDistance: Float = null.asInstanceOf[Float]
+
+  val attackType: AttackType = Unarmed // TODO: val attackType: AttackType = currentAttack.getAttackType
+
 
   override def performActions(): Unit = {
 
@@ -101,8 +104,6 @@ abstract class Mob(id: String) extends Creature(id) {
       case Some(value) => value
       case None => throw new RuntimeException("aggroed creature is not set")
     }
-
-    val attackType = Unarmed // TODO: val attackType: AttackType = currentAttack.getAttackType
 
     val aggroedCenter = aggroed.rect.center
     val creatureCenter = rect.center
@@ -178,7 +179,7 @@ abstract class Mob(id: String) extends Creature(id) {
   }
 
   override def onDeath(): Unit = {
-    super.onDeath()
+    isRunningAnimationActive = false
 
     GameSystem.lootSystem.spawnLootPile(area, rect.center.x, rect.center.y, dropTable)
 

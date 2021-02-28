@@ -25,6 +25,7 @@ import scala.collection.mutable.ListBuffer
 
 abstract class Creature(val id: String) extends Ordered[Creature] {
 
+
   protected var healthRegen = 0.3f
   protected var staminaRegen = 10f
 
@@ -143,6 +144,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   protected var knockbackTimer: Timer = Timer()
 
   def alive: Boolean = healthPoints > 0f
+  def atFullLife: Boolean = healthPoints >= maxHealthPoints
 
   def currentAttack: Attack = {
     if (equipmentItems.contains(0)) {
@@ -206,8 +208,8 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   def render(batch: SpriteBatch): Unit = {
     drawRunningAnimation(batch)
 
-    abilityList.foreach(ability => ability.renderSprites(batch))
-    currentAttack.renderSprites(batch)
+    abilityList.foreach(ability => ability.render(batch))
+    currentAttack.render(batch)
   }
 
   def renderHealthBar(shapeDrawer: ShapeDrawer): Unit = {
@@ -253,9 +255,9 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
   def renderAbilities(batch: SpriteBatch): Unit = {
     for (ability <- abilityList) {
-      ability.renderSprites(batch)
+      ability.render(batch)
     }
-    currentAttack.renderSprites(batch)
+    currentAttack.render(batch)
   }
 
   def defineStandardAbilities(): Unit = {
@@ -291,7 +293,6 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     effectMap.put("immobilized", new Effect())
     effectMap.put("staminaRegenStopped", new Effect())
     effectMap.put("poisoned", new Effect())
-
   }
 
   def updateAttackType(): Unit = {
@@ -367,7 +368,6 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   }
 
   def onDeath(): Unit = {
-    isRunningAnimationActive = false
   }
 
   def kill: Unit = {

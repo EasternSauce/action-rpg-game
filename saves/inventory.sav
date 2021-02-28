@@ -2,5 +2,5 @@ inventory_item 0 woodenSword 31 0 1
 inventory_item 2 leatherHelmet 0 7 1
 inventory_item 3 ringmailGreaves 0 7 1
 inventory_item 5 leatherHelmet 0 7 1
-inventory_item 7 healingPowder 0 0 30
+inventory_item 7 healingPowder 0 0 31
 gold 465

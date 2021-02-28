@@ -55,12 +55,11 @@ class PlayerCharacter(id: String) extends Creature(id) {
     facingVector = CustomVector2(mouseX - centerX, (Gdx.graphics.getHeight - mouseY) - centerY) // we need to reverse y due to mouse coordinates being in different system
   }
 
-
   override def onDeath(): Unit = {
-    super.onDeath()
+    isRunningAnimationActive = false
   }
 
-  override protected def defineCustomAbilities(): Unit = {
+    override protected def defineCustomAbilities(): Unit = {
     dashAbility = DashAbility(this)
 
     dashAbility.onPerformAction = () => {

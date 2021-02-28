@@ -1,10 +1,12 @@
 package com.easternsauce.game.creature.mob
 
 import com.badlogic.gdx.audio.Sound
+import com.easternsauce.game.ability.ExplodeAbility
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up}
 import com.easternsauce.game.shapes.CustomRectangle
 import com.easternsauce.game.utils.Timer
+import system.GameSystem
 
 class Ghost(id: String) extends Mob(id) {
   actionTimer = Timer(true)
@@ -27,10 +29,46 @@ class Ghost(id: String) extends Mob(id) {
 
   override val baseSpeed = 300f
 
+  private var explodeAbility: ExplodeAbility = _
+
+
   creatureType = "goblin"
 
   maxHealthPoints = 300f
   healthPoints = maxHealthPoints
 
   //grantWeapon(weapon)
+
+  override def performAggroedBehavior(): Unit = {
+    super.performAggroedBehavior()
+
+    assert(aggroedCreature.nonEmpty)
+
+    if (GameSystem.distance(aggroedCreature.get.rect, this.rect) < (if (attackDistance == null.asInstanceOf[Float]) attackType.attackDistance else attackDistance)) {
+      if (healthPoints <= maxHealthPoints * 0.50) if (explodeAbility.canPerform) explodeAbility.perform()
+    }
+  }
+
+  override def onInit(): Unit = {
+    super.onInit()
+
+    explodeAbility = ExplodeAbility(this)
+
+    explodeAbility.onChannelAction = () => {Assets.darkLaughSound.play(0.1f)}
+
+    abilityList += explodeAbility
+  }
+
+  override def onDeath(): Unit = {
+    isRunningAnimationActive = false
+
+    GameSystem.lootSystem.spawnLootPile(area, rect.center.x, rect.center.y, dropTable)
+    for (ability <- abilityList) {
+      if (!ability.isInstanceOf[ExplodeAbility]) {
+        ability.stopAbility()
+
+      }
+    }
+    currentAttack.stopAbility()
+  }
 }

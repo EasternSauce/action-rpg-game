@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d._
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
 import com.badlogic.gdx.math.{Intersector, Vector2}
 import com.badlogic.gdx.{Gdx, Input}
+import com.easternsauce.game.animation.Animation
 import com.easternsauce.game.area.{Area, AreaGate}
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
@@ -170,7 +171,7 @@ object GameSystem {
     GameSystem.playerCharacter = new PlayerCharacter("protagonist")
     val skele: Skeleton = new Skeleton("skellie123") // TODO: load from file
     val wolf: Wolf = new Wolf("wolf352") // TODO: load from file
-    val ghost: Ghost = new Ghost("32532") // TODO: load from file
+    val ghost: Ghost = new Ghost("ghost32532") // TODO: load from file
     val goblin: Goblin = new Goblin("3255323523") // TODO: load from file
     val npc: NonPlayerCharacter = new NonPlayerCharacter("asfasffassaf", true, Assets.male1SpriteSheet, "a1") // TODO: load from file
 
@@ -185,12 +186,15 @@ object GameSystem {
         area.addNewCreature(playerCharacter, 1000f, 1000f)
         area.addNewCreature(skele, 600f, 600f) // TODO: load from file
         area.addNewCreature(wolf, 1200f, 1000f)
-        area.addNewCreature(ghost, 1200f, 1000f)
+        area.addNewCreature(ghost, 1700, 1700)
         area.addNewCreature(goblin, 1200f, 1000f)
         area.addNewCreature(npc, 900, 900)
 
         currentArea = Some(area) // TODO: load from file
-        area.creatures.values.foreach(creature => creature.onInit()) // TODO: do it while loading saves
+        area.creatures.values.foreach(
+          creature => {
+            creature.onInit()
+          }) // TODO: do it while loading saves
 
       case None => throw new RuntimeException("area doesn't exist")
     }

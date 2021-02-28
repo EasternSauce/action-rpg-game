@@ -66,7 +66,7 @@ abstract class Ability(protected val abilityCreature: Creature) {
   protected def onUpdateChanneling(): Unit = {
   }
 
-  def renderSprites(batch: SpriteBatch): Unit = {
+  def render(batch: SpriteBatch): Unit = {
 
   }
 

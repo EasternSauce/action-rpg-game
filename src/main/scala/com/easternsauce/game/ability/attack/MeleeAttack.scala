@@ -83,8 +83,8 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
 //    meleeAttackHitbox.translate(0, height / 2 * scale)
 //  }
 
-  override def renderSprites(batch: SpriteBatch): Unit = {
-    super.renderSprites(batch)
+  override def render(batch: SpriteBatch): Unit = {
+    super.render(batch)
 
 //    val image = windupAnimation.getFrameByIndex(5)
 //    val attackVector = abilityCreature.facingVector

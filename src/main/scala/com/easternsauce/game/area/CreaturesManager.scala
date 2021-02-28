@@ -73,7 +73,7 @@ class CreaturesManager(private val area: Area) {
     }
 
     for (creature <- creatures.values) {
-      if (creature.alive) creature.renderHealthBar(shapeDrawer)
+      if (creature.alive && !creature.atFullLife) creature.renderHealthBar(shapeDrawer)
     }
   }
 
