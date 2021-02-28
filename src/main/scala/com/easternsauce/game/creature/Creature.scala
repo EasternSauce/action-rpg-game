@@ -371,7 +371,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   def onDeath(): Unit = {
   }
 
-  def kill: Unit = {
+  def kill(): Unit = {
     // TODO
   }
 

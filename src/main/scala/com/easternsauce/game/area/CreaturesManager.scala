@@ -12,6 +12,7 @@ import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
 import scala.collection.mutable
+import scala.collection.mutable.ListBuffer
 
 class CreaturesManager(private val area: Area) {
 
@@ -93,7 +94,7 @@ class CreaturesManager(private val area: Area) {
 
   def saveToFile(writer: PrintWriter): Unit = {
     for (creature <- creatures.values) {
-      if (creature.isPlayer) { // TODO: or npc
+      if (creature.isPlayer || creature.isNPC) {
         writer.write("creature " + creature.id + "\n")
         writer.write("area " + creature.area.id + "\n")
         writer.write("pos " + creature.rect.x + " " + creature.rect.y + "\n")
@@ -113,6 +114,14 @@ class CreaturesManager(private val area: Area) {
         }
       }
     }
+  }
+
+  def processAreaChanges(creaturesToMove: ListBuffer[Creature]): Unit = {
+    for (creature <- creatures.values) {
+      if (creature.pendingArea != null) creaturesToMove += creature
+    }
+
+    area.updateSpawns()
   }
 }
 

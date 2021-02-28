@@ -1,5 +1,8 @@
 package com.easternsauce.game.area
 
+import java.util
+import java.util.List
+
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.easternsauce.game.assets.Assets
@@ -11,18 +14,14 @@ import com.easternsauce.game.spawn._
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
-class Area(val id: String, val tiledMap: TiledMap, scale: Float) {
-//  val creatures: mutable.Map[String, Creature] = mutable.Map()
+class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocationsContainer: SpawnLocationsContainer) {
+
   val tiledMapRenderer = new OrthogonalTiledMapRenderer(Assets.grassyMap, scale)
 
   var creaturesManager: CreaturesManager = CreaturesManager(this)
 
-  private val spawnLocationsContainer: SpawnLocationsContainer = null
-
-  private var enemyRespawnAreaList: mutable.ListBuffer[EnemyRespawnArea] = null
-  private var mobSpawnPointList: mutable.ListBuffer[MobSpawnPoint] = null
-
-
+  private var enemyRespawnAreaList: mutable.ListBuffer[EnemyRespawnArea] = ListBuffer()
+  private var mobSpawnPointList: mutable.ListBuffer[MobSpawnPoint] = ListBuffer()
 
 
   private var abandonedPlains = null //music
@@ -30,7 +29,7 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float) {
   var respawnList: mutable.ListBuffer[PlayerRespawnPoint] = ListBuffer()
 
 
-  var blockadeList: mutable.ListBuffer[Blockade] = null
+  var blockadeList: mutable.ListBuffer[Blockade] = ListBuffer()
 
   var lootPileList: ListBuffer[LootPile] = ListBuffer()
   var remainingTreasureList: ListBuffer[Treasure] = ListBuffer()
@@ -38,9 +37,20 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float) {
 
   var arrowList: mutable.ListBuffer[Arrow] = ListBuffer()
 
+  loadSpawns()
 
   private def loadSpawns(): Unit = {
-    // TODO
+    for (spawnLocation <- spawnLocationsContainer.spawnLocationList) {
+      val posX = spawnLocation.posX
+      val posY = spawnLocation.posY
+      if (spawnLocation.spawnType == "respawnArea") enemyRespawnAreaList += new EnemyRespawnArea(posX, posY, 3, this, spawnLocation.creatureType)
+      else if (spawnLocation.spawnType == "spawnPoint") {
+        println("loaded " + spawnLocation.creatureType)
+        val mobSpawnPoint = new MobSpawnPoint(posX, posY, this, spawnLocation.creatureType)
+        mobSpawnPointList += mobSpawnPoint
+        if (spawnLocation.hasBlockade) addBlockade(mobSpawnPoint, spawnLocation.blockadePosX, spawnLocation.blockadePosY)
+      }
+    }
   }
 
   def render(): Unit = {
@@ -48,7 +58,13 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float) {
   }
 
   def updateSpawns(): Unit = {
-    // TODO
+    for (enemyRespawnArea <- enemyRespawnAreaList) {
+      enemyRespawnArea.update()
+    }
+
+    for (mobSpawnPoint <- mobSpawnPointList) {
+      mobSpawnPoint.update()
+    }
   }
 
 
@@ -81,7 +97,11 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float) {
   }
 
   def moveInCreature(creature: Creature, x: Float, y: Float): Unit = {
-    // TODO
+    creaturesManager.addCreature(creature)
+    creature.area = this
+
+    creature.rect.setX(x)
+    creature.rect.setY(y)
   }
 
   def removeCreature(id: String): Unit = {
@@ -131,5 +151,6 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float) {
   def creatures: mutable.Map[String, Creature] = {
     creaturesManager.creatures
   }
+
 
 }

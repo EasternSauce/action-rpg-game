@@ -5,10 +5,11 @@ import com.easternsauce.game.ability.DashAbility
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up}
 import com.easternsauce.game.shapes.{CustomRectangle, CustomVector2}
+import com.easternsauce.game.spawn.MobSpawnPoint
 import com.easternsauce.game.utils.Timer
 import system.GameSystem
 
-class Wolf(id: String) extends Mob(id) {
+class Wolf(override val id: String, override val mobSpawnPoint: MobSpawnPoint) extends Mob(id, mobSpawnPoint) {
 
   override val baseSpeed: Float = 200f
 

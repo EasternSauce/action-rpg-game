@@ -4,9 +4,10 @@ import com.badlogic.gdx.audio.Sound
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up}
 import com.easternsauce.game.shapes.CustomRectangle
+import com.easternsauce.game.spawn.MobSpawnPoint
 import com.easternsauce.game.utils.Timer
 
-class Skeleton(id: String) extends Mob(id) {
+class Skeleton(override val id: String, override val mobSpawnPoint: MobSpawnPoint, val weaponType: String) extends Mob(id, mobSpawnPoint) {
   override val rect = new CustomRectangle(0,4500,64,64)
   override val hitboxBounds = new CustomRectangle(18, 0, 28, 64)
   override val baseSpeed = 300f

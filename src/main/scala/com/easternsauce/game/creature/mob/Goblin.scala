@@ -4,9 +4,10 @@ import com.badlogic.gdx.audio.Sound
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up}
 import com.easternsauce.game.shapes.CustomRectangle
+import com.easternsauce.game.spawn.MobSpawnPoint
 import com.easternsauce.game.utils.Timer
 
-class Goblin(id: String) extends Mob(id) {
+class Goblin(override val id: String, override val mobSpawnPoint: MobSpawnPoint, weaponType: String) extends Mob(id, mobSpawnPoint) {
   actionTimer = Timer(true)
 
   dropTable.put("ironSword", 0.03f)

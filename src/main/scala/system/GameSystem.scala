@@ -24,7 +24,7 @@ import com.easternsauce.game.item.loot.LootSystem
 import com.easternsauce.game.item.util.ItemType
 import com.easternsauce.game.projectile.Arrow
 import com.easternsauce.game.shapes.{CustomPolygon, CustomRectangle, CustomVector2}
-import com.easternsauce.game.spawn.PlayerRespawnPoint
+import com.easternsauce.game.spawn.{PlayerRespawnPoint, SpawnLocationsContainer}
 import com.easternsauce.game.utils.Timer
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameState.{GameState, MainMenu}
@@ -169,25 +169,28 @@ object GameSystem {
 
   def init(): Unit = {
     GameSystem.playerCharacter = new PlayerCharacter("protagonist")
-    val skele: Skeleton = new Skeleton("skellie123") // TODO: load from file
-    val wolf: Wolf = new Wolf("wolf352") // TODO: load from file
-    val ghost: Ghost = new Ghost("ghost32532") // TODO: load from file
-    val goblin: Goblin = new Goblin("3255323523") // TODO: load from file
+//    val skele: Skeleton = new Skeleton("skellie123") // TODO: load from file
+//    val wolf: Wolf = new Wolf("wolf352") // TODO: load from file
+//    val ghost: Ghost = new Ghost("ghost32532") // TODO: load from file
+//    val goblin: Goblin = new Goblin("3255323523") // TODO: load from file
     val npc: NonPlayerCharacter = new NonPlayerCharacter("asfasffassaf", true, Assets.male1SpriteSheet, "a1") // TODO: load from file
 
+    val area1SpawnPoints: SpawnLocationsContainer = new SpawnLocationsContainer("assets/areas/area1/spawns.txt")
+    val area2SpawnPoints: SpawnLocationsContainer = new SpawnLocationsContainer("assets/areas/area2/spawns.txt")
 
-    areas += ("area1" -> new Area("area1", Assets.grassyMap, 4.0f))
-    areas += ("area2" -> new Area("area2", null, 1.0f)) // TODO: load assets
+
+    areas += ("area1" -> new Area("area1", Assets.grassyMap, 4.0f, area1SpawnPoints))
+    areas += ("area2" -> new Area("area2", null, 1.0f, area2SpawnPoints)) // TODO: load assets
 
     areas.get("area1") match {
       case Some(area) =>
         area.addRespawnPoint(new PlayerRespawnPoint(400, 500, area))
         area.addRespawnPoint(new PlayerRespawnPoint(3650, 4909, area))
         area.addNewCreature(playerCharacter, 1000f, 1000f)
-        area.addNewCreature(skele, 600f, 600f) // TODO: load from file
-        area.addNewCreature(wolf, 1200f, 1000f)
-        area.addNewCreature(ghost, 1700, 1700)
-        area.addNewCreature(goblin, 1200f, 1000f)
+//        area.addNewCreature(skele, 600f, 600f) // TODO: load from file
+//        area.addNewCreature(wolf, 1200f, 1000f)
+//        area.addNewCreature(ghost, 1700, 1700)
+//        area.addNewCreature(goblin, 1200f, 1000f)
         area.addNewCreature(npc, 900, 900)
 
         currentArea = Some(area) // TODO: load from file
@@ -258,6 +261,12 @@ object GameSystem {
       area.tiledMapRenderer.setView(camera)
 
       area.update()
+
+      // TODO: creatures to move
+
+      for (area <- areas.values) {
+        area.creaturesManager.processAreaChanges(creaturesToMove)
+      }
 
       area.creaturesManager.updateRenderPriorityQueue()
 

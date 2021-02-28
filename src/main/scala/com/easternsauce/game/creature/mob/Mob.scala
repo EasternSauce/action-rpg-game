@@ -4,10 +4,11 @@ import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.util.WalkDirection.WalkDirection
 import com.easternsauce.game.creature.util.{AttackType, Unarmed, WalkDirection}
 import com.easternsauce.game.shapes.CustomVector2
+import com.easternsauce.game.spawn.MobSpawnPoint
 import com.easternsauce.game.utils.Timer
 import system.GameSystem
 
-abstract class Mob(id: String) extends Creature(id) {
+abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) extends Creature(id) {
   protected var aggroedCreature: Option[Creature] = None
   protected var aggroDistance: Float = 800
 
