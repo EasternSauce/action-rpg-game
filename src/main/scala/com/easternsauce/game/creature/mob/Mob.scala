@@ -47,7 +47,7 @@ abstract class Mob(id: String) extends Creature(id) {
 
 
 
-    GameSystem.areaCreatures.filter(creature => !creature.isMob).foreach(creature => { // TODO: exclude npc too
+    GameSystem.areaCreatures.filter(creature => !creature.isMob && !creature.isNPC).foreach(creature => { // TODO: exclude npc too
       if (!foundCreatureToAggro && alive && GameSystem.distance(rect, creature.rect) < aggroDistance) {
         aggroedCreature = Some(creature)
         foundCreatureToAggro = true

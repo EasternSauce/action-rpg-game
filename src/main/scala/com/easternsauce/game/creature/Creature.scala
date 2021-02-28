@@ -69,6 +69,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
   val isPlayer = false
   val isMob = false
+  val isNPC = false
 
   var passedGateRecently = false
 
@@ -539,6 +540,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
         totalDirections = totalDirections + 1
         lastMovingDir = Down
     }
+
   }
 
   def onUpdateStart(): Unit = {
@@ -591,22 +593,23 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
       }
       else movementVector.y = 0
 
-      if (isMoving && !wasMoving) if (!isRunningAnimationActive) {
-
-        isRunningAnimationActive = true
-        walkAnimationTimer.resetStart()
-      }
-
-      if (!isMoving && wasMoving) runningStoppedTimer.resetStart()
-
-      if (!isMoving && isRunningAnimationActive && runningStoppedTimer.time > 0.25f) {
-        isRunningAnimationActive = false
-        runningStoppedTimer.stop()
-        walkAnimationTimer.stop()
-      }
-
-      wasMoving = isMoving
     }
+
+    if (isMoving && !wasMoving) if (!isRunningAnimationActive) {
+
+      isRunningAnimationActive = true
+      walkAnimationTimer.resetStart()
+    }
+
+    if (!isMoving && wasMoving) runningStoppedTimer.resetStart()
+
+    if (!isMoving && isRunningAnimationActive && runningStoppedTimer.time > 0.25f) {
+      isRunningAnimationActive = false
+      runningStoppedTimer.stop()
+      walkAnimationTimer.stop()
+    }
+
+    wasMoving = isMoving
 
     if (knockback) {
       val tiledMap = GameSystem.currentArea.get.tiledMap

@@ -24,6 +24,7 @@ class NonPlayerCharacter(id: String, trader: Boolean, spriteSheet: SpriteSheet, 
 
   override protected val onGettingHitSound: Sound = Assets.painSound
 
+  override val isNPC = true
 
   loadSprites(spriteSheet, Map(Left -> 2, Right -> 3, Up -> 4, Down -> 1), 1)
 

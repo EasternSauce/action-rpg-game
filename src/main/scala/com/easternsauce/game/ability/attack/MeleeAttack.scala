@@ -20,7 +20,7 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
   protected var scale = 1.0f
   protected var attackRange: Float = _
 
-  protected var knockbackPower = 0f
+  protected var knockbackPower = 2000f
 
   implicit def rectConversion(s: com.badlogic.gdx.math.Rectangle): CustomRectangle = new CustomRectangle(s.x, s.y, s.width, s.height)
 

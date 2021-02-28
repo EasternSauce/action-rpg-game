@@ -1,7 +1,7 @@
 creature protagonist
 area area1
-pos 1836.0071 1409.0189
-health 100.0
+pos 895.1279 870.2922
+health 91.60022
 equipment_item 0 crossbow 67 0
 equipment_item 1 leatherHelmet 0 8
 equipment_item 2 steelArmor 0 18
