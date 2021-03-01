@@ -27,13 +27,13 @@ class Item(val itemType: ItemType, var lootPileBackref: LootPile = null, var dam
 
   def getItemInformation(trader: Boolean): String =
     if (trader)
-      (if (this.damage != null) "Damage: " + damage.intValue + "\n" else "") +
-        (if (this.armor != null) "Armor: " + armor.intValue + "\n" else "") +
+      (if (this.damage != null && this.damage != 0f) "Damage: " + damage.intValue + "\n" else "") +
+        (if (this.armor != null && this.armor != 0f) "Armor: " + armor.intValue + "\n" else "") +
         this.description +
         "\n" + "Worth " + this.itemType.worth.toInt + " Gold" + "\n"
     else
-      (if (this.damage != null) "Damage: " + damage.intValue + "\n" else "") +
-        (if (this.armor != null) "Armor: " + armor.intValue + "\n" else "") +
+      (if (this.damage != null && this.damage != 0f) "Damage: " + damage.intValue + "\n" else "") +
+        (if (this.armor != null && this.armor != 0f) "Armor: " + armor.intValue + "\n" else "") +
         this.description +
         "\n" + "Worth " + (this.itemType.worth * 0.3).toInt + " Gold" + "\n"
 }

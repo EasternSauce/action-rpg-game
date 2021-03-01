@@ -1,8 +1,7 @@
 package com.easternsauce.game.area
 
-import java.util
-import java.util.List
-
+import com.badlogic.gdx.audio.Music
+import com.badlogic.gdx.backends.lwjgl.audio.Wav
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.easternsauce.game.assets.Assets
@@ -10,6 +9,7 @@ import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.item.loot.{LootPile, Treasure}
 import com.easternsauce.game.projectile.Arrow
 import com.easternsauce.game.spawn._
+import space.earlygrey.shapedrawer.ShapeDrawer
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
@@ -22,9 +22,6 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
 
   private var enemyRespawnAreaList: mutable.ListBuffer[EnemyRespawnArea] = ListBuffer()
   private var mobSpawnPointList: mutable.ListBuffer[MobSpawnPoint] = ListBuffer()
-
-
-  private var abandonedPlains = null //music
 
   var respawnList: mutable.ListBuffer[PlayerRespawnPoint] = ListBuffer()
 
@@ -45,7 +42,6 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
       val posY = spawnLocation.posY
       if (spawnLocation.spawnType == "respawnArea") enemyRespawnAreaList += new EnemyRespawnArea(posX, posY, 3, this, spawnLocation.creatureType)
       else if (spawnLocation.spawnType == "spawnPoint") {
-        println("loaded " + spawnLocation.creatureType)
         val mobSpawnPoint = new MobSpawnPoint(posX, posY, this, spawnLocation.creatureType)
         mobSpawnPointList += mobSpawnPoint
         if (spawnLocation.hasBlockade) addBlockade(mobSpawnPoint, spawnLocation.blockadePosX, spawnLocation.blockadePosY)
@@ -53,8 +49,12 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
     }
   }
 
-  def render(): Unit = {
-    // TODO
+  def render(shapeDrawer: ShapeDrawer): Unit = {
+    for (blockade <- blockadeList) {
+      blockade.render()
+    }
+
+    respawnList.foreach(respawnPoint => respawnPoint.render(shapeDrawer))
   }
 
   def updateSpawns(): Unit = {
@@ -80,12 +80,8 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
     // TODO
   }
 
-  def renderSpawns(): Unit = {
-    // TODO
-  }
-
   def addRespawnPoint(respawnPoint: PlayerRespawnPoint): Unit = {
-    // TODO
+    respawnList += respawnPoint
   }
 
   def onLeave(): Unit = {
@@ -93,7 +89,20 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
   }
 
   def onEntry(): Unit = {
-    // TODO
+
+    //TODO: add music manager or smth
+    Assets.abandonedPlainsMusic.stop()
+
+    if (id == "area1") {
+      Assets.abandonedPlainsMusic.setVolume(0.1f)
+      Assets.abandonedPlainsMusic.play()
+    }
+
+    creaturesManager.onAreaChange()
+
+    reset()
+
+    creaturesManager.initializeCreatures()
   }
 
   def moveInCreature(creature: Creature, x: Float, y: Float): Unit = {
@@ -151,6 +160,5 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
   def creatures: mutable.Map[String, Creature] = {
     creaturesManager.creatures
   }
-
 
 }

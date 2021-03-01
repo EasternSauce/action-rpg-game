@@ -10,13 +10,13 @@ import com.easternsauce.game.creature.util.WalkDirection
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up}
 import com.easternsauce.game.item.Item
 import com.easternsauce.game.item.util.ItemType
-import com.easternsauce.game.utils.Timer
+import com.easternsauce.game.utils.SimpleTimer
 import system.GameSystem
 
 import scala.collection.mutable.ListBuffer
 
 class NonPlayerCharacter(id: String, trader: Boolean, spriteSheet: SpriteSheet, val dialogueStartId: String) extends Creature(id) {
-  private var actionTimer: Timer = Timer(isStarted = true)
+  private var actionTimer: SimpleTimer = SimpleTimer(isStarted = true)
 
   private var traderInventory: ListBuffer[Item] = ListBuffer()
 

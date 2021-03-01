@@ -5,7 +5,7 @@ import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up}
 import com.easternsauce.game.shapes.CustomRectangle
 import com.easternsauce.game.spawn.MobSpawnPoint
-import com.easternsauce.game.utils.Timer
+import com.easternsauce.game.utils.SimpleTimer
 
 class Skeleton(override val id: String, override val mobSpawnPoint: MobSpawnPoint, val weaponType: String) extends Mob(id, mobSpawnPoint) {
   override val rect = new CustomRectangle(0,4500,64,64)
@@ -17,7 +17,7 @@ class Skeleton(override val id: String, override val mobSpawnPoint: MobSpawnPoin
   loadSprites(Assets.skeletonSpriteSheet, Map(Left -> 2, Right -> 4, Up -> 1, Down -> 3), 0)
 
 
-  actionTimer = Timer(true)
+  actionTimer = SimpleTimer(true)
 
   dropTable.put("ringmailGreaves", 0.1f)
   dropTable.put("leatherArmor", 0.05f)

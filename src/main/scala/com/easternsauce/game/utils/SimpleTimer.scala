@@ -5,10 +5,10 @@ import com.badlogic.gdx.Gdx
 import scala.collection.mutable.ListBuffer
 
 
-class Timer(var isStarted: Boolean = false){
+class SimpleTimer(var isStarted: Boolean = false){
   var time: Float = 0
 
-  Timer.timerList += this
+  SimpleTimer.timerList += this
 
   private def update(delta: Float): Unit = {
     if (isStarted) time = time + delta
@@ -26,11 +26,11 @@ class Timer(var isStarted: Boolean = false){
 }
 
 
-object Timer {
-  def apply(): Timer = new Timer()
-  def apply(isStarted: Boolean): Timer = new Timer(isStarted)
+object SimpleTimer {
+  def apply(): SimpleTimer = new SimpleTimer()
+  def apply(isStarted: Boolean): SimpleTimer = new SimpleTimer(isStarted)
 
-  private val timerList: ListBuffer[Timer] = ListBuffer()
+  private val timerList: ListBuffer[SimpleTimer] = ListBuffer()
 
   def updateTimers(): Unit = timerList.foreach(_.update(Gdx.graphics.getDeltaTime))
 }

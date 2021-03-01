@@ -5,12 +5,12 @@ import com.easternsauce.game.ability.util.AbilityState
 import com.easternsauce.game.ability.util.AbilityState.{AbilityState, Inactive}
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.shapes.{CustomPolygon, CustomRectangle}
-import com.easternsauce.game.utils.Timer
+import com.easternsauce.game.utils.SimpleTimer
 
 abstract class Ability(protected val abilityCreature: Creature) {
 
-  protected var activeTimer: Timer = Timer()
-  protected var channelTimer: Timer = Timer()
+  protected var activeTimer: SimpleTimer = SimpleTimer()
+  protected var channelTimer: SimpleTimer = SimpleTimer()
 
   protected var cooldownTime = 0f
   protected var activeTime = 0f

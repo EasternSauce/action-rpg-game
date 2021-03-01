@@ -16,7 +16,7 @@ import com.easternsauce.game.effect.Effect
 import com.easternsauce.game.item.Item
 import com.easternsauce.game.shapes.{CustomRectangle, CustomVector2}
 import com.easternsauce.game.spawn.Blockade
-import com.easternsauce.game.utils.{IntPair, Timer}
+import com.easternsauce.game.utils.{IntPair, SimpleTimer}
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
@@ -27,7 +27,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
 
   protected var healthRegen = 0.3f
-  protected var staminaRegen = 10f
+  protected var staminaRegen = 15f
 
   protected var staminaOveruseTime = 1.3f
 
@@ -113,14 +113,14 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   protected var wasMoving = false
   protected var totalDirections = 0
   protected var movementIncrement: Float = 0
-  protected var runningStoppedTimer: Timer = Timer()
+  protected var runningStoppedTimer: SimpleTimer = SimpleTimer()
 
   var movementVector: CustomVector2 = CustomVector2(0f, 0f)
 
-  val baseSpeed: Float = 400.0f
+  val baseSpeed: Float = 250.0f
 
   protected val walkAnimationFrameDuration = 0.1f
-  protected val walkAnimationTimer: Timer = Timer()
+  protected val walkAnimationTimer: SimpleTimer = SimpleTimer()
   protected var neutralPositionIndex: Int = _
   protected var isRunningAnimationActive = false
 
@@ -136,13 +136,13 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   var abilityList: mutable.ListBuffer[Ability] = _
   var attackList: mutable.ListBuffer[Attack] = _
 
-  protected var healthRegenTimer: Timer = Timer(true)
-  protected var staminaRegenTimer: Timer = Timer(true)
-  protected var poisonTickTimer: Timer = Timer()
-  protected var staminaOveruseTimer: Timer = Timer()
-  protected var healingTimer: Timer = Timer()
-  protected var healingTickTimer: Timer = Timer()
-  protected var knockbackTimer: Timer = Timer()
+  protected var healthRegenTimer: SimpleTimer = SimpleTimer(true)
+  protected var staminaRegenTimer: SimpleTimer = SimpleTimer(true)
+  protected var poisonTickTimer: SimpleTimer = SimpleTimer()
+  protected var staminaOveruseTimer: SimpleTimer = SimpleTimer()
+  protected var healingTimer: SimpleTimer = SimpleTimer()
+  protected var healingTickTimer: SimpleTimer = SimpleTimer()
+  protected var knockbackTimer: SimpleTimer = SimpleTimer()
 
   def alive: Boolean = healthPoints > 0f
   def atFullLife: Boolean = healthPoints >= maxHealthPoints
@@ -200,7 +200,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     }
 
     if (staminaDrain >= 0.3f) {
-      takeStaminaDamage(8f)
+      takeStaminaDamage(11f)
 
       staminaDrain = 0.0f
     }
@@ -557,7 +557,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
     if (isAttacking) adjustedSpeed = adjustedSpeed / 3
     else if (sprinting && staminaPoints > 0) {
-      adjustedSpeed = adjustedSpeed * 1.65f
+      adjustedSpeed = adjustedSpeed * 2.5f
       staminaDrain += Gdx.graphics.getDeltaTime
     }
 

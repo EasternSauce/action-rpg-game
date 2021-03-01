@@ -4,27 +4,43 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys._
 import com.badlogic.gdx.audio.Sound
 import com.easternsauce.game.ability.DashAbility
+import com.easternsauce.game.area.Area
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.npc.NonPlayerCharacter
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up}
 import com.easternsauce.game.shapes.{CustomRectangle, CustomVector2}
+import com.easternsauce.game.spawn.PlayerRespawnPoint
+import com.easternsauce.game.utils.SimpleTimer
 import system.GameSystem
 
 class PlayerCharacter(id: String) extends Creature(id) {
+
 
   override val rect = new CustomRectangle(0,5000,64,64)
   override val hitboxBounds = new CustomRectangle(18, 0, 28, 64)
   override val isPlayer = true
 
-  var dashAbility: DashAbility = _
-
-
   override protected val onGettingHitSound: Sound = Assets.painSound
+
+  private var respawnTimer: SimpleTimer = SimpleTimer()
+
+  var dashAbility: DashAbility = _
+  var respawning: Boolean = false
+
+  var currentRespawnPoint: PlayerRespawnPoint = _
 
   def inMenus: Boolean = GameSystem.inventoryWindow.inventoryOpen || GameSystem.dialogueWindow.activated
 
   loadSprites(Assets.male1SpriteSheet, Map(Left -> 2, Right -> 3, Up -> 4, Down -> 1), 1)
+
+  override def onInit(): Unit = {
+    super.onInit()
+
+    currentRespawnPoint = area.respawnList.head
+    respawning = false
+
+  }
 
   override def controlMovement(): Unit = {
 
@@ -99,13 +115,35 @@ class PlayerCharacter(id: String) extends Creature(id) {
 
       for (playerRespawnPoint <- area.respawnList) {
         if (rect.intersects(playerRespawnPoint.rect)) {
-          // TODO
-//          currentRespawnPoint = playerRespawnPoint
-//          currentRespawnPoint.onRespawnSet()
-//          if (getHealthPoints < getMaxHealthPoints / 2) setHealthPoints(getMaxHealthPoints / 2)
-//          gameSystem.getCurrentArea.softReset()
+          currentRespawnPoint = playerRespawnPoint
+          currentRespawnPoint.onRespawnSet()
+          if (healthPoints < maxHealthPoints / 2) healthPoints = maxHealthPoints / 2
+
+          assert(GameSystem.currentArea.nonEmpty)
+          GameSystem.currentArea.get.softReset()
         }
       }
     }
   }
+
+  override def update(): Unit = {
+    super.update()
+
+    if (respawning && respawnTimer.time > 3f) {
+      respawning = false
+      pendingArea = currentRespawnPoint.area
+      pendingX = currentRespawnPoint.rect.x
+      pendingY = currentRespawnPoint.rect.y
+      healthPoints = maxHealthPoints
+      staminaPoints = maxStaminaPoints
+      isAttacking = false
+      staminaOveruse = false
+      effectMap("staminaRegenStopped").stop()
+      GameSystem.currentArea = Option(currentRespawnPoint.area)
+      GameSystem.resetArea()
+      GameSystem.stopBossBattleMusic()
+    }
+  }
+
+  def respawnArea: Area = currentRespawnPoint.area
 }

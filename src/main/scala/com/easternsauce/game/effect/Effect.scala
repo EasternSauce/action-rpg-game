@@ -1,11 +1,11 @@
 package com.easternsauce.game.effect
 
 import com.easternsauce.game.creature.Creature
-import com.easternsauce.game.utils.Timer
+import com.easternsauce.game.utils.SimpleTimer
 
 class Effect {
 
-  protected var effectTimer: Timer = Timer()
+  protected var effectTimer: SimpleTimer = SimpleTimer()
 
   protected var effectEndTime = 0f
 

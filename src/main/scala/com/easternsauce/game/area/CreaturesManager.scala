@@ -85,11 +85,8 @@ class CreaturesManager(private val area: Area) {
     renderPriorityQueue.addAll(creatures.values)
   }
 
-  def getCreatureById(id: String): Creature = {
-    creatures.get(id) match {
-      case Some(creature) => creature
-      case _ => throw new RuntimeException("creature doesn't exist: " + id)
-    }
+  def getCreatureById(id: String): Option[Creature] = {
+    creatures.get(id)
   }
 
   def saveToFile(writer: PrintWriter): Unit = {
@@ -122,6 +119,16 @@ class CreaturesManager(private val area: Area) {
     }
 
     area.updateSpawns()
+  }
+
+  def initializeCreatures(): Unit = {
+    for (creature <- creatures.values) {
+      creature.onInit()
+    }
+  }
+
+  def clearRespawnableCreatures(): Unit = {
+    creatures.values.filter(creature => creature.isPlayer || creature.isNPC)
   }
 }
 

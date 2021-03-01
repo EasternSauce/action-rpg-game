@@ -5,7 +5,7 @@ import com.easternsauce.game.creature.util.WalkDirection.WalkDirection
 import com.easternsauce.game.creature.util.{AttackType, Unarmed, WalkDirection}
 import com.easternsauce.game.shapes.CustomVector2
 import com.easternsauce.game.spawn.MobSpawnPoint
-import com.easternsauce.game.utils.Timer
+import com.easternsauce.game.utils.SimpleTimer
 import system.GameSystem
 
 abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) extends Creature(id) {
@@ -18,17 +18,17 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
 
   override val isMob = true
 
-  protected var attackOrHoldTimer: Timer = Timer(true)
+  protected var attackOrHoldTimer: SimpleTimer = SimpleTimer(true)
   protected var attackOrHoldTime = 0.5f
   protected var hold = false
 
-  protected var circlingDirectionTimer: Timer = Timer(true)
+  protected var circlingDirectionTimer: SimpleTimer = SimpleTimer(true)
   protected var circlingDirectionTime = 0.5f
   protected var circling = false
   protected var circlingDir = 0
-  protected var findNewDestinationTimer: Timer = Timer(true)
+  protected var findNewDestinationTimer: SimpleTimer = SimpleTimer(true)
 
-  protected var actionTimer: Timer = Timer(true)
+  protected var actionTimer: SimpleTimer = SimpleTimer(true)
 
   protected var stayInPlace = false
 

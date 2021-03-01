@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion
 import com.badlogic.gdx.utils
 import com.easternsauce.game.assets.SpriteSheet
-import com.easternsauce.game.utils.Timer
+import com.easternsauce.game.utils.SimpleTimer
 import system.GameSystem
 
 
@@ -14,7 +14,7 @@ class Animation(spriteSheet: SpriteSheet, frameDuration: Float, spriteWidth: Flo
   import com.badlogic.gdx.graphics.g2d.{Animation => GdxAnimation}
 
   protected var animation: GdxAnimation[Sprite] = _
-  protected val animationTimer: Timer = Timer(true)
+  protected val animationTimer: SimpleTimer = SimpleTimer(true)
   protected var sprites: Array[Sprite] = _
 
   loadAnimation()

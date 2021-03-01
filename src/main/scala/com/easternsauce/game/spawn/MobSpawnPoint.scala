@@ -20,7 +20,6 @@ class MobSpawnPoint(val posX: Int, val posY: Int, val area: Area, val creatureTy
     if (isToBeRespawned) {
       if (spawnedCreature != null) spawnedCreature.kill()
       if (creatureType == "skeletonSword") {
-        println("spawning skeleton")
         spawnedCreature = new Skeleton("skellie" + Math.abs(GameSystem.random.nextInt), this, "woodenSword")
         area.moveInCreature(spawnedCreature, posX, posY)
       }

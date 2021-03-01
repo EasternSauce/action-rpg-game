@@ -1,7 +1,7 @@
 package com.easternsauce.game.assets
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.audio.Sound
+import com.badlogic.gdx.audio.{Music, Sound}
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.maps.tiled.{TiledMap, TmxMapLoader}
@@ -50,6 +50,9 @@ object Assets {
 
   var arrowTexture: Texture = _
 
+  var abandonedPlainsMusic: Music = _
+  var fireDemonMusic: Music = _
+
   def createAssets(): Unit = {
     male1SpriteSheet = new SpriteSheet("assets/packed/male1_pack.atlas")
     skeletonSpriteSheet = new SpriteSheet("assets/packed/skeleton_pack.atlas")
@@ -92,6 +95,10 @@ object Assets {
     swooshSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/swoosh.wav"))
 
     arrowTexture = new Texture(Gdx.files.internal("assets/projectiles/arrow.png"))
+
+    abandonedPlainsMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/music/abandoned_plains.wav"))
+    fireDemonMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/music/fire_demon.wav"))
+
   }
 
   def getItemIcon(x: Int, y: Int): Sprite = {

@@ -13,6 +13,7 @@ import com.easternsauce.game.animation.Animation
 import com.easternsauce.game.area.{Area, AreaGate}
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
+import com.easternsauce.game.creature.mob.boss.Boss
 import com.easternsauce.game.creature.mob.{Ghost, Goblin, Skeleton, Wolf}
 import com.easternsauce.game.creature.npc.NonPlayerCharacter
 import com.easternsauce.game.creature.player.PlayerCharacter
@@ -25,7 +26,7 @@ import com.easternsauce.game.item.util.ItemType
 import com.easternsauce.game.projectile.Arrow
 import com.easternsauce.game.shapes.{CustomPolygon, CustomRectangle, CustomVector2}
 import com.easternsauce.game.spawn.{PlayerRespawnPoint, SpawnLocationsContainer}
-import com.easternsauce.game.utils.Timer
+import com.easternsauce.game.utils.SimpleTimer
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameState.{GameState, MainMenu}
 
@@ -36,8 +37,9 @@ import scala.util.Random
 
 object GameSystem {
 
+
   var currentArea: Option[Area] = None
-  var gameTimer: Timer = Timer(true)
+  var gameTimer: SimpleTimer = SimpleTimer(true)
 
   var camera: OrthographicCamera = _
 
@@ -93,6 +95,8 @@ object GameSystem {
 
   var worldBatch: SpriteBatch = _
   var hudBatch: SpriteBatch = _
+
+  var markRespawnAreaForReset: Boolean = false
 
   def getTiledMapRealWidth(tiledMap: TiledMap): Int = {
     val layer = tiledMap.getLayers.get(0).asInstanceOf[TiledMapTileLayer]
@@ -165,54 +169,50 @@ object GameSystem {
     worldShapeDrawer = new ShapeDrawer(worldBatch, worldRegion)
 
     init()
+
   }
 
   def init(): Unit = {
-    GameSystem.playerCharacter = new PlayerCharacter("protagonist")
-//    val skele: Skeleton = new Skeleton("skellie123") // TODO: load from file
-//    val wolf: Wolf = new Wolf("wolf352") // TODO: load from file
-//    val ghost: Ghost = new Ghost("ghost32532") // TODO: load from file
-//    val goblin: Goblin = new Goblin("3255323523") // TODO: load from file
-    val npc: NonPlayerCharacter = new NonPlayerCharacter("asfasffassaf", true, Assets.male1SpriteSheet, "a1") // TODO: load from file
 
     val area1SpawnPoints: SpawnLocationsContainer = new SpawnLocationsContainer("assets/areas/area1/spawns.txt")
     val area2SpawnPoints: SpawnLocationsContainer = new SpawnLocationsContainer("assets/areas/area2/spawns.txt")
 
-
     areas += ("area1" -> new Area("area1", Assets.grassyMap, 4.0f, area1SpawnPoints))
-    areas += ("area2" -> new Area("area2", null, 1.0f, area2SpawnPoints)) // TODO: load assets
+    areas += ("area2" -> new Area("area2", Assets.grassyMap, 1.0f, area2SpawnPoints))
 
-    areas.get("area1") match {
-      case Some(area) =>
-        area.addRespawnPoint(new PlayerRespawnPoint(400, 500, area))
-        area.addRespawnPoint(new PlayerRespawnPoint(3650, 4909, area))
-        area.addNewCreature(playerCharacter, 1000f, 1000f)
-//        area.addNewCreature(skele, 600f, 600f) // TODO: load from file
-//        area.addNewCreature(wolf, 1200f, 1000f)
-//        area.addNewCreature(ghost, 1700, 1700)
-//        area.addNewCreature(goblin, 1200f, 1000f)
-        area.addNewCreature(npc, 900, 900)
+    areas("area1").addRespawnPoint(new PlayerRespawnPoint(400, 500, areas("area1")))
+    areas("area1").addRespawnPoint(new PlayerRespawnPoint(3650, 4909, areas("area1")))
 
-        currentArea = Some(area) // TODO: load from file
-        area.creatures.values.foreach(
-          creature => {
-            creature.onInit()
-          }) // TODO: do it while loading saves
+    areas("area2").addRespawnPoint(new PlayerRespawnPoint(594, 133, areas("area2")))
+    areas("area2").addRespawnPoint(new PlayerRespawnPoint(1342, 2099, areas("area2")))
 
-      case None => throw new RuntimeException("area doesn't exist")
-    }
+    GameSystem.playerCharacter = new PlayerCharacter("protagonist")
+    areas("area1").addNewCreature(playerCharacter, 1000f, 1000f)
 
-    areas.get("area2") match {
-      case Some(area) =>
-        area.addRespawnPoint(new PlayerRespawnPoint(594, 133, area))
-        area.addRespawnPoint(new PlayerRespawnPoint(1342, 2099, area))
-      case None => throw new RuntimeException("area doesn't exist")
-    }
+    lootSystem.placeTreasure(areas("area1"), 1920, 8, ItemType.getItemType("leatherArmor"))
+    lootSystem.placeTreasure(areas("area1"), 3551, 3840, ItemType.getItemType("woodenSword"))
+    lootSystem.placeTreasure(areas("area1"), 3145, 2952, ItemType.getItemType("lifeRing"))
+    lootSystem.placeTreasure(areas("area1"), 1332, 2833, ItemType.getItemType("ironSword"))
+    lootSystem.placeTreasure(areas("area2"), 3100, 2654, ItemType.getItemType("crossbow"))
+    lootSystem.placeTreasure(areas("area2"), 168, 3024, ItemType.getItemType("trident"))
+    lootSystem.placeTreasure(areas("area1"), 600, 500, ItemType.getItemType("healingPowder"))
+
+    val nonPlayerCharacter = new NonPlayerCharacter("Johnny", true, Assets.male1SpriteSheet,"a1")
+    areas("area1").addNewCreature(nonPlayerCharacter, 1512f, 11f)
+    val nonPlayerCharacter2 = new NonPlayerCharacter("Rita", true, Assets.male1SpriteSheet, "a1")
+    areas("area2").addNewCreature(nonPlayerCharacter2, 183f, 95f)
 
     hud = new Hud()
 
     cameraFocussedCreature = Some(playerCharacter)
 
+    gateList = ListBuffer()
+
+    gateList += new AreaGate(areas("area1"), 20, 3960, areas("area2"), 3690, 262)
+
+    creaturesToMove = ListBuffer()
+
+    markRespawnAreaForReset = false
   }
 
   private def createTextureAndRegion(): (Texture, TextureRegion) = {
@@ -238,7 +238,7 @@ object GameSystem {
       mainMenu.update()
     }
     else if (state == GameState.Gameplay) {
-      Timer.updateTimers()
+      SimpleTimer.updateTimers()
 
       if (Gdx.input.isButtonPressed(Buttons.LEFT)) if (playerCharacter.currentAttack.canPerform) {
         playerCharacter.currentAttack.perform()
@@ -262,10 +262,25 @@ object GameSystem {
 
       area.update()
 
-      // TODO: creatures to move
+      creaturesToMove.clear()
 
       for (area <- areas.values) {
         area.creaturesManager.processAreaChanges(creaturesToMove)
+      }
+
+      for (creature <- creaturesToMove) {
+        if (creature.pendingArea != null) {
+          val oldArea = creature.area
+          val newArea = creature.pendingArea
+          if (oldArea != null) oldArea.removeCreature(creature.id)
+          newArea.moveInCreature(creature, creature.pendingX, creature.pendingY)
+          creature.area = newArea
+        }
+      }
+
+      if (markRespawnAreaForReset) {
+        markRespawnAreaForReset = false
+        playerCharacter.respawnArea.reset()
       }
 
       area.creaturesManager.updateRenderPriorityQueue()
@@ -293,10 +308,6 @@ object GameSystem {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT
       | (if (Gdx.graphics.getBufferFormat.coverageSampling) GL20.GL_COVERAGE_BUFFER_BIT_NV else 0))
 
-    val area: Area = currentArea match {
-      case Some(value) => value
-      case None => throw new RuntimeException("currentArea is not set")
-    }
 
     if (state == GameState.MainMenu) {
       hudBatch.begin()
@@ -306,18 +317,25 @@ object GameSystem {
       hudBatch.end()
     }
     else if (state == GameState.Gameplay) {
-      area.tiledMapRenderer.render()
+
+      val area: Area = currentArea match {
+        case Some(value) => value
+        case None => throw new RuntimeException("currentArea is not set")
+      }
+
+      area.tiledMapRenderer.render() // has to be outside world batch for some reason, otherwise camera issues
 
       worldBatch.begin()
+
+      area.render(worldShapeDrawer)
+
+      gateList.foreach(_.render(worldShapeDrawer))
 
       area.creaturesManager.renderCreatures(worldBatch, worldShapeDrawer)
 
       lootSystem.render(worldShapeDrawer)
 
-      gateList.foreach(_.render(worldShapeDrawer))
-
       area.arrowList.foreach((arrow: Arrow) => arrow.render(worldBatch))
-
 
       worldBatch.end()
 
@@ -331,12 +349,23 @@ object GameSystem {
 
       lootOptionWindow.render(hudBatch)
 
+      renderDeathScreen()
+
       hudBatch.end()
+
     }
 
   }
 
+  private def renderDeathScreen() = {
+    if (playerCharacter.respawning) {
+      GameSystem.font.setColor(Color.RED)
+      GameSystem.font.draw(hudBatch, "YOU DIED", Gdx.graphics.getWidth / 2f - 130, Gdx.graphics.getHeight * GameSystem.ScreenProportion / 2f - 50)
+    }
+  }
+
   def loadGame(): Unit = {
+
     var creature: Creature = null
 
     val fileContents = Source.fromFile("saves/savegame.sav")
@@ -346,9 +375,16 @@ object GameSystem {
         if(s(0).equals("creature")) {
           var foundCreature: Creature = null
 
+          var found = false
           areas.values.foreach (area => {
-            if (foundCreature == null) {
-              foundCreature = area.creaturesManager.getCreatureById(s(1))
+            if (!found) {
+              area.creaturesManager.getCreatureById(s(1)) match {
+                case Some(creature) => {
+                  foundCreature = creature
+                  found = true
+                }
+                case _ =>
+              }
             }
           })
 
@@ -417,7 +453,9 @@ object GameSystem {
         val s = line.split(" ")
 
         if (s(0) == "respawnPoint") {
-          // TODO
+          val respawnPoint = areas(s(1)).respawnList(s(2).toInt)
+          playerCharacter.currentRespawnPoint = respawnPoint
+
         }
 
       }
@@ -482,6 +520,22 @@ object GameSystem {
     respawnWriter.close()
 
 
+  }
+
+
+  def resetArea(): Unit = {
+    markRespawnAreaForReset = true
+  }
+
+  def stopBossBattleMusic(): Unit = {
+    assert(currentArea.nonEmpty)
+
+    for ((_, creature) <- currentArea.get.creatures) {
+      if (creature.isBoss) {
+        val boss = creature.asInstanceOf[Boss]
+        boss.bossMusic.stop()
+      }
+    }
   }
 
 
