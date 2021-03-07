@@ -6,8 +6,12 @@ import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
 class AreaGate(val areaFrom: Area, val fromPosX: Int, val fromPosY: Int, val areaTo: Area, val toPosX: Int, val toPosY: Int) {
-  val fromRect = new CustomRectangle(fromPosX, fromPosY, 50, 50)
-  val toRect = new CustomRectangle(toPosX, toPosY, 50, 50)
+
+  private val width = 50
+  private val height = 50
+
+  val fromRect = new CustomRectangle(fromPosX, fromPosY, width, height)
+  val toRect = new CustomRectangle(toPosX, toPosY, width, height)
 
   def render(shapeDrawer: ShapeDrawer): Unit = {
     val currentArea = GameSystem.currentArea.getOrElse {

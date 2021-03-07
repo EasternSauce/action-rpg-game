@@ -193,7 +193,6 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
     currentAttack.update()
 
-
     if (GameSystem.cameraFocussedCreature.nonEmpty
       && this == GameSystem.cameraFocussedCreature.get) {
       GameSystem.adjustCamera(rect)
@@ -372,12 +371,13 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   }
 
   def kill(): Unit = {
-    // TODO
+    healthPoints = 0f
   }
 
   def moveToArea(area: Area, posX: Float, posY: Float): Unit = {
-    // TODO
-
+    pendingArea = area
+    pendingX = posX
+    pendingY = posY
   }
 
   def takeStaminaDamage(staminaDamage: Float): Unit = {
@@ -630,19 +630,20 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   }
 
   def isMovementAllowedXAxis(newPosX: Float, newPosY: Float, tiledMap: TiledMap, blockadeList: ListBuffer[Blockade]): Boolean = {
-    !isCollidingX(tiledMap, blockadeList, newPosX, newPosY) && newPosX + hitboxBounds.x >= 0 && newPosX <
-      GameSystem.getTiledMapRealWidth(tiledMap) - (hitboxBounds.x + hitboxBounds.width)
+    val notCollidingWithTerrain = !isCollidingX(tiledMap, blockadeList, newPosX, newPosY) && newPosX + hitboxBounds.x >= 0
+    val notCollidingWithAreaBounds = newPosX < GameSystem.getTiledMapRealWidth(tiledMap) - (hitboxBounds.x + hitboxBounds.width)
+    notCollidingWithTerrain && notCollidingWithAreaBounds
   }
 
   def isMovementAllowedYAxis(newPosX: Float, newPosY: Float, tiledMap: TiledMap, blockadeList: ListBuffer[Blockade]): Boolean = {
-    !isCollidingY(tiledMap, blockadeList, newPosX, newPosY) && newPosY + hitboxBounds.y >= 0 && newPosY <
-      GameSystem.getTiledMapRealHeight(tiledMap) - (hitboxBounds.y + hitboxBounds.height)
+    val notCollidingWithTerrain = !isCollidingY(tiledMap, blockadeList, newPosX, newPosY) && newPosY + hitboxBounds.y >= 0
+    val notCollidingWithAreaBounds = newPosY < GameSystem.getTiledMapRealHeight(tiledMap) - (hitboxBounds.y + hitboxBounds.height)
+    notCollidingWithTerrain && notCollidingWithAreaBounds
   }
 
   def move(dx: Float, dy: Float): Unit = {
     rect.x = rect.x + dx
     rect.y = rect.y + dy
-
   }
 
   def controlMovement(): Unit = {
@@ -661,6 +662,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   }
 
   def drawRunningAnimation(batch: SpriteBatch): Unit = {
+
     if (isRunningAnimationActive) {
       val currentFrame: Sprite = new Sprite(walkAnimation(lastMovingDir).currentFrame())
 

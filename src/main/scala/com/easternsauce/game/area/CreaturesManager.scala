@@ -32,7 +32,7 @@ class CreaturesManager(private val area: Area) {
 
   def updateGatesLogic(areaGate: AreaGate): Unit = {
     for (creature <- creatures.values) {
-      if (creature.isInstanceOf[PlayerCharacter]) if (!creature.passedGateRecently) {
+      if (creature.isPlayer) if (!creature.passedGateRecently) {
         var gateRect: CustomRectangle = null
         var destinationArea: Area = null
         var oldArea: Area = null
@@ -49,7 +49,9 @@ class CreaturesManager(private val area: Area) {
           destinationArea = areaGate.areaFrom
           destinationRect = areaGate.fromRect
         }
+
         if (creature.rect.intersects(gateRect)) {
+          println("collided")
           creature.passedGateRecently = true
           creature.moveToArea(destinationArea, destinationRect.getX, destinationRect.getY)
           GameSystem.currentArea = Some(destinationArea)

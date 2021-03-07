@@ -19,4 +19,4 @@ spawnPoint skeletonSword 2477 3000
 spawnPoint goblin 3002 2654
 spawnPoint goblin 3150 2654
 spawnPoint goblin 3100 2654
-spawnPoint fireDemon 3196 4250 3199 3661
+//spawnPoint fireDemon 3196 4250 3199 3661 // TODO

@@ -67,19 +67,6 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
     }
   }
 
-
-  def saveTerrainLayoutToFile(fileName: String): Unit = {
-    // TODO
-  }
-
-  def setTile(x: Int, y: Int, id: String): Unit = {
-    // TODO
-  }
-
-  def loadLayoutTiles(): Unit = {
-    // TODO
-  }
-
   def addRespawnPoint(respawnPoint: PlayerRespawnPoint): Unit = {
     respawnList += respawnPoint
   }
@@ -114,7 +101,7 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
   }
 
   def removeCreature(id: String): Unit = {
-    // TODO
+    creatures.remove(id)
   }
 
   def addNewCreature(creature: Creature, x: Float, y: Float): Unit = {
@@ -129,11 +116,25 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
   }
 
   def reset(): Unit = {
-    // TODO
+    arrowList.clear()
+    lootPileList.clear()
+    creaturesManager.clearRespawnableCreatures()
+
+    for (mobSpawnPoint <- mobSpawnPointList) {
+      mobSpawnPoint.markForRespawn()
+    }
+
+    for (blockade <- blockadeList) {
+      blockade.active = false
+    }
+
+    creaturesManager.initializeCreatures()
   }
 
   def softReset(): Unit = {
-    // TODO
+    for (creature <- creaturesManager.creatures.values) {
+      if (creature.alive && !creature.isPlayer && !creature.isNPC) creature.reset()
+    }
   }
 
   def addBlockade(mobSpawnPoint: MobSpawnPoint, blockadePosX: Int, blockadePosY: Int): Unit = {

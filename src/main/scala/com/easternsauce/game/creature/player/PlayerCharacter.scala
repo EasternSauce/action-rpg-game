@@ -143,6 +143,9 @@ class PlayerCharacter(id: String) extends Creature(id) {
       GameSystem.resetArea()
       GameSystem.stopBossBattleMusic()
     }
+
+    if (passedGateRecently) onPassedGate(GameSystem.gateList)
+
   }
 
   def respawnArea: Area = currentRespawnPoint.area

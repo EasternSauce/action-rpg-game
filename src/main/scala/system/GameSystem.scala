@@ -178,7 +178,7 @@ object GameSystem {
     val area2SpawnPoints: SpawnLocationsContainer = new SpawnLocationsContainer("assets/areas/area2/spawns.txt")
 
     areas += ("area1" -> new Area("area1", Assets.grassyMap, 4.0f, area1SpawnPoints))
-    areas += ("area2" -> new Area("area2", Assets.grassyMap, 1.0f, area2SpawnPoints))
+    areas += ("area2" -> new Area("area2", Assets.grassyMap, 4.0f, area2SpawnPoints))
 
     areas("area1").addRespawnPoint(new PlayerRespawnPoint(400, 500, areas("area1")))
     areas("area1").addRespawnPoint(new PlayerRespawnPoint(3650, 4909, areas("area1")))
@@ -275,6 +275,7 @@ object GameSystem {
           if (oldArea != null) oldArea.removeCreature(creature.id)
           newArea.moveInCreature(creature, creature.pendingX, creature.pendingY)
           creature.area = newArea
+          creature.pendingArea = null
         }
       }
 
@@ -290,6 +291,8 @@ object GameSystem {
       dialogueWindow.update()
 
       lootSystem.update()
+
+      gateList.foreach((gate: AreaGate) => gate.update())
 
       hud.update()
 
