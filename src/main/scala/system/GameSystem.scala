@@ -98,6 +98,8 @@ object GameSystem {
 
   var markRespawnAreaForReset: Boolean = false
 
+  var loadingScreenVisible: Boolean = true
+
   def getTiledMapRealWidth(tiledMap: TiledMap): Int = {
     val layer = tiledMap.getLayers.get(0).asInstanceOf[TiledMapTileLayer]
     layer.getWidth * TiledMapCellSize
@@ -269,7 +271,7 @@ object GameSystem {
       }
 
       for (creature <- creaturesToMove) {
-        if (creature.pendingArea != null) {
+        if (creature.isPlayer && creature.pendingArea != null) {
           val oldArea = creature.area
           val newArea = creature.pendingArea
           if (oldArea != null) oldArea.removeCreature(creature.id)
@@ -352,7 +354,9 @@ object GameSystem {
 
       lootOptionWindow.render(hudBatch)
 
-      renderDeathScreen()
+      renderDeathScreen(hudBatch)
+
+      renderLoadingScreen(hudShapeDrawer)
 
       hudBatch.end()
 
@@ -360,10 +364,17 @@ object GameSystem {
 
   }
 
-  private def renderDeathScreen() = {
+  private def renderDeathScreen(hudBatch: SpriteBatch) = {
     if (playerCharacter.respawning) {
       GameSystem.font.setColor(Color.RED)
       GameSystem.font.draw(hudBatch, "YOU DIED", Gdx.graphics.getWidth / 2f - 130, Gdx.graphics.getHeight * GameSystem.ScreenProportion / 2f - 50)
+    }
+  }
+
+  def renderLoadingScreen(hudShapeDrawer: ShapeDrawer): Unit = {
+    if (loadingScreenVisible) {
+      hudShapeDrawer.setColor(Color.BLACK)
+      hudShapeDrawer.filledRectangle(0,0, Gdx.graphics.getWidth, Gdx.graphics.getHeight)
     }
   }
 

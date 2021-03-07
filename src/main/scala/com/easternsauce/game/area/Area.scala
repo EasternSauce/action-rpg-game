@@ -10,6 +10,7 @@ import com.easternsauce.game.item.loot.{LootPile, Treasure}
 import com.easternsauce.game.projectile.Arrow
 import com.easternsauce.game.spawn._
 import space.earlygrey.shapedrawer.ShapeDrawer
+import system.GameSystem
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
@@ -98,6 +99,8 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
 
     creature.rect.setX(x)
     creature.rect.setY(y)
+
+    GameSystem.loadingScreenVisible = false
   }
 
   def removeCreature(id: String): Unit = {

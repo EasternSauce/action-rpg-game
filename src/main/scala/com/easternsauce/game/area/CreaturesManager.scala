@@ -50,8 +50,8 @@ class CreaturesManager(private val area: Area) {
           destinationRect = areaGate.fromRect
         }
 
-        if (creature.rect.intersects(gateRect)) {
-          println("collided")
+        if (creature.rect.intersects(gateRect) && creature.isPlayer) {
+          GameSystem.loadingScreenVisible = true
           creature.passedGateRecently = true
           creature.moveToArea(destinationArea, destinationRect.getX, destinationRect.getY)
           GameSystem.currentArea = Some(destinationArea)
