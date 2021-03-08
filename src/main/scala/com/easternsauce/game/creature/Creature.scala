@@ -346,8 +346,18 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   }
 
   def abilityActive: Boolean = {
-    // TODO
-    false
+    var abilityActive = false
+
+    for (ability <- abilityList) {
+      if (!abilityActive && ability.active) {
+        abilityActive = true
+
+      }
+    }
+
+    if (currentAttack.active) return true
+
+    abilityActive
   }
 
   def heal(healValue: Float): Unit = {
@@ -359,12 +369,16 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   }
 
   def becomePoisoned(): Unit = {
-    // TODO
+    poisonTickTimer.resetStart()
+    getEffect("poisoned").applyEffect(poisonTime)
   }
 
   def totalArmor: Float = {
-    // TODO
-    0f
+    var totalArmor = 0.0f
+    for ((_, value) <- equipmentItems) {
+      if (value != null && value.itemType.maxArmor != null.asInstanceOf[Float]) totalArmor += value.itemType.maxArmor
+    }
+    totalArmor
   }
 
   def onDeath(): Unit = {
@@ -407,7 +421,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   }
 
   def onAttack(): Unit = {
-    // TODO
+    if (equipmentItems.contains(4) && equipmentItems(4) != null && equipmentItems(4).itemType.id == "thiefRing") heal(7f)
   }
 
   def isNoAbilityActive: Boolean = {

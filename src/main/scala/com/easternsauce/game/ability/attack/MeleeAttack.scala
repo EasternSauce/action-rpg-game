@@ -127,6 +127,7 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
       image.setRotation(theta)
       image.setPosition(attackRectX, attackRectY)
       image.translate(0, -height / 2  * scale)
+      image.setScale(scale)
 
       // ----> useful testing rect <----
 //      val testX = attackRectX
@@ -157,6 +158,7 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
       poly.setRotation(theta)
       poly.setPosition(attackRectX, attackRectY)
       poly.translate(0, -height / 2  * scale)
+      poly.setScale(scale, scale)
 
       meleeAttackHitbox = poly
 
@@ -164,6 +166,7 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
       image.setRotation(theta)
       image.setPosition(attackRectX, attackRectY)
       image.translate(0, -height / 2  * scale)
+      image.setScale(scale)
 
       image.draw(batch)
     }

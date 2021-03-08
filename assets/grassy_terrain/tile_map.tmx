@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="2" nextobjectid="1">
+<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-up" width="100" height="100" tilewidth="16" tileheight="16" infinite="0" nextlayerid="2" nextobjectid="1">
  <tileset firstgid="1" source="grassy_static.tsx"/>
  <tileset firstgid="144" source="grassy_anim.tsx"/>
  <layer id="1" name="Warstwa Kafelków 1" width="100" height="100">

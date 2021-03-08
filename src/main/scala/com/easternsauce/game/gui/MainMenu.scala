@@ -2,8 +2,6 @@ package com.easternsauce.game.gui
 
 import java.io.{BufferedWriter, IOException}
 import java.nio.file.{Files, Paths}
-import java.util
-import java.util.LinkedList
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch

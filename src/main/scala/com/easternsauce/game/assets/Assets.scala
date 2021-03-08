@@ -8,6 +8,7 @@ import com.badlogic.gdx.maps.tiled.{TiledMap, TmxMapLoader}
 
 object Assets {
   var grassyMap: TiledMap = _
+  var jungleMap: TiledMap = _
   var male1SpriteSheet: SpriteSheet = _
   var skeletonSpriteSheet: SpriteSheet = _
   var wolfSpriteSheet: SpriteSheet = _
@@ -15,7 +16,8 @@ object Assets {
   var ghostSpriteSheet: SpriteSheet = _
   var slashSpriteSheet: SpriteSheet = _
   var slashWindupSpriteSheet: SpriteSheet = _
-
+  var tridentThrustSpriteSheet: SpriteSheet = _
+  var tridentThrustWindupSpriteSheet: SpriteSheet = _
   var explosionSpriteSheet: SpriteSheet = _
   var explosionWindupSpriteSheet: SpriteSheet = _
 
@@ -65,11 +67,14 @@ object Assets {
     slashSpriteSheet = new SpriteSheet("assets/packed/slash_pack.atlas")
     slashWindupSpriteSheet = new SpriteSheet("assets/packed/slash_windup_pack.atlas")
 
+    tridentThrustSpriteSheet = new SpriteSheet("assets/packed/trident_thrust.atlas")
+    tridentThrustWindupSpriteSheet = new SpriteSheet("assets/packed/trident_thrust_windup.atlas")
+
     explosionSpriteSheet = new SpriteSheet("assets/packed/explosion_pack.atlas")
     explosionWindupSpriteSheet = new SpriteSheet("assets/packed/explosion_windup_pack.atlas")
 
-
     grassyMap = new TmxMapLoader().load("assets/grassy_terrain/tile_map.tmx")
+    jungleMap = new TmxMapLoader().load("assets/jungle_terrain/tile_map.tmx")
 
     attackSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/swoosh.wav"))
     painSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/pain.wav"))

@@ -17,7 +17,7 @@ import scala.collection.mutable.ListBuffer
 
 class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocationsContainer: SpawnLocationsContainer) {
 
-  val tiledMapRenderer = new OrthogonalTiledMapRenderer(Assets.grassyMap, scale)
+  val tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, scale)
 
   var creaturesManager: CreaturesManager = CreaturesManager(this)
 
@@ -73,7 +73,13 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
   }
 
   def onLeave(): Unit = {
-    // TODO
+    arrowList.clear()
+    lootPileList.clear()
+
+    for (mobSpawnPoint <- mobSpawnPointList) {
+      mobSpawnPoint.markForRespawn()
+    }
+
   }
 
   def onEntry(): Unit = {

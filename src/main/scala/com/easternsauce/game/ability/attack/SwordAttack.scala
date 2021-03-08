@@ -40,7 +40,7 @@ class SwordAttack(override protected val abilityCreature: Creature) extends Mele
 
     width = 40f
     height = 40f
-    scale = 1f
+    scale = 2f
     attackRange = 30f
     knockbackPower = 450f
 

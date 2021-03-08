@@ -180,7 +180,7 @@ object GameSystem {
     val area2SpawnPoints: SpawnLocationsContainer = new SpawnLocationsContainer("assets/areas/area2/spawns.txt")
 
     areas += ("area1" -> new Area("area1", Assets.grassyMap, 4.0f, area1SpawnPoints))
-    areas += ("area2" -> new Area("area2", Assets.grassyMap, 4.0f, area2SpawnPoints))
+    areas += ("area2" -> new Area("area2", Assets.jungleMap, 4.0f, area2SpawnPoints))
 
     areas("area1").addRespawnPoint(new PlayerRespawnPoint(400, 500, areas("area1")))
     areas("area1").addRespawnPoint(new PlayerRespawnPoint(3650, 4909, areas("area1")))
@@ -393,10 +393,9 @@ object GameSystem {
           areas.values.foreach (area => {
             if (!found) {
               area.creaturesManager.getCreatureById(s(1)) match {
-                case Some(creature) => {
+                case Some(creature) =>
                   foundCreature = creature
                   found = true
-                }
                 case _ =>
               }
             }
@@ -412,6 +411,12 @@ object GameSystem {
 
           creature.rect.x = s(1).toFloat
           creature.rect.y = s(2).toFloat
+        }
+
+        if (s(0) == "area") if (creature != null) {
+          creature.area = areas(s(1))
+          areas(s(1)).moveInCreature(creature, 0f, 0f)
+          if (creature.isInstanceOf[PlayerCharacter]) currentArea= Some(areas(s(1)))
         }
 
         if(s(0).equals("health")) {
@@ -490,6 +495,7 @@ object GameSystem {
     }
     finally treasureFileContents.close()
 
+    println("player area: " + playerCharacter.area.id)
     if (currentArea.isEmpty) currentArea = areas.get("area1")
 
     currentArea match {
