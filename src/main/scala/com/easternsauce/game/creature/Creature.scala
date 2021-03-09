@@ -205,11 +205,11 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     }
   }
 
-  def render(batch: SpriteBatch): Unit = {
+  def render(shapeDrawer: ShapeDrawer, batch: SpriteBatch): Unit = {
     drawRunningAnimation(batch)
 
-    abilityList.foreach(ability => ability.render(batch))
-    currentAttack.render(batch)
+    abilityList.foreach(ability => ability.render(shapeDrawer, batch))
+    currentAttack.render(shapeDrawer, batch)
   }
 
   def renderHealthBar(shapeDrawer: ShapeDrawer): Unit = {
@@ -253,11 +253,11 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     }
   }
 
-  def renderAbilities(batch: SpriteBatch): Unit = {
+  def renderAbilities(shapeDrawer: ShapeDrawer, batch: SpriteBatch): Unit = {
     for (ability <- abilityList) {
-      ability.render(batch)
+      ability.render(shapeDrawer, batch)
     }
-    currentAttack.render(batch)
+    currentAttack.render(shapeDrawer, batch)
   }
 
   def defineStandardAbilities(): Unit = {

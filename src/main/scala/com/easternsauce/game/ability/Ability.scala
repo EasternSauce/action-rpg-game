@@ -6,6 +6,7 @@ import com.easternsauce.game.ability.util.AbilityState.{AbilityState, Inactive}
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.shapes.{CustomPolygon, CustomRectangle}
 import com.easternsauce.game.utils.SimpleTimer
+import space.earlygrey.shapedrawer.ShapeDrawer
 
 abstract class Ability(protected val abilityCreature: Creature) {
 
@@ -66,7 +67,7 @@ abstract class Ability(protected val abilityCreature: Creature) {
   protected def onUpdateChanneling(): Unit = {
   }
 
-  def render(batch: SpriteBatch): Unit = {
+  def render(shapeDrawer: ShapeDrawer, batch: SpriteBatch): Unit = {
 
   }
 

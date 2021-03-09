@@ -36,8 +36,6 @@ import scala.io.Source
 import scala.util.Random
 
 object GameSystem {
-
-
   var currentArea: Option[Area] = None
   var gameTimer: SimpleTimer = SimpleTimer(true)
 
@@ -99,6 +97,8 @@ object GameSystem {
   var markRespawnAreaForReset: Boolean = false
 
   var loadingScreenVisible: Boolean = true
+
+  var drawAttackHitboxes: Boolean = false
 
   def getTiledMapRealWidth(tiledMap: TiledMap): Int = {
     val layer = tiledMap.getLayers.get(0).asInstanceOf[TiledMapTileLayer]

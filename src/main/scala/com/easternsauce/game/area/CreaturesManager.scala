@@ -69,10 +69,10 @@ class CreaturesManager(private val area: Area) {
   def renderCreatures(batch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
     if (renderPriorityQueue != null) while (renderPriorityQueue.nonEmpty) {
       val creature = renderPriorityQueue.dequeue()
-      creature.render(batch)
+      creature.render(shapeDrawer, batch)
     }
     for (creature <- creatures.values) {
-      creature.renderAbilities(batch)
+      creature.renderAbilities(shapeDrawer, batch)
     }
 
     for (creature <- creatures.values) {

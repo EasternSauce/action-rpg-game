@@ -10,6 +10,7 @@ import com.easternsauce.game.animation.Animation
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.mob.Mob
+import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
 class ExplodeAbility(override protected val abilityCreature: Creature) extends Ability(abilityCreature) {
@@ -48,7 +49,7 @@ class ExplodeAbility(override protected val abilityCreature: Creature) extends A
     abilityCreature.getEffect("immobilized").applyEffect(channelTime + activeTime)
   }
 
-  override def render(spriteBatch: SpriteBatch): Unit = {
+  override def render(shapeDrawer: ShapeDrawer, spriteBatch: SpriteBatch): Unit = {
     if (state == AbilityState.Active) {
       val spriteWidth = 64
       val scale = explosionRange * 2 / spriteWidth

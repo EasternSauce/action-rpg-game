@@ -7,6 +7,7 @@ import com.easternsauce.game.animation.Animation
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.shapes.{CustomPolygon, CustomRectangle, CustomVector2}
+import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
 abstract class MeleeAttack(override protected val abilityCreature: Creature) extends Attack(abilityCreature) {
@@ -83,8 +84,8 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
 //    meleeAttackHitbox.translate(0, height / 2 * scale)
 //  }
 
-  override def render(batch: SpriteBatch): Unit = {
-    super.render(batch)
+  override def render(shapeDrawer: ShapeDrawer, batch: SpriteBatch): Unit = {
+    super.render(shapeDrawer, batch)
 
 //    val image = windupAnimation.getFrameByIndex(5)
 //    val attackVector = abilityCreature.facingVector
@@ -123,17 +124,11 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
       val attackRectX = attackShiftX + abilityCreature.rect.center.x
       val attackRectY = attackShiftY + abilityCreature.rect.center.y
 
-      image.setOrigin(0, height / 2 * scale)
+      image.setOrigin(0, height / 2)
       image.setRotation(theta)
       image.setPosition(attackRectX, attackRectY)
-      image.translate(0, -height / 2  * scale)
+      image.translate(0, -height / 2)
       image.setScale(scale)
-
-      // ----> useful testing rect <----
-//      val testX = attackRectX
-//      val testY = attackRectY
-//
-//      batch.drawRect(new CustomRectangle(testX - 3, testY - 3, 6, 6), Color.CYAN)
 
       image.draw(batch)
     }
@@ -154,18 +149,22 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
 
       val poly = new CustomPolygon(new CustomRectangle(0,0, width, height))
 
-      poly.setOrigin(0, height / 2 * scale)
+      poly.setOrigin(0, height / 2)
       poly.setRotation(theta)
       poly.setPosition(attackRectX, attackRectY)
-      poly.translate(0, -height / 2  * scale)
+      poly.translate(0, -height / 2)
       poly.setScale(scale, scale)
+
+      if (GameSystem.drawAttackHitboxes) {
+        shapeDrawer.filledPolygon(poly)
+      }
 
       meleeAttackHitbox = poly
 
-      image.setOrigin(0, height / 2 * scale)
+      image.setOrigin(0, height / 2)
       image.setRotation(theta)
       image.setPosition(attackRectX, attackRectY)
-      image.translate(0, -height / 2  * scale)
+      image.translate(0, -height / 2)
       image.setScale(scale)
 
       image.draw(batch)
