@@ -18,7 +18,7 @@ class MobSpawnPoint(val posX: Int, val posY: Int, val area: Area, val creatureTy
 
   def update(): Unit = {
     if (isToBeRespawned) {
-      if (spawnedCreature != null) spawnedCreature.kill()
+
       if (creatureType == "skeletonSword") {
         spawnedCreature = new Skeleton("skellie" + Math.abs(GameSystem.random.nextInt), this, "woodenSword")
         area.moveInCreature(spawnedCreature, posX, posY)
@@ -47,11 +47,13 @@ class MobSpawnPoint(val posX: Int, val posY: Int, val area: Area, val creatureTy
       spawnedCreature.startingPosY = posY
       spawnedCreature.moveToArea(area, posX, posY)
       spawnedCreature.onInit()
+
       isToBeRespawned = false
     }
   }
 
   def markForRespawn(): Unit = {
+    //if (spawnedCreature != null) spawnedCreature.kill()
     isToBeRespawned = true
   }
 

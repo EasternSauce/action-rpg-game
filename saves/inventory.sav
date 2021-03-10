@@ -3,4 +3,5 @@ inventory_item 1 leatherArmor 0 8 1
 inventory_item 2 woodenSword 33 0 1
 inventory_item 3 leatherHelmet 0 8 1
 inventory_item 4 hideGloves 0 4 1
+inventory_item 5 steelGloves 0 6 1
 gold 0

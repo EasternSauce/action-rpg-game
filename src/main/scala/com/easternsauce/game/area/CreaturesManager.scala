@@ -24,10 +24,12 @@ class CreaturesManager(private val area: Area) {
 
   def onAreaChange(): Unit = {
     for (creature <- creatures.values) {
-      if (!(creature.isInstanceOf[PlayerCharacter] || creature.isInstanceOf[NonPlayerCharacter])) if (!creature.alive) creature.toBeRemoved = true
+      if (!(creature.isPlayer || creature.isNPC)) if (!creature.alive) {
+        creature.toBeRemoved = true
+      }
     }
 
-    creatures.filterInPlace((_, creature) => !creature.toBeRemoved)
+    creatures.filterInPlace((_, creature) => creature.isPlayer || creature.isNPC)
   }
 
   def updateGatesLogic(areaGate: AreaGate): Unit = {

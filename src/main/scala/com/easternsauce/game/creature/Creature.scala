@@ -27,7 +27,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
 
   protected var healthRegen = 0.3f
-  protected var staminaRegen = 15f
+  protected var staminaRegen = 3f
 
   protected var staminaOveruseTime = 1.3f
 
@@ -321,7 +321,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
       healthRegenTimer.resetStart()
     }
 
-    if (!isEffectActive("staminaRegenStopped") && !sprinting) if (staminaRegenTimer.time > 0.25f && !abilityActive && !staminaOveruse) {
+    if (!isEffectActive("staminaRegenStopped") && !sprinting) if (staminaRegenTimer.time > 0.05f && !abilityActive && !staminaOveruse) {
       if (staminaPoints < maxStaminaPoints) {
         val afterRegen = staminaPoints + staminaRegen
         staminaPoints = Math.min(afterRegen, maxStaminaPoints)
@@ -569,9 +569,9 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
     var adjustedSpeed = this.baseSpeed
 
-    if (isAttacking) adjustedSpeed = adjustedSpeed / 3
+    if (isAttacking) adjustedSpeed = adjustedSpeed / 2
     else if (sprinting && staminaPoints > 0) {
-      adjustedSpeed = adjustedSpeed * 2.5f
+      adjustedSpeed = adjustedSpeed * 2f
       staminaDrain += Gdx.graphics.getDeltaTime
     }
 

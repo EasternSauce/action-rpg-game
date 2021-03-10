@@ -63,6 +63,7 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
       enemyRespawnArea.update()
     }
 
+
     for (mobSpawnPoint <- mobSpawnPointList) {
       mobSpawnPoint.update()
     }
@@ -83,7 +84,6 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
   }
 
   def onEntry(): Unit = {
-
     //TODO: add music manager or smth
     Assets.abandonedPlainsMusic.stop()
 
@@ -91,7 +91,6 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
       Assets.abandonedPlainsMusic.setVolume(0.1f)
       Assets.abandonedPlainsMusic.play()
     }
-
     creaturesManager.onAreaChange()
 
     reset()

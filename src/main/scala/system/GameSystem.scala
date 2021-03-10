@@ -495,7 +495,6 @@ object GameSystem {
     }
     finally treasureFileContents.close()
 
-    println("player area: " + playerCharacter.area.id)
     if (currentArea.isEmpty) currentArea = areas.get("area1")
 
     currentArea match {
