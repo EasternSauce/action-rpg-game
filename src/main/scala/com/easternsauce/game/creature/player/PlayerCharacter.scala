@@ -72,6 +72,18 @@ class PlayerCharacter(id: String) extends Creature(id) {
   }
 
   override def onDeath(): Unit = {
+    respawnTimer.resetStart()
+    respawning = true
+    sprinting = false
+
+    for (ability <- abilityList) {
+      ability.stopAbility()
+    }
+
+    currentAttack.stopAbility()
+
+    GameSystem.hud.bossHealthBar.hide()
+
     isRunningAnimationActive = false
   }
 

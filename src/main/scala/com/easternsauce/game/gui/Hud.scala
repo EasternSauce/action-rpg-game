@@ -21,7 +21,8 @@ class Hud {
   private var healthRect = new CustomRectangle(10, h * proportion + 40, 100 * pc.healthPoints / pc.maxHealthPoints, 10)
   private var maxStaminaRect = new CustomRectangle(10, h * proportion + 25, 100, 10)
   private var staminaRect = new CustomRectangle(10, h * proportion + 25, 100 * pc.healthPoints / pc.maxHealthPoints, 10)
-  private var bossHealthBar = new BossHealthBar
+
+  var bossHealthBar = new BossHealthBar
 
   def render(hudBatch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
     shapeDrawer.filledRectangle(bottomRect, Color.DARK_GRAY)
