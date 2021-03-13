@@ -47,7 +47,7 @@ class Hud {
         }
         GameSystem.font.draw(hudBatch, triggerMessage, 10, Gdx.graphics.getHeight - (Gdx.graphics.getHeight * GameSystem.ScreenProportion + 10))
       }
-      bossHealthBar.render()
+      bossHealthBar.render(shapeDrawer, hudBatch)
     }
   }
 

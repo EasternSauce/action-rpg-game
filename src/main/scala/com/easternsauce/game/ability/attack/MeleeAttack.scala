@@ -3,7 +3,7 @@ package com.easternsauce.game.ability.attack
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.easternsauce.game.ability.util.AbilityState
-import com.easternsauce.game.animation.Animation
+import com.easternsauce.game.animation.DeprecatedAnimation
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.shapes.{CustomPolygon, CustomRectangle, CustomVector2}
@@ -11,8 +11,8 @@ import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
 abstract class MeleeAttack(override protected val abilityCreature: Creature) extends Attack(abilityCreature) {
-  protected var attackAnimation: Animation = _
-  protected var windupAnimation: Animation = _
+  protected var attackAnimation: DeprecatedAnimation = _
+  protected var windupAnimation: DeprecatedAnimation = _
   //protected val weaponSound: Sound = Assets.attackSound
   protected var aimed = false
 

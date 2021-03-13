@@ -40,7 +40,7 @@ abstract class Ability(protected val abilityCreature: Creature) {
       state = AbilityState.Active
       onActiveStart()
       onPerformAction()
-      activeTimer.resetStart()
+      activeTimer.restart()
       onCooldown = true
     }
     if ((state == AbilityState.Active) && activeTimer.time > activeTime) {
@@ -81,7 +81,7 @@ abstract class Ability(protected val abilityCreature: Creature) {
   }
 
   def perform(): Unit = {
-    channelTimer.resetStart()
+    channelTimer.restart()
     state = AbilityState.Channeling
     onChannellingStart()
     onChannelAction()

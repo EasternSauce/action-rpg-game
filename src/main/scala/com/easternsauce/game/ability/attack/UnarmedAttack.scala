@@ -1,6 +1,6 @@
 package com.easternsauce.game.ability.attack
 
-import com.easternsauce.game.animation.Animation
+import com.easternsauce.game.animation.DeprecatedAnimation
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.shapes.{CustomPolygon, CustomRectangle}
@@ -27,9 +27,9 @@ class UnarmedAttack(override protected val abilityCreature: Creature) extends Me
     val spriteWidth = 40 // TODO
     val spriteHeight = 40
 
-    windupAnimation = new Animation(Assets.slashWindupSpriteSheet, channelFrameDuration, spriteWidth, spriteHeight)
+    windupAnimation = new DeprecatedAnimation(Assets.slashWindupSpriteSheet, channelFrameDuration, spriteWidth, spriteHeight)
 
-    attackAnimation = new Animation(Assets.slashSpriteSheet, frameDuration, spriteWidth, spriteHeight)
+    attackAnimation = new DeprecatedAnimation(Assets.slashSpriteSheet, frameDuration, spriteWidth, spriteHeight)
 
     meleeAttackRect = new CustomRectangle(-999, -999, 1, 1)
 

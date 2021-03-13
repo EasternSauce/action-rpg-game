@@ -72,7 +72,7 @@ class PlayerCharacter(id: String) extends Creature(id) {
   }
 
   override def onDeath(): Unit = {
-    respawnTimer.resetStart()
+    respawnTimer.restart()
     respawning = true
     sprinting = false
 

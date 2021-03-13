@@ -4,13 +4,13 @@ import com.badlogic.gdx.graphics.g2d.Animation.PlayMode
 import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion
 import com.badlogic.gdx.utils
-import com.easternsauce.game.assets.SpriteSheet
+import com.easternsauce.game.assets.DeprecatedSpriteSheet
 import com.easternsauce.game.utils.SimpleTimer
 import system.GameSystem
 
 
 
-class Animation(spriteSheet: SpriteSheet, frameDuration: Float, spriteWidth: Float, spriteHeight: Float, regionName: String = GameSystem.textureRegionName) {
+class DeprecatedAnimation(spriteSheet: DeprecatedSpriteSheet, frameDuration: Float, spriteWidth: Float, spriteHeight: Float, regionName: String = GameSystem.textureRegionName) {
   import com.badlogic.gdx.graphics.g2d.{Animation => GdxAnimation}
 
   protected var animation: GdxAnimation[Sprite] = _
@@ -39,5 +39,5 @@ class Animation(spriteSheet: SpriteSheet, frameDuration: Float, spriteWidth: Flo
 
   def getFrameByIndex(i: Int): Sprite = animation.getKeyFrames.array(i)
 
-  def restart(): Unit = animationTimer.resetStart()
+  def restart(): Unit = animationTimer.restart()
 }

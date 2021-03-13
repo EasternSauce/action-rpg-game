@@ -1,0 +1,62 @@
+
+packed_atlas.png
+size: 1024,512
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+female1
+  rotate: false
+  xy: 902, 142
+  size: 96, 128
+  orig: 96, 128
+  offset: 0, 0
+  index: -1
+ghost
+  rotate: false
+  xy: 302, 14
+  size: 96, 128
+  orig: 96, 128
+  offset: 0, 0
+  index: -1
+goblin
+  rotate: false
+  xy: 400, 14
+  size: 96, 128
+  orig: 96, 128
+  offset: 0, 0
+  index: -1
+male1
+  rotate: false
+  xy: 204, 14
+  size: 96, 128
+  orig: 96, 128
+  offset: 0, 0
+  index: -1
+male2
+  rotate: false
+  xy: 902, 272
+  size: 96, 128
+  orig: 96, 128
+  offset: 0, 0
+  index: -1
+skeleton
+  rotate: false
+  xy: 2, 144
+  size: 576, 256
+  orig: 576, 256
+  offset: 0, 0
+  index: -1
+taurus
+  rotate: false
+  xy: 580, 80
+  size: 320, 320
+  orig: 320, 320
+  offset: 0, 0
+  index: -1
+wolf
+  rotate: false
+  xy: 2, 2
+  size: 200, 140
+  orig: 200, 140
+  offset: 0, 0
+  index: -1

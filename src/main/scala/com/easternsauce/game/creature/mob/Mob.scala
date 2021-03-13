@@ -89,14 +89,14 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
   def performAggroedBehavior(): Unit = {
     if (attackOrHoldTimer.time > attackOrHoldTime) {
       hold = GameSystem.random.nextFloat() < 0.8f
-      attackOrHoldTimer.resetStart()
+      attackOrHoldTimer.restart()
     }
 
     if (circlingDirectionTimer.time > circlingDirectionTime) {
       circling = GameSystem.random.nextFloat() < 0.8f
       if (circling) if (GameSystem.random.nextFloat() < 0.5f) circlingDir = 0
       else circlingDir = 1
-      circlingDirectionTimer.resetStart()
+      circlingDirectionTimer.restart()
     }
 
     //val attackType = currentAttack.getAttackType
@@ -155,7 +155,7 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
         hasDestination = false
       }
 
-      findNewDestinationTimer.resetStart();
+      findNewDestinationTimer.restart();
     }
 
     if (hasDestination) walkTowards(destinationX, destinationY)
@@ -170,7 +170,7 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
     if (actionTimer.time > 0.5f) {
       lastMovingDir = WalkDirection.randomDir()
       stayInPlace = Math.abs(GameSystem.random.nextInt) % 10 < 8
-      actionTimer.resetStart()
+      actionTimer.restart()
     }
 
     if (!stayInPlace) {

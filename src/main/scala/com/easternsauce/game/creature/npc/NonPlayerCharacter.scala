@@ -4,18 +4,19 @@ import java.util
 import java.util.{List, Random}
 
 import com.badlogic.gdx.audio.Sound
-import com.easternsauce.game.assets.{Assets, SpriteSheet}
+import com.easternsauce.game.assets.{Assets, DeprecatedSpriteSheet}
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.util.WalkDirection
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up}
 import com.easternsauce.game.item.Item
 import com.easternsauce.game.item.util.ItemType
 import com.easternsauce.game.utils.SimpleTimer
+import com.easternsauce.game.wrappers.EsSpriteSheet
 import system.GameSystem
 
 import scala.collection.mutable.ListBuffer
 
-class NonPlayerCharacter(id: String, trader: Boolean, spriteSheet: SpriteSheet, val dialogueStartId: String) extends Creature(id) {
+class NonPlayerCharacter(id: String, trader: Boolean, spriteSheet: EsSpriteSheet, val dialogueStartId: String) extends Creature(id) {
   private var actionTimer: SimpleTimer = SimpleTimer(isStarted = true)
 
   private var traderInventory: ListBuffer[Item] = ListBuffer()
@@ -56,7 +57,7 @@ class NonPlayerCharacter(id: String, trader: Boolean, spriteSheet: SpriteSheet, 
         case 3 => WalkDirection.Right
       }
 
-      actionTimer.resetStart()
+      actionTimer.restart()
     }
   }
 

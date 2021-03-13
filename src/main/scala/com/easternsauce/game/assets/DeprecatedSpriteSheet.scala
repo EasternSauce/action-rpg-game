@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.{Sprite, TextureAtlas}
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up, WalkDirection}
 
-class SpriteSheet(var atlasFileLocation: String) {
+class DeprecatedSpriteSheet(var atlasFileLocation: String) {
   var textureAtlas = new TextureAtlas(atlasFileLocation)
   val dirMap = Map(Left -> 2, Right -> 3, Up -> 4, Down -> 1)
 

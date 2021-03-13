@@ -14,13 +14,13 @@ class Effect {
 
   def applyEffect(effectTime: Float): Unit = {
     if (effectActive) {
-      effectTimer.resetStart()
+      effectTimer.restart()
       val remainingTime = effectEndTime - effectTimer.time
       effectEndTime = Math.max(remainingTime, effectTime)
     }
     else {
       effectActive = true
-      effectTimer.resetStart()
+      effectTimer.restart()
       effectEndTime = effectTime
     }
   }
@@ -39,6 +39,6 @@ class Effect {
     effectActive = false
     effectEndTime = 0
     effectTimer.stop()
-    effectTimer.resetStart()
+    effectTimer.restart()
   }
 }

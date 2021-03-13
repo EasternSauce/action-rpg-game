@@ -3,25 +3,28 @@ package com.easternsauce.game.assets
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.{Music, Sound}
 import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.Sprite
+import com.badlogic.gdx.graphics.g2d.{Sprite, TextureAtlas}
 import com.badlogic.gdx.maps.tiled.{TiledMap, TmxMapLoader}
+import com.easternsauce.game.wrappers.EsSpriteSheet
 
 object Assets {
+  var textureAtlas: TextureAtlas = _
   var grassyMap: TiledMap = _
   var jungleMap: TiledMap = _
-  var male1SpriteSheet: SpriteSheet = _
-  var skeletonSpriteSheet: SpriteSheet = _
-  var wolfSpriteSheet: SpriteSheet = _
-  var goblinSpriteSheet: SpriteSheet = _
-  var ghostSpriteSheet: SpriteSheet = _
-  var slashSpriteSheet: SpriteSheet = _
-  var slashWindupSpriteSheet: SpriteSheet = _
-  var tridentThrustSpriteSheet: SpriteSheet = _
-  var tridentThrustWindupSpriteSheet: SpriteSheet = _
-  var explosionSpriteSheet: SpriteSheet = _
-  var explosionWindupSpriteSheet: SpriteSheet = _
+  var male1SpriteSheet: EsSpriteSheet = _
+  var skeletonSpriteSheet: EsSpriteSheet = _
+  var wolfSpriteSheet: EsSpriteSheet = _
+  var goblinSpriteSheet: EsSpriteSheet = _
+  var ghostSpriteSheet: EsSpriteSheet = _
+  var fireDemonSpriteSheet: EsSpriteSheet = _
+  var slashSpriteSheet: DeprecatedSpriteSheet = _
+  var slashWindupSpriteSheet: DeprecatedSpriteSheet = _
+  var tridentThrustSpriteSheet: DeprecatedSpriteSheet = _
+  var tridentThrustWindupSpriteSheet: DeprecatedSpriteSheet = _
+  var explosionSpriteSheet: DeprecatedSpriteSheet = _
+  var explosionWindupSpriteSheet: DeprecatedSpriteSheet = _
 
-  var iconsSpriteSheet: SpriteSheet = _
+  var iconsSpriteSheet: DeprecatedSpriteSheet = _
 
   var attackSound: Sound = _
   var painSound: Sound = _
@@ -47,7 +50,7 @@ object Assets {
   var strongPunchSound: Sound = _
   var swooshSound: Sound = _
 
-  var niceItemIcons: SpriteSheet = _
+  var niceItemIcons: DeprecatedSpriteSheet = _
 
 
   var arrowTexture: Texture = _
@@ -56,22 +59,25 @@ object Assets {
   var fireDemonMusic: Music = _
 
   def createAssets(): Unit = {
-    male1SpriteSheet = new SpriteSheet("assets/packed/male1_pack.atlas")
-    skeletonSpriteSheet = new SpriteSheet("assets/packed/skeleton_pack.atlas")
-    wolfSpriteSheet = new SpriteSheet("assets/packed/wolf_pack.atlas")
-    goblinSpriteSheet = new SpriteSheet("assets/packed/goblin_pack.atlas")
-    ghostSpriteSheet = new SpriteSheet("assets/packed/ghost_pack.atlas")
+    textureAtlas = new TextureAtlas("assets/atlas/packed_atlas.atlas")
+    textureAtlas.getTextures.forEach(texture => texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest))
 
-    iconsSpriteSheet = new SpriteSheet("assets/packed/icon_pack.atlas")
+    male1SpriteSheet = new EsSpriteSheet("male1", 32, 32)
+    skeletonSpriteSheet = new EsSpriteSheet("skeleton", 64, 64)
+    wolfSpriteSheet = new EsSpriteSheet("wolf", 50, 35)
+    goblinSpriteSheet = new EsSpriteSheet("goblin", 32, 32)
+    ghostSpriteSheet = new EsSpriteSheet("ghost", 32, 32)
 
-    slashSpriteSheet = new SpriteSheet("assets/packed/slash_pack.atlas")
-    slashWindupSpriteSheet = new SpriteSheet("assets/packed/slash_windup_pack.atlas")
+    iconsSpriteSheet = new DeprecatedSpriteSheet("assets/packed/icon_pack.atlas")
 
-    tridentThrustSpriteSheet = new SpriteSheet("assets/packed/trident_thrust.atlas")
-    tridentThrustWindupSpriteSheet = new SpriteSheet("assets/packed/trident_thrust_windup.atlas")
+    slashSpriteSheet = new DeprecatedSpriteSheet("assets/packed/slash_pack.atlas")
+    slashWindupSpriteSheet = new DeprecatedSpriteSheet("assets/packed/slash_windup_pack.atlas")
 
-    explosionSpriteSheet = new SpriteSheet("assets/packed/explosion_pack.atlas")
-    explosionWindupSpriteSheet = new SpriteSheet("assets/packed/explosion_windup_pack.atlas")
+    tridentThrustSpriteSheet = new DeprecatedSpriteSheet("assets/packed/trident_thrust.atlas")
+    tridentThrustWindupSpriteSheet = new DeprecatedSpriteSheet("assets/packed/trident_thrust_windup.atlas")
+
+    explosionSpriteSheet = new DeprecatedSpriteSheet("assets/packed/explosion_pack.atlas")
+    explosionWindupSpriteSheet = new DeprecatedSpriteSheet("assets/packed/explosion_windup_pack.atlas")
 
     grassyMap = new TmxMapLoader().load("assets/grassy_terrain/tile_map.tmx")
     jungleMap = new TmxMapLoader().load("assets/jungle_terrain/tile_map.tmx")

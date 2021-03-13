@@ -28,7 +28,7 @@ class PlayerRespawnPoint(posX: Int, posY: Int, val area: Area) {
   }
 
   def onRespawnSet(): Unit = {
-    respawnSetTimer.resetStart()
+    respawnSetTimer.restart()
   }
 
 

@@ -18,7 +18,7 @@ class SimpleTimer(var isStarted: Boolean = false){
 
   def stop(): Unit = isStarted = false
 
-  def resetStart(): Unit = {
+  def restart(): Unit = {
     time = 0
     isStarted = true
   }

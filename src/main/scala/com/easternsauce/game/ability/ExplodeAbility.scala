@@ -6,7 +6,7 @@ import java.util.Collection
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.easternsauce.game.ability.attack.UnarmedAttack
 import com.easternsauce.game.ability.util.AbilityState
-import com.easternsauce.game.animation.Animation
+import com.easternsauce.game.animation.DeprecatedAnimation
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.mob.Mob
@@ -15,7 +15,7 @@ import system.GameSystem
 
 class ExplodeAbility(override protected val abilityCreature: Creature) extends Ability(abilityCreature) {
 
-  protected var explosionAnimation = new Animation(Assets.explosionSpriteSheet, 0.05f, 64, 64)
+  protected var explosionAnimation = new DeprecatedAnimation(Assets.explosionSpriteSheet, 0.05f, 64, 64)
   protected var explosionRange: Float = _
 
   override def init(): Unit = {

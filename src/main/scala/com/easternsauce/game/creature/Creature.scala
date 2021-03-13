@@ -3,20 +3,21 @@ package com.easternsauce.game.creature
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.g2d.{Sprite, SpriteBatch}
+import com.badlogic.gdx.graphics.g2d.{Sprite, SpriteBatch, TextureRegion}
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
 import com.easternsauce.game.ability.Ability
 import com.easternsauce.game.ability.attack._
-import com.easternsauce.game.animation.Animation
+import com.easternsauce.game.animation.DeprecatedAnimation
 import com.easternsauce.game.area.{Area, AreaGate}
-import com.easternsauce.game.assets.SpriteSheet
+import com.easternsauce.game.assets.{Assets, DeprecatedSpriteSheet}
 import com.easternsauce.game.creature.util.{Bow, Sword, Trident, WalkDirection}
-import com.easternsauce.game.creature.util.WalkDirection.WalkDirection
+import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up, WalkDirection}
 import com.easternsauce.game.effect.Effect
 import com.easternsauce.game.item.Item
 import com.easternsauce.game.shapes.{CustomRectangle, CustomVector2}
 import com.easternsauce.game.spawn.Blockade
 import com.easternsauce.game.utils.{IntPair, SimpleTimer}
+import com.easternsauce.game.wrappers.{EsAnimation, EsSpriteSheet}
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
@@ -124,7 +125,8 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   protected var neutralPositionIndex: Int = _
   protected var isRunningAnimationActive = false
 
-  protected var walkAnimation: mutable.Map[WalkDirection, Animation] = mutable.Map()
+  protected var walkAnimation: mutable.Map[WalkDirection, DeprecatedAnimation] = mutable.Map()
+  protected var newWalkAnimation: mutable.Map[WalkDirection, EsAnimation] = mutable.Map()
 
   var lastMovingDir: WalkDirection = WalkDirection.Down
 
@@ -143,6 +145,11 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   protected var healingTimer: SimpleTimer = SimpleTimer()
   protected var healingTickTimer: SimpleTimer = SimpleTimer()
   protected var knockbackTimer: SimpleTimer = SimpleTimer()
+
+  protected var knocbackable = true
+
+  val dirMap = Map(Left -> 1, Right -> 2, Up -> 3, Down -> 0)
+
 
   def alive: Boolean = healthPoints > 0f
   def atFullLife: Boolean = healthPoints >= maxHealthPoints
@@ -245,7 +252,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
         this.knockbackPower = knockbackPower
         knockbackVector = CustomVector2(rect.getX - sourceX, rect.getY - sourceY).normal
         knockback = true
-        knockbackTimer.resetStart()
+        knockbackTimer.restart()
 
       }
 
@@ -318,7 +325,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   def regenerate(): Unit = {
     if (healthRegenTimer.time > 0.5f) {
       heal(healthRegen)
-      healthRegenTimer.resetStart()
+      healthRegenTimer.restart()
     }
 
     if (!isEffectActive("staminaRegenStopped") && !sprinting) if (staminaRegenTimer.time > 0.05f && !abilityActive && !staminaOveruse) {
@@ -326,20 +333,20 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
         val afterRegen = staminaPoints + staminaRegen
         staminaPoints = Math.min(afterRegen, maxStaminaPoints)
       }
-      staminaRegenTimer.resetStart()
+      staminaRegenTimer.restart()
     }
 
     if (staminaOveruse) if (staminaOveruseTimer.time > staminaOveruseTime) staminaOveruse = false
 
     if (getEffect("poisoned").isActive) if (poisonTickTimer.time > poisonTickTime) {
       takeDamage(15f, immunityFrames = false, 0, 0, 0)
-      poisonTickTimer.resetStart()
+      poisonTickTimer.restart()
     }
 
     if (healing) {
       if (healingTickTimer.time > healingTickTime) {
         heal(healingPower)
-        healingTickTimer.resetStart()
+        healingTickTimer.restart()
       }
       if (healingTimer.time > healingTime || healthPoints >= maxHealthPoints) healing = false
     }
@@ -369,7 +376,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   }
 
   def becomePoisoned(): Unit = {
-    poisonTickTimer.resetStart()
+    poisonTickTimer.restart()
     getEffect("poisoned").applyEffect(poisonTime)
   }
 
@@ -399,7 +406,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     else {
       staminaPoints = 0f
       staminaOveruse = true
-      staminaOveruseTimer.resetStart()
+      staminaOveruseTimer.restart()
     }
   }
 
@@ -408,8 +415,8 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   }
 
   private def startHealing(healingPower: Float): Unit = {
-    healingTimer.resetStart()
-    healingTickTimer.resetStart()
+    healingTimer.restart()
+    healingTickTimer.restart()
     healing = true
     this.healingPower = healingPower
   }
@@ -612,10 +619,10 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     if (isMoving && !wasMoving) if (!isRunningAnimationActive) {
 
       isRunningAnimationActive = true
-      walkAnimationTimer.resetStart()
+      walkAnimationTimer.restart()
     }
 
-    if (!isMoving && wasMoving) runningStoppedTimer.resetStart()
+    if (!isMoving && wasMoving) runningStoppedTimer.restart()
 
     if (!isMoving && isRunningAnimationActive && runningStoppedTimer.time > 0.25f) {
       isRunningAnimationActive = false
@@ -664,36 +671,34 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
   }
 
-  def loadSprites(spriteSheet: SpriteSheet, directionalMapping: Map[WalkDirection, Int], neutralPositionIndex: Int): Unit = {
+  def loadSprites(spriteSheet: EsSpriteSheet, directionalMapping: Map[WalkDirection, Int], neutralPositionIndex: Int): Unit = {
 
     this.neutralPositionIndex = neutralPositionIndex
 
     WalkDirection.values.foreach(dir => {
-      walkAnimation(dir) = new Animation(spriteSheet, walkAnimationFrameDuration, rect.width, rect.height,
-        GameSystem.textureRegionPrefix + directionalMapping(dir))
+      newWalkAnimation(dir) = new EsAnimation(spriteSheet, dirMap(dir), walkAnimationFrameDuration)
     })
-
   }
 
   def drawRunningAnimation(batch: SpriteBatch): Unit = {
 
     if (isRunningAnimationActive) {
-      val currentFrame: Sprite = new Sprite(walkAnimation(lastMovingDir).currentFrame())
+      val currentFrame = newWalkAnimation(lastMovingDir).currentFrame
 
-      currentFrame.setPosition(rect.x, rect.y)
-
-      currentFrame.draw(batch)
+      batch.draw(currentFrame, rect.x, rect.y, rect.w / 2, rect.h / 2, rect.w, rect.h,
+        1.0f, 1.0f, 0f)
     }
     else {
-      val currentFrame: Sprite = new Sprite(walkAnimation(lastMovingDir).getFrameByIndex(neutralPositionIndex))
+      val currentFrame = newWalkAnimation(lastMovingDir).getFrameByIndex(neutralPositionIndex)
+
+      var rotation = 0.0f
 
       if (!alive) {
-        currentFrame.rotate90(true)
+        rotation = 90f
       }
 
-      currentFrame.setPosition(rect.x, rect.y)
-
-      currentFrame.draw(batch)
+      batch.draw(currentFrame, rect.x, rect.y, rect.w / 2, rect.h / 2, rect.w, rect.h,
+        1.0f, 1.0f, rotation)
     }
   }
 }
