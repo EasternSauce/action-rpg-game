@@ -55,8 +55,8 @@ class ExplodeAbility(override protected val abilityCreature: Creature) extends A
       val scale = explosionRange * 2 / spriteWidth
       val image = explosionAnimation.currentFrame
 
-      batch.draw(image, abilityCreature.rect.center.x - image.getRegionWidth * scale / 2f, abilityCreature.rect.center.y - image.getRegionHeight * scale / 2f, 0,0,
-        image.getRegionWidth * scale, image.getRegionHeight * scale, 1.0f, 1.0f, 0.0f)
+      batch.draw(image, abilityCreature.rect.center.x - image.getRegionWidth / 2f, abilityCreature.rect.center.y - image.getRegionHeight / 2f, 0,0,
+        image.getRegionWidth, image.getRegionHeight, scale, scale, 0.0f)
     }
   }
 }

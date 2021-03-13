@@ -3,14 +3,13 @@ package com.easternsauce.game.creature
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.g2d.{Sprite, SpriteBatch, TextureRegion}
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
 import com.easternsauce.game.ability.Ability
 import com.easternsauce.game.ability.attack._
 import com.easternsauce.game.area.{Area, AreaGate}
-import com.easternsauce.game.assets.Assets
-import com.easternsauce.game.creature.util.{Bow, Sword, Trident, WalkDirection}
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up, WalkDirection}
+import com.easternsauce.game.creature.util.{Bow, Sword, Trident, WalkDirection}
 import com.easternsauce.game.effect.Effect
 import com.easternsauce.game.item.Item
 import com.easternsauce.game.shapes.{CustomRectangle, CustomVector2}

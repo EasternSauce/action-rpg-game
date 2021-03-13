@@ -125,7 +125,7 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
       val attackRectY = attackShiftY + abilityCreature.rect.center.y
 
       batch.draw(image, attackRectX, attackRectY - height / 2, 0, height / 2,
-        image.getRegionWidth * scale, image.getRegionHeight * scale, 1.0f, 1.0f, theta)
+        image.getRegionWidth, image.getRegionHeight, scale, scale, theta)
     }
     if (state == AbilityState.Active) {
       val image = attackAnimation.currentFrame
@@ -157,7 +157,7 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
       meleeAttackHitbox = poly
 
       batch.draw(image, attackRectX, attackRectY - height / 2, 0, height / 2,
-        image.getRegionWidth * scale, image.getRegionHeight * scale, 1.0f, 1.0f, theta)
+        image.getRegionWidth, image.getRegionHeight, scale, scale, theta)
     }
   }
 
