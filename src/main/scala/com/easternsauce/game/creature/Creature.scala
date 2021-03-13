@@ -7,9 +7,8 @@ import com.badlogic.gdx.graphics.g2d.{Sprite, SpriteBatch, TextureRegion}
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
 import com.easternsauce.game.ability.Ability
 import com.easternsauce.game.ability.attack._
-import com.easternsauce.game.animation.DeprecatedAnimation
 import com.easternsauce.game.area.{Area, AreaGate}
-import com.easternsauce.game.assets.{Assets, DeprecatedSpriteSheet}
+import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.util.{Bow, Sword, Trident, WalkDirection}
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up, WalkDirection}
 import com.easternsauce.game.effect.Effect
@@ -125,8 +124,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   protected var neutralPositionIndex: Int = _
   protected var isRunningAnimationActive = false
 
-  protected var walkAnimation: mutable.Map[WalkDirection, DeprecatedAnimation] = mutable.Map()
-  protected var newWalkAnimation: mutable.Map[WalkDirection, EsAnimation] = mutable.Map()
+  protected var walkAnimation: mutable.Map[WalkDirection, EsAnimation] = mutable.Map()
 
   var lastMovingDir: WalkDirection = WalkDirection.Down
 
@@ -676,20 +674,20 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     this.neutralPositionIndex = neutralPositionIndex
 
     WalkDirection.values.foreach(dir => {
-      newWalkAnimation(dir) = new EsAnimation(spriteSheet, dirMap(dir), walkAnimationFrameDuration)
+      walkAnimation(dir) = new EsAnimation(spriteSheet, dirMap(dir), walkAnimationFrameDuration)
     })
   }
 
   def drawRunningAnimation(batch: SpriteBatch): Unit = {
 
     if (isRunningAnimationActive) {
-      val currentFrame = newWalkAnimation(lastMovingDir).currentFrame
+      val currentFrame = walkAnimation(lastMovingDir).currentFrame
 
       batch.draw(currentFrame, rect.x, rect.y, rect.w / 2, rect.h / 2, rect.w, rect.h,
         1.0f, 1.0f, 0f)
     }
     else {
-      val currentFrame = newWalkAnimation(lastMovingDir).getFrameByIndex(neutralPositionIndex)
+      val currentFrame = walkAnimation(lastMovingDir).getFrameByIndex(neutralPositionIndex)
 
       var rotation = 0.0f
 

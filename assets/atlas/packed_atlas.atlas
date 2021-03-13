@@ -1,61 +1,124 @@
 
 packed_atlas.png
-size: 1024,512
+size: 2048,2048
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+explosion
+  rotate: false
+  xy: 2, 1408
+  size: 1600, 256
+  orig: 1600, 256
+  offset: 0, 0
+  index: -1
+explosion_windup
+  rotate: false
+  xy: 2, 1666
+  size: 1600, 256
+  orig: 1600, 256
+  offset: 0, 0
+  index: -1
 female1
   rotate: false
-  xy: 902, 142
+  xy: 1318, 1136
   size: 96, 128
   orig: 96, 128
   offset: 0, 0
   index: -1
+fist_slam
+  rotate: false
+  xy: 1004, 79
+  size: 1000, 166
+  orig: 1000, 166
+  offset: 0, 0
+  index: -1
+fist_slam_windup
+  rotate: false
+  xy: 2, 36
+  size: 1000, 166
+  orig: 1000, 166
+  offset: 0, 0
+  index: -1
 ghost
   rotate: false
-  xy: 302, 14
+  xy: 1702, 1472
   size: 96, 128
   orig: 96, 128
   offset: 0, 0
   index: -1
 goblin
   rotate: false
-  xy: 400, 14
+  xy: 1926, 1664
   size: 96, 128
   orig: 96, 128
   offset: 0, 0
   index: -1
 male1
   rotate: false
-  xy: 204, 14
+  xy: 1926, 1794
   size: 96, 128
   orig: 96, 128
   offset: 0, 0
   index: -1
 male2
   rotate: false
-  xy: 902, 272
+  xy: 1604, 1472
   size: 96, 128
   orig: 96, 128
   offset: 0, 0
   index: -1
+nice_icons
+  rotate: false
+  xy: 804, 539
+  size: 512, 867
+  orig: 512, 867
+  offset: 0, 0
+  index: -1
 skeleton
   rotate: false
-  xy: 2, 144
+  xy: 804, 281
   size: 576, 256
   orig: 576, 256
   offset: 0, 0
   index: -1
+slash
+  rotate: false
+  xy: 2, 204
+  size: 800, 600
+  orig: 800, 600
+  offset: 0, 0
+  index: -1
+slash_windup
+  rotate: false
+  xy: 2, 806
+  size: 800, 600
+  orig: 800, 600
+  offset: 0, 0
+  index: -1
 taurus
   rotate: false
-  xy: 580, 80
+  xy: 1604, 1602
   size: 320, 320
   orig: 320, 320
   offset: 0, 0
   index: -1
-wolf
+trident_thrust
   rotate: false
   xy: 2, 2
+  size: 704, 32
+  orig: 704, 32
+  offset: 0, 0
+  index: -1
+trident_thrust_windup
+  rotate: false
+  xy: 804, 247
+  size: 448, 32
+  orig: 448, 32
+  offset: 0, 0
+  index: -1
+wolf
+  rotate: false
+  xy: 1318, 1266
   size: 200, 140
   orig: 200, 140
   offset: 0, 0

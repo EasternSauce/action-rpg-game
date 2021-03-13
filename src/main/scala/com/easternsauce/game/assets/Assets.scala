@@ -3,7 +3,7 @@ package com.easternsauce.game.assets
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.{Music, Sound}
 import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.{Sprite, TextureAtlas}
+import com.badlogic.gdx.graphics.g2d.{Sprite, TextureAtlas, TextureRegion}
 import com.badlogic.gdx.maps.tiled.{TiledMap, TmxMapLoader}
 import com.easternsauce.game.wrappers.EsSpriteSheet
 
@@ -17,14 +17,14 @@ object Assets {
   var goblinSpriteSheet: EsSpriteSheet = _
   var ghostSpriteSheet: EsSpriteSheet = _
   var fireDemonSpriteSheet: EsSpriteSheet = _
-  var slashSpriteSheet: DeprecatedSpriteSheet = _
-  var slashWindupSpriteSheet: DeprecatedSpriteSheet = _
-  var tridentThrustSpriteSheet: DeprecatedSpriteSheet = _
-  var tridentThrustWindupSpriteSheet: DeprecatedSpriteSheet = _
-  var explosionSpriteSheet: DeprecatedSpriteSheet = _
-  var explosionWindupSpriteSheet: DeprecatedSpriteSheet = _
+  var slashSpriteSheet: EsSpriteSheet = _
+  var slashWindupSpriteSheet: EsSpriteSheet = _
+  var tridentThrustSpriteSheet: EsSpriteSheet = _
+  var tridentThrustWindupSpriteSheet: EsSpriteSheet = _
+  var explosionSpriteSheet: EsSpriteSheet = _
+  var explosionWindupSpriteSheet: EsSpriteSheet = _
 
-  var iconsSpriteSheet: DeprecatedSpriteSheet = _
+  var iconsSpriteSheet: EsSpriteSheet = _
 
   var attackSound: Sound = _
   var painSound: Sound = _
@@ -50,9 +50,6 @@ object Assets {
   var strongPunchSound: Sound = _
   var swooshSound: Sound = _
 
-  var niceItemIcons: DeprecatedSpriteSheet = _
-
-
   var arrowTexture: Texture = _
 
   var abandonedPlainsMusic: Music = _
@@ -68,16 +65,17 @@ object Assets {
     goblinSpriteSheet = new EsSpriteSheet("goblin", 32, 32)
     ghostSpriteSheet = new EsSpriteSheet("ghost", 32, 32)
 
-    iconsSpriteSheet = new DeprecatedSpriteSheet("assets/packed/icon_pack.atlas")
+    iconsSpriteSheet = new EsSpriteSheet("nice_icons", 32, 32)
 
-    slashSpriteSheet = new DeprecatedSpriteSheet("assets/packed/slash_pack.atlas")
-    slashWindupSpriteSheet = new DeprecatedSpriteSheet("assets/packed/slash_windup_pack.atlas")
+    slashSpriteSheet = new EsSpriteSheet("slash", 40, 40)
+    slashWindupSpriteSheet = new EsSpriteSheet("slash_windup", 40, 40)
 
-    tridentThrustSpriteSheet = new DeprecatedSpriteSheet("assets/packed/trident_thrust.atlas")
-    tridentThrustWindupSpriteSheet = new DeprecatedSpriteSheet("assets/packed/trident_thrust_windup.atlas")
+    tridentThrustSpriteSheet = new EsSpriteSheet("trident_thrust", 64, 32)
+    tridentThrustWindupSpriteSheet = new EsSpriteSheet("trident_thrust_windup", 64, 32)
 
-    explosionSpriteSheet = new DeprecatedSpriteSheet("assets/packed/explosion_pack.atlas")
-    explosionWindupSpriteSheet = new DeprecatedSpriteSheet("assets/packed/explosion_windup_pack.atlas")
+    explosionSpriteSheet = new EsSpriteSheet("explosion", 64, 64)
+    explosionWindupSpriteSheet = new EsSpriteSheet("explosion_windup", 64, 64)
+
 
     grassyMap = new TmxMapLoader().load("assets/grassy_terrain/tile_map.tmx")
     jungleMap = new TmxMapLoader().load("assets/jungle_terrain/tile_map.tmx")
@@ -112,8 +110,8 @@ object Assets {
 
   }
 
-  def getItemIcon(x: Int, y: Int): Sprite = {
-    iconsSpriteSheet.getSprite(x, y)
+  def getItemIcon(x: Int, y: Int): TextureRegion = {
+    iconsSpriteSheet.spriteTextures(y)(x)
   }
 
 }

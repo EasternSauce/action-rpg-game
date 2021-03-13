@@ -6,16 +6,16 @@ import java.util.Collection
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.easternsauce.game.ability.attack.UnarmedAttack
 import com.easternsauce.game.ability.util.AbilityState
-import com.easternsauce.game.animation.DeprecatedAnimation
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.mob.Mob
+import com.easternsauce.game.wrappers.EsAnimation
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
 class ExplodeAbility(override protected val abilityCreature: Creature) extends Ability(abilityCreature) {
 
-  protected var explosionAnimation = new DeprecatedAnimation(Assets.explosionSpriteSheet, 0.05f, 64, 64)
+  protected var explosionAnimation = new EsAnimation(Assets.explosionSpriteSheet, 0, 0.05f)
   protected var explosionRange: Float = _
 
   override def init(): Unit = {
@@ -49,15 +49,14 @@ class ExplodeAbility(override protected val abilityCreature: Creature) extends A
     abilityCreature.getEffect("immobilized").applyEffect(channelTime + activeTime)
   }
 
-  override def render(shapeDrawer: ShapeDrawer, spriteBatch: SpriteBatch): Unit = {
+  override def render(shapeDrawer: ShapeDrawer, batch: SpriteBatch): Unit = {
     if (state == AbilityState.Active) {
       val spriteWidth = 64
       val scale = explosionRange * 2 / spriteWidth
-      val image = explosionAnimation.currentFrame()
-      image.setCenterX(abilityCreature.rect.center.x)
-      image.setCenterY(abilityCreature.rect.center.y)
-      image.setScale(scale)
-      image.draw(spriteBatch)
+      val image = explosionAnimation.currentFrame
+
+      batch.draw(image, abilityCreature.rect.center.x - image.getRegionWidth * scale / 2f, abilityCreature.rect.center.y - image.getRegionHeight * scale / 2f, 0,0,
+        image.getRegionWidth * scale, image.getRegionHeight * scale, 1.0f, 1.0f, 0.0f)
     }
   }
 }

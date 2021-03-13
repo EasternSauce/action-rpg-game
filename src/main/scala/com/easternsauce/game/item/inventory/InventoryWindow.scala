@@ -119,7 +119,7 @@ class InventoryWindow {
 
         shapeDrawer.rectangle(traderInventorySlotList(i), color)
         if (traderInventoryItems.contains(i)) {
-          hudBatch.draw(traderInventoryItems(i).itemType.sprite, traderInventorySlotList(i).getX, traderInventorySlotList(i).getY, slotWidth, slotHeight)
+          hudBatch.draw(traderInventoryItems(i).itemType.textureRegion, traderInventorySlotList(i).getX, traderInventorySlotList(i).getY, slotWidth, slotHeight)
           if (traderInventoryItems(i).quantity > 1) {
             GameSystem.font.setColor(Color.CYAN)
             GameSystem.font.draw(hudBatch, "" + traderInventoryItems(i).quantity, traderInventorySlotList(i).getX, traderInventorySlotList(i).getY)
@@ -141,7 +141,7 @@ class InventoryWindow {
       shapeDrawer.rectangle(slotList(i), color)
 
       if (inventoryItems.contains(i)) {
-        hudBatch.draw(inventoryItems(i).itemType.sprite, slotList(i).getX, slotList(i).getY, slotWidth, slotHeight)
+        hudBatch.draw(inventoryItems(i).itemType.textureRegion, slotList(i).getX, slotList(i).getY, slotWidth, slotHeight)
         if (inventoryItems(i).quantity > 1) {
           GameSystem.font.setColor(Color.CYAN)
           GameSystem.font.draw(hudBatch, "" + inventoryItems(i).quantity, slotList(i).getX, slotList(i).getY + 15)
@@ -201,7 +201,7 @@ class InventoryWindow {
         shapeDrawer.rectangle(equipmentSlotList(i), color)
 
         if (equipmentItems.contains(i)) {
-          hudBatch.draw(equipmentItems(i).itemType.sprite, equipmentSlotList(i).getX, equipmentSlotList(i).getY, slotWidth, slotHeight)
+          hudBatch.draw(equipmentItems(i).itemType.textureRegion, equipmentSlotList(i).getX, equipmentSlotList(i).getY, slotWidth, slotHeight)
           if (equipmentItems(i).quantity > 1) {
             GameSystem.font.setColor(Color.CYAN)
             GameSystem.font.draw(hudBatch, "" + equipmentItems(i).quantity, equipmentSlotList(i).getX, equipmentSlotList(i).getY)

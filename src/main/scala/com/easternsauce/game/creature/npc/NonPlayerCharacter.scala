@@ -1,10 +1,7 @@
 package com.easternsauce.game.creature.npc
 
-import java.util
-import java.util.{List, Random}
-
 import com.badlogic.gdx.audio.Sound
-import com.easternsauce.game.assets.{Assets, DeprecatedSpriteSheet}
+import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.util.WalkDirection
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up}

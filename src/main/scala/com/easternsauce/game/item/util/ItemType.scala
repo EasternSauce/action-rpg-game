@@ -1,13 +1,13 @@
 package com.easternsauce.game.item.util
 
 import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.Sprite
+import com.badlogic.gdx.graphics.g2d.{Sprite, TextureRegion}
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.util.{AttackType, Bow, Sword, Trident}
 
 import scala.collection.mutable
 
-class ItemType(val id: String, val name: String, val description: String, val sprite: Sprite,
+class ItemType(val id: String, val name: String, val description: String, val textureRegion: TextureRegion,
                val equipmentType: String, val worth: Int, val maxDamage: Float,
                val maxArmor: Float, val stackable: Boolean, val consumable: Boolean) {
 

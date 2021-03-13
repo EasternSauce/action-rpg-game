@@ -1,9 +1,9 @@
 package com.easternsauce.game.ability.attack
 
-import com.easternsauce.game.animation.DeprecatedAnimation
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.shapes.{CustomPolygon, CustomRectangle}
+import com.easternsauce.game.wrappers.EsAnimation
 
 class TridentAttack(override protected val abilityCreature: Creature) extends MeleeAttack(abilityCreature) {
   override def init(): Unit = {
@@ -28,8 +28,8 @@ class TridentAttack(override protected val abilityCreature: Creature) extends Me
     val spriteWidth = 64
     val spriteHeight = 32
 
-    windupAnimation = new DeprecatedAnimation(Assets.tridentThrustWindupSpriteSheet, channelFrameDuration, spriteWidth, spriteHeight)
-    attackAnimation = new DeprecatedAnimation(Assets.tridentThrustSpriteSheet, frameDuration, spriteWidth, spriteHeight)
+    windupAnimation = new EsAnimation(Assets.tridentThrustWindupSpriteSheet, 0, channelFrameDuration)
+    attackAnimation = new EsAnimation(Assets.tridentThrustSpriteSheet, 0, frameDuration)
 
     meleeAttackRect = new CustomRectangle(-999, -999, 1, 1)
 

@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d._
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
 import com.badlogic.gdx.math.{Intersector, Vector2}
 import com.badlogic.gdx.{Gdx, Input}
-import com.easternsauce.game.animation.DeprecatedAnimation
 import com.easternsauce.game.area.{Area, AreaGate}
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
