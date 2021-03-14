@@ -42,18 +42,18 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
 
     val creatures = abilityCreature.area.creatures.values
     for (creature <- creatures) {
-      if (creature != this.abilityCreature) {
-        if (GameSystem.checkCollision(meleeAttackHitbox, creature.rect)) if (!(this.abilityCreature.isMob && creature.isMob)) { // mob can't hurt a mob?
-          if (!creature.isImmune) {
-            //val weapon: Item = this.abilityCreature.getEquipmentItems.get(0)
-            val center = abilityCreature.rect.center
-            creature.takeDamage(10f, immunityFrames = true, knockbackPower, center.x, center.y)
-            //abilityCreature.onAttack()
-            //val random: Int = Globals.random.nextInt(100)
-            //if (random < weapon.getItemType.getPoisonChance * 100f) creature.becomePoisoned()
-          }
-
-        }
+      if (creature != this.abilityCreature) { // TODO: box2d collisions
+//        if (GameSystem.checkCollision(meleeAttackHitbox, creature.rect)) if (!(this.abilityCreature.isMob && creature.isMob)) { // mob can't hurt a mob?
+//          if (!creature.isImmune) {
+//            //val weapon: Item = this.abilityCreature.getEquipmentItems.get(0)
+//            val center = abilityCreature.rect.center
+//            creature.takeDamage(10f, immunityFrames = true, knockbackPower, center.x, center.y)
+//            //abilityCreature.onAttack()
+//            //val random: Int = Globals.random.nextInt(100)
+//            //if (random < weapon.getItemType.getPoisonChance * 100f) creature.becomePoisoned()
+//          }
+//
+//        }
       }
     }
   }
@@ -121,8 +121,8 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
       val attackShiftX = attackVector.x * attackRange
       val attackShiftY = attackVector.y * attackRange
 
-      val attackRectX = attackShiftX + abilityCreature.rect.center.x
-      val attackRectY = attackShiftY + abilityCreature.rect.center.y
+      val attackRectX = attackShiftX + abilityCreature.centerPosX
+      val attackRectY = attackShiftY + abilityCreature.centerPosY
 
       batch.draw(image, attackRectX, attackRectY - height / 2, 0, height / 2,
         image.getRegionWidth, image.getRegionHeight, scale, scale, theta)
@@ -139,8 +139,8 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
       val attackShiftX = attackVector.x * attackRange
       val attackShiftY = attackVector.y * attackRange
 
-      val attackRectX = attackShiftX + abilityCreature.rect.center.x
-      val attackRectY = attackShiftY + abilityCreature.rect.center.y
+      val attackRectX = attackShiftX + abilityCreature.centerPosX
+      val attackRectY = attackShiftY + abilityCreature.centerPosY
 
       val poly = new CustomPolygon(new CustomRectangle(0,0, width, height))
 

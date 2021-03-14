@@ -93,18 +93,19 @@ class Arrow(var x: Float, var y: Float, val area: Area, var speedVector: CustomV
   def isCollidingWithCreatures(creatures: mutable.Map[String, Creature], newPosX: Float, newPosY: Float): Boolean = {
     for (creature <- creatures.values) {
       if (creature != shooter) {
-        val creatureRect = creature.rect
-        val arrowRect = new CustomRectangle(newPosX + hitboxBounds.getX, newPosY + hitboxBounds.getY, hitboxBounds.getWidth, hitboxBounds.getHeight)
-        if (!(shooter.isInstanceOf[Mob] && creature.isInstanceOf[Mob])) { // mob can't hurt a mob?
-          if (creatureRect.intersects(arrowRect)) {
-            if (speedVector == new Vector2f(0f, 0f) || creature.healthPoints <= 0.0f) return false
-            if (!creature.isImmune) {
-              creature.takeDamage(shooter.equipmentItems(0).damage, true, 0.4f, shooter.rect.center.x, shooter.rect.center.y)
-              shooter.onAttack()
-            }
-            return true
-          }
-        }
+        // TODO: box2d collisions
+//        val creatureRect = creature.rect
+//        val arrowRect = new CustomRectangle(newPosX + hitboxBounds.getX, newPosY + hitboxBounds.getY, hitboxBounds.getWidth, hitboxBounds.getHeight)
+//        if (!(shooter.isInstanceOf[Mob] && creature.isInstanceOf[Mob])) { // mob can't hurt a mob?
+//          if (creatureRect.intersects(arrowRect)) {
+//            if (speedVector == new Vector2f(0f, 0f) || creature.healthPoints <= 0.0f) return false
+//            if (!creature.isImmune) {
+//              creature.takeDamage(shooter.equipmentItems(0).damage, true, 0.4f, shooter.rect.center.x, shooter.rect.center.y)
+//              shooter.onAttack()
+//            }
+//            return true
+//          }
+//        }
       }
     }
     false

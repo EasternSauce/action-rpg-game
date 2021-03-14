@@ -8,7 +8,6 @@ import com.easternsauce.game.spawn.MobSpawnPoint
 import com.easternsauce.game.utils.SimpleTimer
 
 class Skeleton(override val id: String, override val mobSpawnPoint: MobSpawnPoint, val weaponType: String) extends Mob(id, mobSpawnPoint) {
-  override val rect = new CustomRectangle(0,4500,64,64)
   override val hitboxBounds = new CustomRectangle(18, 0, 28, 64)
   override val baseSpeed = 300f
 

@@ -16,8 +16,6 @@ import system.GameSystem
 
 class PlayerCharacter(id: String) extends Creature(id) {
 
-
-  override val rect = new CustomRectangle(0,5000,64,64)
   override val hitboxBounds = new CustomRectangle(18, 0, 28, 64)
   override val isPlayer = true
 
@@ -119,21 +117,23 @@ class PlayerCharacter(id: String) extends Creature(id) {
     if (GameSystem.lootSystem.getVisibleItemsCount == 0) {
       for (creature <- area.creatures.values) {
         if (creature != this) {
-          if (rect.intersects(creature.rect) && creature.isInstanceOf[NonPlayerCharacter] && creature.healthPoints > 0) {
-            creature.asInstanceOf[NonPlayerCharacter].triggerDialogue()
-          }
+          // TODO: box2d collision
+//          if (rect.intersects(creature.rect) && creature.isInstanceOf[NonPlayerCharacter] && creature.healthPoints > 0) {
+//            creature.asInstanceOf[NonPlayerCharacter].triggerDialogue()
+//          }
         }
       }
 
       for (playerRespawnPoint <- area.respawnList) {
-        if (rect.intersects(playerRespawnPoint.rect)) {
-          currentRespawnPoint = playerRespawnPoint
-          currentRespawnPoint.onRespawnSet()
-          if (healthPoints < maxHealthPoints / 2) healthPoints = maxHealthPoints / 2
-
-          assert(GameSystem.currentArea.nonEmpty)
-          GameSystem.currentArea.get.softReset()
-        }
+        // TODO: box2d collision
+//        if (rect.intersects(playerRespawnPoint.rect)) {
+//          currentRespawnPoint = playerRespawnPoint
+//          currentRespawnPoint.onRespawnSet()
+//          if (healthPoints < maxHealthPoints / 2) healthPoints = maxHealthPoints / 2
+//
+//          assert(GameSystem.currentArea.nonEmpty)
+//          GameSystem.currentArea.get.softReset()
+//        }
       }
     }
   }

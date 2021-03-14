@@ -4,6 +4,8 @@ import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.backends.lwjgl.audio.Wav
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
+import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.{Body, BodyDef, CircleShape, FixtureDef, World}
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.item.loot.{LootPile, Treasure}
@@ -16,7 +18,6 @@ import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocationsContainer: SpawnLocationsContainer) {
-
   val tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, scale)
 
   var creaturesManager: CreaturesManager = CreaturesManager(this)
@@ -34,6 +35,8 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
   var treasureList: ListBuffer[Treasure] = ListBuffer()
 
   var arrowList: mutable.ListBuffer[Arrow] = ListBuffer()
+
+  var world: World = new World(new Vector2(0f,0f), true)
 
   loadSpawns()
 
@@ -56,6 +59,7 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
     }
 
     respawnList.foreach(respawnPoint => respawnPoint.render(shapeDrawer))
+
   }
 
   def updateSpawns(): Unit = {
@@ -102,10 +106,26 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
     creaturesManager.addCreature(creature)
     creature.area = this
 
-    creature.rect.setX(x)
-    creature.rect.setY(y)
 
     GameSystem.loadingScreenVisible = false
+
+    println("addking creatuter " + creature.id + " to " + id)
+    addBox2dBody(creature, x, y)
+  }
+
+  private def addBox2dBody(creature: Creature, x: Float, y: Float) = {
+    println("adding new body")
+    val bodyDef = new BodyDef()
+    bodyDef.position.set(x / GameSystem.PixelsPerMeter, y / GameSystem.PixelsPerMeter)
+    bodyDef.`type` = BodyDef.BodyType.DynamicBody
+    creature.body = world.createBody(bodyDef)
+
+    val fixtureDef: FixtureDef = new FixtureDef()
+    val shape: CircleShape = new CircleShape()
+    shape.setRadius(30 / GameSystem.PixelsPerMeter)
+    fixtureDef.shape = shape
+    creature.body.createFixture(fixtureDef)
+    creature.body.setLinearDamping(9f)
   }
 
   def removeCreature(id: String): Unit = {
@@ -116,11 +136,9 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
     creaturesManager.addCreature(creature)
     creature.area = this
 
-    creature.rect.x = x
-    creature.rect.y = y
-
     creature.startingPosX = x
     creature.startingPosY = y
+
   }
 
   def reset(): Unit = {
@@ -163,6 +181,9 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
     val areaCreatures: mutable.Map[String, Creature] = creatures
 
     areaCreatures.values.foreach((creature: Creature) => creature.update())
+
+    world.step(1/60f, 6, 2)
+
 
   }
 

@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.TextureAtlasData.Region
 import com.badlogic.gdx.graphics.g2d._
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
 import com.badlogic.gdx.math.{Intersector, Vector2}
+import com.badlogic.gdx.physics.box2d.{Body, BodyDef, Box2DDebugRenderer, FixtureDef, PolygonShape, World}
 import com.badlogic.gdx.{Gdx, Input}
 import com.easternsauce.game.area.{Area, AreaGate}
 import com.easternsauce.game.assets.Assets
@@ -99,6 +100,11 @@ object GameSystem {
 
   var drawAttackHitboxes: Boolean = false
 
+  var world: World = _
+  var debugRenderer: Box2DDebugRenderer = _
+
+  var PixelsPerMeter: Float = 32f
+
   def getTiledMapRealWidth(tiledMap: TiledMap): Int = {
     val layer = tiledMap.getLayers.get(0).asInstanceOf[TiledMapTileLayer]
     layer.getWidth * TiledMapCellSize
@@ -114,9 +120,9 @@ object GameSystem {
     case None => throw new RuntimeException("currentArea is not set")
   }
 
-  def adjustCamera(rect: CustomRectangle): Unit = {
-    camera.position.x = rect.x + rect.width / 2
-    camera.position.y = rect.y + rect.height / 2 - Gdx.graphics.getHeight * (1 - ScreenProportion) / 2
+  def adjustCamera(creature: Creature): Unit = {
+    camera.position.x = creature.centerPosX
+    camera.position.y = creature.centerPosY - Gdx.graphics.getHeight * (1 - ScreenProportion) / 2
     camera.update()
   }
 
@@ -169,6 +175,13 @@ object GameSystem {
     val (worldTexture, worldRegion) = createTextureAndRegion()
     worldShapeDrawer = new ShapeDrawer(worldBatch, worldRegion)
 
+    world = new World(new Vector2(0,0), true)
+    debugRenderer = new Box2DDebugRenderer()
+//    var bodyDef = new BodyDef()
+//    var shape = new PolygonShape()
+//    var fixtureDef = new FixtureDef()
+//    var body = new Body()
+
     init()
 
   }
@@ -201,7 +214,7 @@ object GameSystem {
     val nonPlayerCharacter = new NonPlayerCharacter("Johnny", true, Assets.male1SpriteSheet,"a1")
     areas("area1").addNewCreature(nonPlayerCharacter, 1512f, 11f)
     val nonPlayerCharacter2 = new NonPlayerCharacter("Rita", true, Assets.male1SpriteSheet, "a1")
-    areas("area2").addNewCreature(nonPlayerCharacter2, 183f, 95f)
+    areas("area2").addNewCreature(nonPlayerCharacter2, 400f, 400f)
 
     hud = new Hud()
 
@@ -359,6 +372,8 @@ object GameSystem {
 
       hudBatch.end()
 
+      debugRenderer.render(currentArea.get.world, camera.combined.scale(PixelsPerMeter, PixelsPerMeter, 0))
+
     }
 
   }
@@ -408,8 +423,7 @@ object GameSystem {
             if (creature.area == null) throw new RuntimeException("position cannot be set before creature is spawned in area")
           }
 
-          creature.rect.x = s(1).toFloat
-          creature.rect.y = s(2).toFloat
+          creature.setPos(s(1).toFloat, s(2).toFloat)
         }
 
         if (s(0) == "area") if (creature != null) {

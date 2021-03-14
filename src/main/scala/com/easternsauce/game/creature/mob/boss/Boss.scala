@@ -27,7 +27,7 @@ class Boss(override val id: String, override val mobSpawnPoint: MobSpawnPoint) e
   }
 
   override def onDeath(): Unit = {
-    GameSystem.lootSystem.spawnLootPile(area, rect.center.x, rect.center.y, dropTable)
+    GameSystem.lootSystem.spawnLootPile(area, centerPosX, centerPosY, dropTable)
     for (ability <- abilityList) {
       ability.stopAbility()
     }
@@ -51,7 +51,7 @@ class Boss(override val id: String, override val mobSpawnPoint: MobSpawnPoint) e
       effectMap("immune").applyEffect(500)
       if (knocbackable && !knockback && knockbackPower > 0f) {
         this.knockbackPower = knockbackPower
-        knockbackVector = new CustomVector2(rect.getX - sourceX, rect.getY - sourceY).normal
+        knockbackVector = new CustomVector2(posX - sourceX, posY - sourceY).normal
         knockback = true
         knockbackTimer.restart()
       }

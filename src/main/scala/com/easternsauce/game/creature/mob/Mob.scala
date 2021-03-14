@@ -49,12 +49,13 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
 
 
     GameSystem.areaCreatures.filter(creature => !creature.isMob && !creature.isNPC).foreach(creature => { // TODO: exclude npc too
-      if (!foundCreatureToAggro && alive && GameSystem.distance(rect, creature.rect) < aggroDistance) {
-        aggroedCreature = Some(creature)
-        foundCreatureToAggro = true
-
-        onAggroed()
-      }
+      // TODO: box2d distance
+//      if (!foundCreatureToAggro && alive && GameSystem.distance(rect, creature.rect) < aggroDistance) {
+//        aggroedCreature = Some(creature)
+//        foundCreatureToAggro = true
+//
+//        onAggroed()
+//      }
     })
 
     aggroedCreature match {
@@ -69,20 +70,21 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
   }
 
   def walkTowards(gotoPosX: Float, gotoPosY: Float): Unit = {
-    val creatureCenter = rect.center
+    val creatureCenterX = centerPosX
+    val creatureCenterY = centerPosY
 
     import com.easternsauce.game.creature.util.WalkDirection._
 
-    if (creatureCenter.x < gotoPosX - 5f) moveInDirection(Right)
-    else if (creatureCenter.x > gotoPosX + 5f) moveInDirection(Left)
+    if (creatureCenterX < gotoPosX - 5f) moveInDirection(Right)
+    else if (creatureCenterX > gotoPosX + 5f) moveInDirection(Left)
 
-    else if (creatureCenter.y > gotoPosY + 5f) moveInDirection(Down)
-    if (creatureCenter.y < gotoPosY - 5f) moveInDirection(Up)
+    else if (creatureCenterY > gotoPosY + 5f) moveInDirection(Down)
+    if (creatureCenterY < gotoPosY - 5f) moveInDirection(Up)
 
 
-    val distX = Math.abs(creatureCenter.x - gotoPosX)
-    val distY = Math.abs(creatureCenter.y - gotoPosY)
-    if (distX - distY < 20f) if (creatureCenter.x < gotoPosX) lastMovingDir = Right
+    val distX = Math.abs(creatureCenterX - gotoPosX)
+    val distY = Math.abs(creatureCenterY - gotoPosY)
+    if (distX - distY < 20f) if (creatureCenterX < gotoPosX) lastMovingDir = Right
     else lastMovingDir = Left
   }
 
@@ -106,33 +108,37 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
       case None => throw new RuntimeException("aggroed creature is not set")
     }
 
-    val aggroedCenter = aggroed.rect.center
-    val creatureCenter = rect.center
+    val aggroedCenterX = aggroed.centerPosX
+    val aggroedCenterY = aggroed.centerPosY
 
-    val dist = GameSystem.distance(this.rect, aggroed.rect);
+    val creatureCenterX = centerPosX
+    val creatureCenterY = centerPosY
+
+    //val dist = GameSystem.distance(this.rect, aggroed.rect);
+    val dist = 999 // TODO: box2d distance
 
     if (findNewDestinationTimer.time > 0.2f) {
       if (dist < attackType.holdDistance) {
         if (hold) {
           if (circling) {
             if (circlingDir == 0) {
-              destinationX = aggroedCenter.x
-              destinationY = aggroedCenter.y
-              val destinationVector = CustomVector2(destinationX - creatureCenter.x, destinationY - creatureCenter.y)
+              destinationX = aggroedCenterX
+              destinationY = aggroedCenterY
+              val destinationVector = CustomVector2(destinationX - creatureCenterX, destinationY - creatureCenterY)
               val perpendicular = GameSystem.getVectorPerpendicular(destinationVector)
-              destinationX = aggroedCenter.x + perpendicular.x
-              destinationY = aggroedCenter.y + perpendicular.y
+              destinationX = aggroedCenterX + perpendicular.x
+              destinationY = aggroedCenterY + perpendicular.y
               hasDestination = true
             }
             else {
-              destinationX = aggroedCenter.x
-              destinationY = aggroedCenter.y
-              val destinationVector = CustomVector2(destinationX - creatureCenter.x, destinationY - creatureCenter.y)
+              destinationX = aggroedCenterX
+              destinationY = aggroedCenterY
+              val destinationVector = CustomVector2(destinationX - creatureCenterX, destinationY - creatureCenterY)
               val perpendicular = GameSystem.getVectorPerpendicular(destinationVector)
               val negated = CustomVector2(-perpendicular.x, -perpendicular.y)
 
-              destinationX = creatureCenter.x + negated.x
-              destinationY = creatureCenter.y + negated.y
+              destinationX = creatureCenterX + negated.x
+              destinationY = creatureCenterY + negated.y
               hasDestination = true
             }
           }
@@ -141,14 +147,14 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
           }
         }
         else {
-          destinationX = aggroedCenter.x
-          destinationY = aggroedCenter.y
+          destinationX = aggroedCenterX
+          destinationY = aggroedCenterY
           hasDestination = true
         }
       }
       else if (dist < (if (walkUpDistance == null.asInstanceOf[Float]) attackType.walkUpDistance else walkUpDistance)) {
-        destinationX = aggroedCenter.x
-        destinationY = aggroedCenter.y
+        destinationX = aggroedCenterX
+        destinationY = aggroedCenterY
         hasDestination = true
       }
       else {
@@ -182,7 +188,7 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
   override def onDeath(): Unit = {
     isRunningAnimationActive = false
 
-    GameSystem.lootSystem.spawnLootPile(area, rect.center.x, rect.center.y, dropTable)
+    GameSystem.lootSystem.spawnLootPile(area, centerPosX, centerPosY, dropTable)
 
     for (ability <- abilityList) {
       ability.stopAbility()
@@ -199,7 +205,7 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
   override def setFacingDirection(): Unit = {
     if (aggroedCreature.nonEmpty) {
       val aggroed = aggroedCreature.get
-      facingVector = CustomVector2(aggroed.rect.center.x - rect.center.x, aggroed.rect.center.y - rect.center.y)
+      facingVector = CustomVector2(aggroed.centerPosX - centerPosX, aggroed.centerPosY - centerPosY)
     }
   }
 

@@ -35,12 +35,12 @@ class ExplodeAbility(override protected val abilityCreature: Creature) extends A
   override protected def onUpdateActive(): Unit = {
     val creatures = abilityCreature.area.creatures
     for ((_, creature) <- creatures) {
-      if (creature != this.abilityCreature) {
-        if (GameSystem.distance(abilityCreature.rect, creature.rect) < explosionRange && activeTimer.time < 0.1f) {
-          if (!(this.abilityCreature.isInstanceOf[Mob] && creature.isInstanceOf[Mob]) && creature.alive) { // mob can't hurt a mob?
-            if (!creature.isImmune) creature.takeDamage(700f, immunityFrames = true, 0, 0, 0)
-          }
-        }
+      if (creature != this.abilityCreature) { // TODO: box2d distance
+//        if (GameSystem.distance(abilityCreature.rect, creature.rect) < explosionRange && activeTimer.time < 0.1f) {
+//          if (!(this.abilityCreature.isInstanceOf[Mob] && creature.isInstanceOf[Mob]) && creature.alive) { // mob can't hurt a mob?
+//            if (!creature.isImmune) creature.takeDamage(700f, immunityFrames = true, 0, 0, 0)
+//          }
+//        }
       }
     }
   }
@@ -55,7 +55,7 @@ class ExplodeAbility(override protected val abilityCreature: Creature) extends A
       val scale = explosionRange * 2 / spriteWidth
       val image = explosionAnimation.currentFrame
 
-      batch.draw(image, abilityCreature.rect.center.x - image.getRegionWidth / 2f, abilityCreature.rect.center.y - image.getRegionHeight / 2f, 0,0,
+      batch.draw(image, abilityCreature.centerPosX - image.getRegionWidth / 2f, abilityCreature.centerPosY - image.getRegionHeight / 2f, 0,0,
         image.getRegionWidth, image.getRegionHeight, scale, scale, 0.0f)
     }
   }

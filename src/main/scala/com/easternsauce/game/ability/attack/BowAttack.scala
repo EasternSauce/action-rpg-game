@@ -31,8 +31,8 @@ class BowAttack(override protected val abilityCreature: Creature) extends Attack
     if (!abilityCreature.facingVector.equals(new CustomVector2(0.0f, 0.0f))) {
       val arrowWidth = 40 //TODO: make global? or read from arrow texture?
       val arrowHeight = 40
-      val arrowStartX = abilityCreature.rect.getX + abilityCreature.rect.width / 2 - arrowWidth / 2
-      val arrowStartY = abilityCreature.rect.getY + abilityCreature.rect.height / 2 - arrowHeight / 2
+      val arrowStartX = abilityCreature.posX + abilityCreature.spriteWidth / 2 - arrowWidth / 2
+      val arrowStartY = abilityCreature.posY + abilityCreature.spriteHeight / 2 - arrowHeight / 2
       val arrow: Arrow = new Arrow(arrowStartX, arrowStartY, abilityCreature.area, abilityCreature.facingVector, arrowList, tiles, areaCreatures, this.abilityCreature)
       arrowList += arrow
     }

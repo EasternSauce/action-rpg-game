@@ -26,11 +26,10 @@ class DashAbility(override protected val abilityCreature: Creature) extends Abil
 
   override def performMovement(): Unit = {
     if (state == AbilityState.Active) {
-      val rect: CustomRectangle = abilityCreature.rect
       //check collisions after dash
       val tiles = abilityCreature.area.tiledMap
-      val newPosX: Float = rect.getX + dashFrameSpeed * dashVector.x
-      val newPosY: Float = rect.getY + dashFrameSpeed * dashVector.y
+      val newPosX: Float = abilityCreature.posX + dashFrameSpeed * dashVector.x
+      val newPosY: Float = abilityCreature.posY + dashFrameSpeed * dashVector.y
       val blockadeList: ListBuffer[Blockade] = abilityCreature.area.blockadeList
 
       if (abilityCreature.isMovementAllowedXAxis(newPosX, newPosY, tiles, blockadeList)) {

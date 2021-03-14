@@ -5,6 +5,8 @@ import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
+import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.{Body, BodyDef}
 import com.easternsauce.game.ability.Ability
 import com.easternsauce.game.ability.attack._
 import com.easternsauce.game.area.{Area, AreaGate}
@@ -63,7 +65,10 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
   protected var staminaDrain = 0.0f
 
-  val rect: CustomRectangle = new CustomRectangle(0, 0, 64, 64)
+  val spriteWidth: Float = 64
+  val spriteHeight: Float = 64
+
+//  val rect: CustomRectangle = new CustomRectangle(0, 0, 64, 64)
   val hitboxBounds: CustomRectangle = new CustomRectangle(2, 2, 60, 60)
 
   val isPlayer = false
@@ -147,6 +152,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
   val dirMap = Map(Left -> 1, Right -> 2, Up -> 3, Down -> 0)
 
+  var body: Body = _
 
   def alive: Boolean = healthPoints > 0f
   def atFullLife: Boolean = healthPoints >= maxHealthPoints
@@ -199,7 +205,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
     if (GameSystem.cameraFocussedCreature.nonEmpty
       && this == GameSystem.cameraFocussedCreature.get) {
-      GameSystem.adjustCamera(rect)
+      GameSystem.adjustCamera(this)
     }
 
     if (staminaDrain >= 0.3f) {
@@ -220,8 +226,10 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     val healthBarHeight = 5
     val healthBarWidth = 50
     val currentHealthBarWidth = healthBarWidth * healthPoints/maxHealthPoints
-    shapeDrawer.filledRectangle(new CustomRectangle(rect.x + (rect.width/2 - healthBarWidth/2), rect.y + rect.width + 10, healthBarWidth, healthBarHeight), Color.ORANGE)
-    shapeDrawer.filledRectangle(new CustomRectangle(rect.x + (rect.width/2 - healthBarWidth/2), rect.y + rect.width + 10, currentHealthBarWidth, healthBarHeight), Color.RED)
+    val barPosX = posX + (spriteWidth / 2 - healthBarWidth/2)
+    val barPosY = posY + spriteHeight + 10
+    shapeDrawer.filledRectangle(new CustomRectangle(barPosX, barPosY, healthBarWidth, healthBarHeight), Color.ORANGE)
+    shapeDrawer.filledRectangle(new CustomRectangle(barPosX, barPosY, currentHealthBarWidth, healthBarHeight), Color.RED)
 
   }
 
@@ -247,7 +255,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
       if (knockbackable && !knockback && knockbackPower > 0f) {
         this.knockbackPower = knockbackPower
-        knockbackVector = CustomVector2(rect.getX - sourceX, rect.getY - sourceY).normal
+        knockbackVector = CustomVector2(posX - sourceX, posY - sourceY).normal
         knockback = true
         knockbackTimer.restart()
 
@@ -307,12 +315,12 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     var leftGate = true
     for (areaGate <- gatesList) {
       if (leftGate) {
-        if (areaGate.areaFrom == area) if (rect.intersects(areaGate.fromRect)) {
-          leftGate = false
-        }
-        if (areaGate.areaTo == area) if (rect.intersects(areaGate.toRect)) {
-          leftGate = false
-        }
+//        if (areaGate.areaFrom == area) if (rect.intersects(areaGate.fromRect)) { // TODO: box2d
+//          leftGate = false
+//        }
+//        if (areaGate.areaTo == area) if (rect.intersects(areaGate.toRect)) {
+//          leftGate = false
+//        }
       }
     }
 
@@ -420,8 +428,8 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
   def reset(): Unit = {
     healthPoints = maxHealthPoints
-    rect.x = startingPosX
-    rect.y = startingPosY
+
+    setPos(startingPosX, startingPosY)
   }
 
   def onAttack(): Unit = {
@@ -462,14 +470,14 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     if (other.healthPoints <= 0.0f) {
       return -1
     }
-    if (rect.y == other.rect.y) {
+    if (posX == other.posY) {
       return 0
     }
-    if (rect.getY - other.rect.getY > 0.0f) 1 else -1
+    if (posY - other.posY > 0.0f) 1 else -1
 
   }
 
-  def hitbox: CustomRectangle = new CustomRectangle(rect.x + hitboxBounds.x, rect.y + hitboxBounds.y,
+  def hitbox: CustomRectangle = new CustomRectangle(posX + hitboxBounds.x, posY + hitboxBounds.y,
     hitboxBounds.width, hitboxBounds.height)
 
   // TODO: check blockade list for collisions
@@ -595,22 +603,47 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     if (!isEffectActive("immobilized") && !knockback) {
 
       if (totalDirections > 1) movementIncrement = movementIncrement / Math.sqrt(2).toFloat
-      val newPosX = rect.getX + movementIncrement * movingDir.x
-      val newPosY = rect.getY + movementIncrement * movingDir.y
-
+      val newPosX = posX + movementIncrement * movingDir.x
+      val newPosY = posY + movementIncrement * movingDir.y
 
       if (isMovementAllowedXAxis(newPosX, newPosY, tiledMap, blockadeList)) {
-        move(movementIncrement * movingDir.x, 0)
+        //move(movementIncrement * movingDir.x, 0)
+        if (movingDir.x == -1) {
+          if (body.getLinearVelocity.x >= -12f) {
+            body.applyLinearImpulse(new Vector2(2f * movingDir.x, 0), body.getWorldCenter, true)
+          }
+        }
+        else if (movingDir.x == 1) {
+          if (body.getLinearVelocity.x <= 12f) {
+            body.applyLinearImpulse(new Vector2(2f * movingDir.x, 0), body.getWorldCenter, true)
+          }
+        }
+
         movementVector.x = movementIncrement * movingDir.x
       }
       else movementVector.x = 0
 
       if (isMovementAllowedYAxis(newPosX, newPosY, tiledMap, blockadeList)) {
-        move(0, movementIncrement * movingDir.y)
+        //move(0, movementIncrement * movingDir.y)
+        if (movingDir.y == -1) {
+          if (body.getLinearVelocity.y >= -12f) {
+            body.applyLinearImpulse(new Vector2(0, 2f * movingDir.y), body.getWorldCenter, true)
+          }
+        }
+        else if (movingDir.y == 1) {
+          if (body.getLinearVelocity.y <= 12f) {
+            body.applyLinearImpulse(new Vector2(0, 2f * movingDir.y), body.getWorldCenter, true)
+          }
+        }
+
+
         movementVector.y = movementIncrement * movingDir.y
       }
       else movementVector.y = 0
 
+//      if (movingDir.x == 0 && movingDir.y == 0) {
+//        body.setLinearVelocity(0f,0f)
+//      }
     }
 
     if (isMoving && !wasMoving) if (!isRunningAnimationActive) {
@@ -632,8 +665,8 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     if (knockback) {
       val tiledMap = GameSystem.currentArea.get.tiledMap
 
-      val newPosX: Float = rect.getX + knockbackSpeed * knockbackVector.x
-      val newPosY: Float = rect.getY + knockbackSpeed * knockbackVector.y
+      val newPosX: Float = posX + knockbackSpeed * knockbackVector.x
+      val newPosY: Float = posY + knockbackSpeed * knockbackVector.y
       val blockadeList: ListBuffer[Blockade] = GameSystem.currentArea.get.blockadeList
       if (isMovementAllowedXAxis(newPosX, newPosY, tiledMap, blockadeList)) move(knockbackSpeed * knockbackVector.x, 0)
       if (isMovementAllowedYAxis(newPosX, newPosY, tiledMap, blockadeList)) move(0, knockbackSpeed * knockbackVector.y)
@@ -659,9 +692,8 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     notCollidingWithTerrain && notCollidingWithAreaBounds
   }
 
-  def move(dx: Float, dy: Float): Unit = {
-    rect.x = rect.x + dx
-    rect.y = rect.y + dy
+  def move(dx: Float, dy: Float): Unit = { // TODO: box2d
+    setPos(posX + dx, posY + dy)
   }
 
   def controlMovement(): Unit = {
@@ -682,7 +714,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     if (isRunningAnimationActive) {
       val currentFrame = walkAnimation(lastMovingDir).currentFrame
 
-      batch.draw(currentFrame, rect.x, rect.y, rect.w / 2, rect.h / 2, rect.w, rect.h,
+      batch.draw(currentFrame, posX - spriteWidth / 2, posY - spriteHeight / 2, spriteWidth / 2, spriteHeight / 2, spriteWidth, spriteHeight,
         1.0f, 1.0f, 0f)
     }
     else {
@@ -694,8 +726,18 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
         rotation = 90f
       }
 
-      batch.draw(currentFrame, rect.x, rect.y, rect.w / 2, rect.h / 2, rect.w, rect.h,
+      batch.draw(currentFrame, posX - spriteWidth / 2, posY - spriteHeight / 2, spriteWidth / 2, spriteHeight / 2, spriteWidth, spriteHeight,
         1.0f, 1.0f, rotation)
     }
+  }
+
+  def posX: Float = body.getPosition.x * GameSystem.PixelsPerMeter
+  def posY: Float = body.getPosition.y * GameSystem.PixelsPerMeter
+
+  def centerPosX: Float = body.getWorldCenter.x * GameSystem.PixelsPerMeter
+  def centerPosY: Float = body.getWorldCenter.y * GameSystem.PixelsPerMeter
+
+  def setPos(x: Float, y: Float): Unit = {
+    body.setTransform(x / GameSystem.PixelsPerMeter, y / GameSystem.PixelsPerMeter, 0)
   }
 }

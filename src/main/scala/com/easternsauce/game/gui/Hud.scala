@@ -38,12 +38,15 @@ class Hud {
         var triggerMessage = ""
         for (creature <- GameSystem.currentArea.get.creatures.values) {
           if (creature != GameSystem.playerCharacter) {
-            if (GameSystem.playerCharacter.rect.intersects(creature.rect) && creature.isInstanceOf[NonPlayerCharacter] && creature.healthPoints > 0) triggerMessage = "> Talk"
+
+            // TODO: box2d collision
+//            if (GameSystem.playerCharacter.rect.intersects(creature.rect) && creature.isInstanceOf[NonPlayerCharacter] && creature.healthPoints > 0) triggerMessage = "> Talk"
           }
         }
 
         for (playerRespawnPoint <- GameSystem.currentArea.get.respawnList) {
-          if (GameSystem.playerCharacter.rect.intersects(playerRespawnPoint.rect)) triggerMessage = "> Set respawn"
+          // TODO: box2d collision
+//          if (GameSystem.playerCharacter.rect.intersects(playerRespawnPoint.rect)) triggerMessage = "> Set respawn"
         }
         GameSystem.font.draw(hudBatch, triggerMessage, 10, Gdx.graphics.getHeight - (Gdx.graphics.getHeight * GameSystem.ScreenProportion + 10))
       }

@@ -52,14 +52,15 @@ class CreaturesManager(private val area: Area) {
           destinationRect = areaGate.fromRect
         }
 
-        if (creature.rect.intersects(gateRect) && creature.isPlayer) {
-          GameSystem.loadingScreenVisible = true
-          creature.passedGateRecently = true
-          creature.moveToArea(destinationArea, destinationRect.getX, destinationRect.getY)
-          GameSystem.currentArea = Some(destinationArea)
-          oldArea.onLeave()
-          destinationArea.onEntry()
-        }
+        // TODO: box2d
+//        if (creature.rect.intersects(gateRect) && creature.isPlayer) {
+//          GameSystem.loadingScreenVisible = true
+//          creature.passedGateRecently = true
+//          creature.moveToArea(destinationArea, destinationRect.getX, destinationRect.getY)
+//          GameSystem.currentArea = Some(destinationArea)
+//          oldArea.onLeave()
+//          destinationArea.onEntry()
+//        }
       }
     }
   }
@@ -98,7 +99,7 @@ class CreaturesManager(private val area: Area) {
       if (creature.isPlayer || creature.isNPC) {
         writer.write("creature " + creature.id + "\n")
         writer.write("area " + creature.area.id + "\n")
-        writer.write("pos " + creature.rect.x + " " + creature.rect.y + "\n")
+        writer.write("pos " + creature.posX + " " + creature.posY + "\n")
         writer.write("health " + creature.healthPoints + "\n")
         val equipmentItems: mutable.Map[Int, Item] = creature.equipmentItems
         for ((key, value) <- equipmentItems) {
