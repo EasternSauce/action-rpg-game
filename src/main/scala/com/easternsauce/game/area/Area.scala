@@ -2,10 +2,12 @@ package com.easternsauce.game.area
 
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.backends.lwjgl.audio.Wav
-import com.badlogic.gdx.maps.tiled.TiledMap
+import com.badlogic.gdx.maps.MapLayer
+import com.badlogic.gdx.maps.objects.RectangleMapObject
+import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.physics.box2d.{Body, BodyDef, CircleShape, FixtureDef, World}
+import com.badlogic.gdx.physics.box2d.{Body, BodyDef, CircleShape, FixtureDef, PolygonShape, Shape, World}
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.item.loot.{LootPile, Treasure}
@@ -38,6 +40,60 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
 
   var world: World = new World(new Vector2(0f,0f), true)
 
+  val layer = tiledMap.getLayers.get(0).asInstanceOf[TiledMapTileLayer]
+
+  for {x <- Seq.range(0, layer.getWidth)
+       y <- Seq.range(0, layer.getHeight)} {
+    val cell: TiledMapTileLayer.Cell = layer.getCell(x, y)
+
+    val traversable: Boolean = cell.getTile.getProperties.get("traversable").asInstanceOf[Boolean]
+
+    if (!traversable) {
+      val rectX = x * layer.getTileWidth * scale
+      val rectY = y * layer.getTileHeight * scale
+      val rectW = layer.getTileWidth * scale
+      val rectH = layer.getTileHeight * scale
+
+      val bodyDef = new BodyDef()
+      bodyDef.`type` = BodyDef.BodyType.StaticBody
+      bodyDef.position.set((rectX + rectH / 2) / GameSystem.PixelsPerMeter, (rectY + rectH / 2) / GameSystem.PixelsPerMeter)
+
+      val body: Body = world.createBody(bodyDef)
+
+      val shape : PolygonShape = new PolygonShape()
+
+      shape.setAsBox((rectW / 2) / GameSystem.PixelsPerMeter, (rectH / 2) / GameSystem.PixelsPerMeter)
+
+      val fixtureDef: FixtureDef = new FixtureDef
+
+      fixtureDef.shape = shape
+
+      body.createFixture(fixtureDef)
+    }
+
+  }
+
+  tiledMap.getLayers.get(0).getObjects.getByType(classOf[RectangleMapObject]).forEach( rectObject => {
+    val rect = rectObject.getRectangle
+    println("adding " + rect.x + " " + rect.y)
+
+    val bodyDef = new BodyDef()
+    bodyDef.`type` = BodyDef.BodyType.StaticBody
+    bodyDef.position.set((rect.getX + rect.getWidth / 2) * GameSystem.PixelsPerMeter, (rect.getY + rect.getHeight / 2) * GameSystem.PixelsPerMeter)
+
+    val body: Body = world.createBody(bodyDef)
+
+    val shape : PolygonShape = new PolygonShape()
+
+    shape.setAsBox((rect.getWidth / 2) * GameSystem.PixelsPerMeter, (rect.getHeight / 2) * GameSystem.PixelsPerMeter)
+
+    val fixtureDef: FixtureDef = new FixtureDef
+
+    fixtureDef.shape = shape
+
+    body.createFixture(fixtureDef)
+
+  })
   loadSpawns()
 
   private def loadSpawns(): Unit = {
@@ -109,12 +165,10 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
 
     GameSystem.loadingScreenVisible = false
 
-    println("addking creatuter " + creature.id + " to " + id)
     addBox2dBody(creature, x, y)
   }
 
-  private def addBox2dBody(creature: Creature, x: Float, y: Float) = {
-    println("adding new body")
+  private def addBox2dBody(creature: Creature, x: Float, y: Float): Unit = {
     val bodyDef = new BodyDef()
     bodyDef.position.set(x / GameSystem.PixelsPerMeter, y / GameSystem.PixelsPerMeter)
     bodyDef.`type` = BodyDef.BodyType.DynamicBody

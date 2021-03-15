@@ -603,10 +603,15 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     if (!isEffectActive("immobilized") && !knockback) {
 
       if (totalDirections > 1) movementIncrement = movementIncrement / Math.sqrt(2).toFloat
-      val newPosX = posX + movementIncrement * movingDir.x
-      val newPosY = posY + movementIncrement * movingDir.y
 
-      if (isMovementAllowedXAxis(newPosX, newPosY, tiledMap, blockadeList)) {
+      // no longer need to check collisions due to box2d taking care of them
+
+
+      //val newPosX = posX + movementIncrement * movingDir.x
+      //val newPosY = posY + movementIncrement * movingDir.y
+
+
+      //if (isMovementAllowedXAxis(newPosX, newPosY, tiledMap, blockadeList)) {
         //move(movementIncrement * movingDir.x, 0)
         if (movingDir.x == -1) {
           if (body.getLinearVelocity.x >= -12f) {
@@ -620,10 +625,10 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
         }
 
         movementVector.x = movementIncrement * movingDir.x
-      }
-      else movementVector.x = 0
+      //}
+      //else movementVector.x = 0
 
-      if (isMovementAllowedYAxis(newPosX, newPosY, tiledMap, blockadeList)) {
+      //if (isMovementAllowedYAxis(newPosX, newPosY, tiledMap, blockadeList)) {
         //move(0, movementIncrement * movingDir.y)
         if (movingDir.y == -1) {
           if (body.getLinearVelocity.y >= -12f) {
@@ -638,8 +643,8 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
 
         movementVector.y = movementIncrement * movingDir.y
-      }
-      else movementVector.y = 0
+      //}
+      //else movementVector.y = 0
 
 //      if (movingDir.x == 0 && movingDir.y == 0) {
 //        body.setLinearVelocity(0f,0f)

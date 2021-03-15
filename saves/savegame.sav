@@ -1,6 +1,10 @@
+creature Johnny
+area area1
+pos 1512.0 11.0
+health 100.0
 creature protagonist
-area area2
-pos 3792.8933 315.01852
+area area1
+pos 976.0351 5770.46
 health 100.0
 equipment_item 0 trident 9999 0
 equipment_item 1 leatherHelmet 0 9
@@ -8,10 +12,6 @@ equipment_item 2 leatherArmor 0 12
 equipment_item 3 hideGloves 0 3
 equipment_item 4 lifeRing 0 0
 equipment_item 5 ringmailGreaves 0 5
-creature Johnny
-area area1
-pos 1512.0 11.0
-health 100.0
 creature Rita
 area area2
 pos 183.0 95.0

@@ -55,9 +55,12 @@ class Arrow(var x: Float, var y: Float, val area: Area, var speedVector: CustomV
     val margin = 50
     if (!((x >= 0 - margin && x < GameSystem.getTiledMapRealWidth(tiledMap) + margin) && (y >= 0 - margin && y < GameSystem.getTiledMapRealHeight(tiledMap) + margin))) markedForDeletion = true
 
-    if (isCollidingWithEnvironment(tiledMap, x, y)) speedVector = new CustomVector2(0f, 0f)
 
-    if (isCollidingWithCreatures(creatures, x, y)) markedForDeletion = true
+    // TODO: box2d collision
+
+    //if (isCollidingWithEnvironment(tiledMap, x, y)) speedVector = new CustomVector2(0f, 0f)
+
+    //if (isCollidingWithCreatures(creatures, x, y)) markedForDeletion = true
   }
 
   def isCollidingWithEnvironment(tiledMap: TiledMap, newPosX: Float, newPosY: Float): Boolean = {
