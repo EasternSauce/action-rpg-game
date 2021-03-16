@@ -90,8 +90,6 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
   var isAttacking = false
 
-  var toBeRemoved = false
-
   var pendingArea: Area = _
 
   var pendingX = 0f
@@ -309,22 +307,6 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
   def updateAttackType(): Unit = {
 
-  }
-
-  def onPassedGate(gatesList: ListBuffer[AreaGate]): Unit = {
-    var leftGate = true
-    for (areaGate <- gatesList) {
-      if (leftGate) {
-//        if (areaGate.areaFrom == area) if (rect.intersects(areaGate.fromRect)) { // TODO: box2d
-//          leftGate = false
-//        }
-//        if (areaGate.areaTo == area) if (rect.intersects(areaGate.toRect)) {
-//          leftGate = false
-//        }
-      }
-    }
-
-    passedGateRecently = !leftGate
   }
 
   def regenerate(): Unit = {

@@ -1,13 +1,14 @@
 package com.easternsauce.game.area
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Music
 import com.badlogic.gdx.backends.lwjgl.audio.Wav
 import com.badlogic.gdx.maps.MapLayer
 import com.badlogic.gdx.maps.objects.RectangleMapObject
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
-import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.physics.box2d.{Body, BodyDef, CircleShape, FixtureDef, PolygonShape, Shape, World}
+import com.badlogic.gdx.math.{Rectangle, Vector2}
+import com.badlogic.gdx.physics.box2d.{Body, BodyDef, CircleShape, Contact, ContactImpulse, ContactListener, Fixture, FixtureDef, Manifold, PolygonShape, Shape, World}
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.item.loot.{LootPile, Treasure}
@@ -20,6 +21,7 @@ import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocationsContainer: SpawnLocationsContainer) {
+
   val tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, scale)
 
   var creaturesManager: CreaturesManager = CreaturesManager(this)
@@ -59,6 +61,7 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
       bodyDef.position.set((rectX + rectH / 2) / GameSystem.PixelsPerMeter, (rectY + rectH / 2) / GameSystem.PixelsPerMeter)
 
       val body: Body = world.createBody(bodyDef)
+      body.setUserData(this)
 
       val shape : PolygonShape = new PolygonShape()
 
@@ -69,31 +72,13 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
       fixtureDef.shape = shape
 
       body.createFixture(fixtureDef)
+
     }
 
   }
 
-  tiledMap.getLayers.get(0).getObjects.getByType(classOf[RectangleMapObject]).forEach( rectObject => {
-    val rect = rectObject.getRectangle
-    println("adding " + rect.x + " " + rect.y)
+  createContactListener()
 
-    val bodyDef = new BodyDef()
-    bodyDef.`type` = BodyDef.BodyType.StaticBody
-    bodyDef.position.set((rect.getX + rect.getWidth / 2) * GameSystem.PixelsPerMeter, (rect.getY + rect.getHeight / 2) * GameSystem.PixelsPerMeter)
-
-    val body: Body = world.createBody(bodyDef)
-
-    val shape : PolygonShape = new PolygonShape()
-
-    shape.setAsBox((rect.getWidth / 2) * GameSystem.PixelsPerMeter, (rect.getHeight / 2) * GameSystem.PixelsPerMeter)
-
-    val fixtureDef: FixtureDef = new FixtureDef
-
-    fixtureDef.shape = shape
-
-    body.createFixture(fixtureDef)
-
-  })
   loadSpawns()
 
   private def loadSpawns(): Unit = {
@@ -151,7 +136,7 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
       Assets.abandonedPlainsMusic.setVolume(0.1f)
       Assets.abandonedPlainsMusic.play()
     }
-    creaturesManager.onAreaChange()
+    creaturesManager.onAreaEntry()
 
     reset()
 
@@ -173,12 +158,13 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
     bodyDef.position.set(x / GameSystem.PixelsPerMeter, y / GameSystem.PixelsPerMeter)
     bodyDef.`type` = BodyDef.BodyType.DynamicBody
     creature.body = world.createBody(bodyDef)
+    creature.body.setUserData(creature)
 
     val fixtureDef: FixtureDef = new FixtureDef()
     val shape: CircleShape = new CircleShape()
     shape.setRadius(30 / GameSystem.PixelsPerMeter)
     fixtureDef.shape = shape
-    creature.body.createFixture(fixtureDef)
+    val fixture = creature.body.createFixture(fixtureDef)
     creature.body.setLinearDamping(9f)
   }
 
@@ -245,4 +231,98 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
     creaturesManager.creatures
   }
 
+
+  def createContactListener(): Unit = {
+    val contactListener: ContactListener = new ContactListener {
+      override def beginContact(contact: Contact): Unit = {
+        val fixtureB = contact.getFixtureA
+        val fixtureA = contact.getFixtureB
+
+        fixtureA.getBody.getUserData match {
+          case areaGate: AreaGate =>
+            Gdx.app.log("beginContact", "between " + fixtureA.getBody.getUserData + " and " + fixtureB.getBody.getUserData)
+            fixtureB.getBody.getUserData match {
+              case creature: Creature =>
+                if (!creature.passedGateRecently) {
+                  onPassedAreaGate(areaGate, creature)
+                }
+              case _ =>
+            }
+          case _ =>
+        }
+
+        fixtureB.getBody.getUserData match {
+          case areaGate: AreaGate =>
+            Gdx.app.log("beginContact", "between " + fixtureA.getBody.getUserData + " and " + fixtureB.getBody.getUserData)
+            fixtureA.getBody.getUserData match {
+              case creature: Creature =>
+                if (!creature.passedGateRecently) {
+                  onPassedAreaGate(areaGate, creature)
+                }
+              case _ =>
+            }
+          case _ =>
+        }
+      }
+
+      override def endContact(contact: Contact): Unit = {
+        val fixtureB = contact.getFixtureA
+        val fixtureA = contact.getFixtureB
+
+        fixtureA.getBody.getUserData match {
+          case areaGate: AreaGate =>
+            Gdx.app.log("endContact", "between " + fixtureA.getBody.getUserData + " and " + fixtureB.getBody.getUserData)
+            fixtureB.getBody.getUserData match {
+              case creature: Creature =>
+                creature.passedGateRecently = false
+              case _ =>
+            }
+          case _ =>
+        }
+
+        fixtureB.getBody.getUserData match {
+          case areaGate: AreaGate =>
+            Gdx.app.log("endContact", "between " + fixtureA.getBody.getUserData + " and " + fixtureB.getBody.getUserData)
+            fixtureA.getBody.getUserData match {
+              case creature: Creature =>
+                creature.passedGateRecently = false
+              case _ =>
+            }
+          case _ =>
+        }
+      }
+
+      override def preSolve(contact: Contact, oldManifold: Manifold): Unit = {}
+
+      override def postSolve(contact: Contact, impulse: ContactImpulse): Unit = {}
+    }
+
+    world.setContactListener(contactListener)
+  }
+
+  private def onPassedAreaGate(areaGate: AreaGate, creature: Creature): Unit = {
+    if (creature.isPlayer) {
+      var oldArea: Area = null
+      var destinationArea: Area = null
+      var destinationRect: Rectangle = null
+
+      if (this == areaGate.areaFrom) {
+        oldArea = areaGate.areaFrom
+        destinationArea = areaGate.areaTo
+        destinationRect = areaGate.toRect
+      }
+      if (this == areaGate.areaTo) {
+        oldArea = areaGate.areaTo
+        destinationArea = areaGate.areaFrom
+        destinationRect = areaGate.fromRect
+      }
+
+      GameSystem.loadingScreenVisible = true
+      creature.moveToArea(destinationArea, destinationRect.x + destinationRect.width / 2, destinationRect.y + destinationRect.height / 2)
+      GameSystem.currentArea = Some(destinationArea)
+      oldArea.onLeave()
+      destinationArea.onEntry()
+
+    }
+  }
 }

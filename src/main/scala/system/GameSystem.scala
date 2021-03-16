@@ -100,7 +100,6 @@ object GameSystem {
 
   var drawAttackHitboxes: Boolean = false
 
-  var world: World = _
   var debugRenderer: Box2DDebugRenderer = _
 
   var PixelsPerMeter: Float = 32f
@@ -175,7 +174,6 @@ object GameSystem {
     val (worldTexture, worldRegion) = createTextureAndRegion()
     worldShapeDrawer = new ShapeDrawer(worldBatch, worldRegion)
 
-    world = new World(new Vector2(0,0), true)
     debugRenderer = new Box2DDebugRenderer()
 //    var bodyDef = new BodyDef()
 //    var shape = new PolygonShape()
@@ -287,9 +285,11 @@ object GameSystem {
           val oldArea = creature.area
           val newArea = creature.pendingArea
           if (oldArea != null) oldArea.removeCreature(creature.id)
+          oldArea.world.destroyBody(creature.body)
           newArea.moveInCreature(creature, creature.pendingX, creature.pendingY)
           creature.area = newArea
           creature.pendingArea = null
+          creature.passedGateRecently = true
         }
       }
 
@@ -305,8 +305,6 @@ object GameSystem {
       dialogueWindow.update()
 
       lootSystem.update()
-
-      gateList.foreach((gate: AreaGate) => gate.update())
 
       hud.update()
 

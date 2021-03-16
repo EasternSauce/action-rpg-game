@@ -3,6 +3,7 @@ package com.easternsauce.game.area
 import java.io.PrintWriter
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.math.Rectangle
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.npc.NonPlayerCharacter
 import com.easternsauce.game.creature.player.PlayerCharacter
@@ -22,47 +23,11 @@ class CreaturesManager(private val area: Area) {
 
   private var renderPriorityQueue: mutable.PriorityQueue[Creature] = _
 
-  def onAreaChange(): Unit = {
-    for (creature <- creatures.values) {
-      if (!(creature.isPlayer || creature.isNPC)) if (!creature.alive) {
-        creature.toBeRemoved = true
-      }
-    }
-
+  def onAreaEntry(): Unit = {
+    creatures.values.filter(creature => !creature.isPlayer && !creature.isNPC).foreach(creature => {
+      creature.area.world.destroyBody(creature.body)
+    })
     creatures.filterInPlace((_, creature) => creature.isPlayer || creature.isNPC)
-  }
-
-  def updateGatesLogic(areaGate: AreaGate): Unit = {
-    for (creature <- creatures.values) {
-      if (creature.isPlayer) if (!creature.passedGateRecently) {
-        var gateRect: CustomRectangle = null
-        var destinationArea: Area = null
-        var oldArea: Area = null
-        var destinationRect: CustomRectangle = null
-        if (area == areaGate.areaFrom) {
-          gateRect = areaGate.fromRect
-          oldArea = areaGate.areaFrom
-          destinationArea = areaGate.areaTo
-          destinationRect = areaGate.toRect
-        }
-        if (area == areaGate.areaTo) {
-          gateRect = areaGate.toRect
-          oldArea = areaGate.areaTo
-          destinationArea = areaGate.areaFrom
-          destinationRect = areaGate.fromRect
-        }
-
-        // TODO: box2d
-//        if (creature.rect.intersects(gateRect) && creature.isPlayer) {
-//          GameSystem.loadingScreenVisible = true
-//          creature.passedGateRecently = true
-//          creature.moveToArea(destinationArea, destinationRect.getX, destinationRect.getY)
-//          GameSystem.currentArea = Some(destinationArea)
-//          oldArea.onLeave()
-//          destinationArea.onEntry()
-//        }
-      }
-    }
   }
 
   def addCreature(creature: Creature): Unit = {

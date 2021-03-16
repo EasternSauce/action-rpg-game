@@ -141,6 +141,7 @@ class PlayerCharacter(id: String) extends Creature(id) {
   override def update(): Unit = {
     super.update()
 
+
     if (respawning && respawnTimer.time > 3f) {
       respawning = false
       pendingArea = currentRespawnPoint.area
@@ -155,9 +156,6 @@ class PlayerCharacter(id: String) extends Creature(id) {
       GameSystem.resetArea()
       GameSystem.stopBossBattleMusic()
     }
-
-    if (passedGateRecently) onPassedGate(GameSystem.gateList)
-
   }
 
   def respawnArea: Area = currentRespawnPoint.area
