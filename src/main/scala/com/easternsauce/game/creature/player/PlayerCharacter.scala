@@ -117,23 +117,21 @@ class PlayerCharacter(id: String) extends Creature(id) {
     if (GameSystem.lootSystem.getVisibleItemsCount == 0) {
       for (creature <- area.creatures.values) {
         if (creature != this) {
-          // TODO: box2d collision
-//          if (rect.intersects(creature.rect) && creature.isInstanceOf[NonPlayerCharacter] && creature.healthPoints > 0) {
-//            creature.asInstanceOf[NonPlayerCharacter].triggerDialogue()
-//          }
+          if (body.getPosition.dst(creature.body.getPosition) * GameSystem.PixelsPerMeter < 70f && creature.healthPoints > 0) {
+            creature.asInstanceOf[NonPlayerCharacter].triggerDialogue()
+          }
         }
       }
 
       for (playerRespawnPoint <- area.respawnList) {
-        // TODO: box2d collision
-//        if (rect.intersects(playerRespawnPoint.rect)) {
-//          currentRespawnPoint = playerRespawnPoint
-//          currentRespawnPoint.onRespawnSet()
-//          if (healthPoints < maxHealthPoints / 2) healthPoints = maxHealthPoints / 2
-//
-//          assert(GameSystem.currentArea.nonEmpty)
-//          GameSystem.currentArea.get.softReset()
-//        }
+        if (body.getPosition.dst(playerRespawnPoint.body.getPosition) * GameSystem.PixelsPerMeter < 70f) {
+          currentRespawnPoint = playerRespawnPoint
+          currentRespawnPoint.onRespawnSet()
+          if (healthPoints < maxHealthPoints / 2) healthPoints = maxHealthPoints / 2
+
+          assert(GameSystem.currentArea.nonEmpty)
+          GameSystem.currentArea.get.softReset()
+        }
       }
     }
   }

@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.physics.box2d.{Body, BodyDef}
+import com.badlogic.gdx.physics.box2d.{Body, BodyDef, CircleShape, FixtureDef}
 import com.easternsauce.game.ability.Ability
 import com.easternsauce.game.ability.attack._
 import com.easternsauce.game.area.{Area, AreaGate}
@@ -25,8 +25,6 @@ import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 abstract class Creature(val id: String) extends Ordered[Creature] {
-
-
   protected var healthRegen = 0.3f
   protected var staminaRegen = 3f
 
@@ -727,4 +725,20 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   def setPos(x: Float, y: Float): Unit = {
     body.setTransform(x / GameSystem.PixelsPerMeter, y / GameSystem.PixelsPerMeter, 0)
   }
+
+  def initBody(x: Float, y: Float): Unit = {
+    val bodyDef = new BodyDef()
+    bodyDef.position.set(x / GameSystem.PixelsPerMeter, y / GameSystem.PixelsPerMeter)
+    bodyDef.`type` = BodyDef.BodyType.DynamicBody
+    body = area.world.createBody(bodyDef)
+    body.setUserData(this)
+
+    val fixtureDef: FixtureDef = new FixtureDef()
+    val shape: CircleShape = new CircleShape()
+    shape.setRadius(30 / GameSystem.PixelsPerMeter)
+    fixtureDef.shape = shape
+    body.createFixture(fixtureDef)
+    body.setLinearDamping(9f)
+  }
+
 }

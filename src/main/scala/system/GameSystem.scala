@@ -125,15 +125,15 @@ object GameSystem {
     camera.update()
   }
 
-  def distance(rect1: CustomRectangle, rect2: CustomRectangle): Float = {
-    val center1 = rect1.center
-    val x1 = center1.x
-    val y1 = center1.y
-    val center2 = rect2.center
-    val x2 = center2.x
-    val y2 = center2.y
-    Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)).toFloat
-  }
+//  def distance(rect1: CustomRectangle, rect2: CustomRectangle): Float = {
+//    val center1 = rect1.center
+//    val x1 = center1.x
+//    val y1 = center1.y
+//    val center2 = rect2.center
+//    val x2 = center2.x
+//    val y2 = center2.y
+//    Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)).toFloat
+//  }
 
   def getVectorPerpendicular(vector: Vector2): CustomVector2 = {
     CustomVector2(-vector.y, vector.x)

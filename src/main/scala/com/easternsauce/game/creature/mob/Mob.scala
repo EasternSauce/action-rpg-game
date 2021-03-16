@@ -49,13 +49,13 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
 
 
     GameSystem.areaCreatures.filter(creature => !creature.isMob && !creature.isNPC).foreach(creature => { // TODO: exclude npc too
-      // TODO: box2d distance
-//      if (!foundCreatureToAggro && alive && GameSystem.distance(rect, creature.rect) < aggroDistance) {
-//        aggroedCreature = Some(creature)
-//        foundCreatureToAggro = true
-//
-//        onAggroed()
-//      }
+      if (!foundCreatureToAggro && alive && body.getPosition.dst(creature.body.getPosition) * GameSystem.PixelsPerMeter < aggroDistance) {
+        aggroedCreature = Some(creature)
+        foundCreatureToAggro = true
+
+        onAggroed()
+      }
+
     })
 
     aggroedCreature match {

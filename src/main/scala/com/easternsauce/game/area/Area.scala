@@ -1,14 +1,10 @@
 package com.easternsauce.game.area
 
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.audio.Music
-import com.badlogic.gdx.backends.lwjgl.audio.Wav
-import com.badlogic.gdx.maps.MapLayer
-import com.badlogic.gdx.maps.objects.RectangleMapObject
-import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
+import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
 import com.badlogic.gdx.math.{Rectangle, Vector2}
-import com.badlogic.gdx.physics.box2d.{Body, BodyDef, CircleShape, Contact, ContactImpulse, ContactListener, Fixture, FixtureDef, Manifold, PolygonShape, Shape, World}
+import com.badlogic.gdx.physics.box2d._
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.item.loot.{LootPile, Treasure}
@@ -147,25 +143,9 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
     creaturesManager.addCreature(creature)
     creature.area = this
 
-
     GameSystem.loadingScreenVisible = false
 
-    addBox2dBody(creature, x, y)
-  }
-
-  private def addBox2dBody(creature: Creature, x: Float, y: Float): Unit = {
-    val bodyDef = new BodyDef()
-    bodyDef.position.set(x / GameSystem.PixelsPerMeter, y / GameSystem.PixelsPerMeter)
-    bodyDef.`type` = BodyDef.BodyType.DynamicBody
-    creature.body = world.createBody(bodyDef)
-    creature.body.setUserData(creature)
-
-    val fixtureDef: FixtureDef = new FixtureDef()
-    val shape: CircleShape = new CircleShape()
-    shape.setRadius(30 / GameSystem.PixelsPerMeter)
-    fixtureDef.shape = shape
-    val fixture = creature.body.createFixture(fixtureDef)
-    creature.body.setLinearDamping(9f)
+    creature.initBody(x, y)
   }
 
   def removeCreature(id: String): Unit = {

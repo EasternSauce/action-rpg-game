@@ -1,10 +1,12 @@
 package com.easternsauce.game.spawn
 
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.physics.box2d.{Body, BodyDef, FixtureDef, PolygonShape}
 import com.easternsauce.game.area.Area
 import com.easternsauce.game.shapes.CustomRectangle
 import com.easternsauce.game.utils.SimpleTimer
 import space.earlygrey.shapedrawer.ShapeDrawer
+import system.GameSystem
 
 class PlayerRespawnPoint(posX: Int, posY: Int, val area: Area) {
 
@@ -16,6 +18,10 @@ class PlayerRespawnPoint(posX: Int, posY: Int, val area: Area) {
   private var respawnSetTimer = SimpleTimer()
 
   private val respawnSetTime: Float = 2f
+
+  var body: Body = _
+
+  initBody()
 
   respawnSetTimer.time = respawnSetTime
 
@@ -31,5 +37,23 @@ class PlayerRespawnPoint(posX: Int, posY: Int, val area: Area) {
     respawnSetTimer.restart()
   }
 
+  def initBody(): Unit = {
+    val bodyDef = new BodyDef()
+    bodyDef.position.set((rect.x + width / 2) / GameSystem.PixelsPerMeter, (rect.y + height / 2) / GameSystem.PixelsPerMeter)
+    bodyDef.`type` = BodyDef.BodyType.StaticBody
+    body = area.world.createBody(bodyDef)
+    body.setUserData(this)
+
+    val fixtureDef: FixtureDef = new FixtureDef()
+
+    fixtureDef.isSensor = true
+    val shape : PolygonShape = new PolygonShape()
+
+    shape.setAsBox((rect.width / 2) / GameSystem.PixelsPerMeter, (rect.height / 2) / GameSystem.PixelsPerMeter)
+
+    fixtureDef.shape = shape
+    body.createFixture(fixtureDef)
+
+  }
 
 }
