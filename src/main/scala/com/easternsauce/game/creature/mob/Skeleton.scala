@@ -9,7 +9,7 @@ import com.easternsauce.game.utils.SimpleTimer
 
 class Skeleton(override val id: String, override val mobSpawnPoint: MobSpawnPoint, val weaponType: String) extends Mob(id, mobSpawnPoint) {
   override val hitboxBounds = new CustomRectangle(18, 0, 28, 64)
-  override val baseSpeed = 300f
+  override val baseSpeed = 12f
 
   override protected val onGettingHitSound: Sound = Assets.boneClickSound
 

@@ -85,7 +85,7 @@ class PlayerCharacter(id: String) extends Creature(id) {
     isRunningAnimationActive = false
   }
 
-    override protected def defineCustomAbilities(): Unit = {
+  override protected def defineCustomAbilities(): Unit = {
     dashAbility = DashAbility(this)
 
     dashAbility.onPerformAction = () => {
@@ -99,17 +99,16 @@ class PlayerCharacter(id: String) extends Creature(id) {
   }
 
   override def processMovement(): Unit = {
-      if (isMoving && !wasMoving) {
-        Assets.runningSound.loop(0.1f)
-      }
+    if (isMoving && !wasMoving) {
+      Assets.runningSound.loop(0.1f)
+    }
 
 
+    if (wasMoving && !isMoving) {
+      Assets.runningSound.stop()
+    }
 
-      if (wasMoving && !isMoving) {
-        Assets.runningSound.stop()
-      }
-
-      super.processMovement()
+    super.processMovement()
 
   }
 

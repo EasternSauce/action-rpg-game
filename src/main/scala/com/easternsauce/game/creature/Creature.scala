@@ -66,7 +66,6 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   val spriteWidth: Float = 64
   val spriteHeight: Float = 64
 
-//  val rect: CustomRectangle = new CustomRectangle(0, 0, 64, 64)
   val hitboxBounds: CustomRectangle = new CustomRectangle(2, 2, 60, 60)
 
   val isPlayer = false
@@ -117,7 +116,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
   var movementVector: CustomVector2 = CustomVector2(0f, 0f)
 
-  val baseSpeed: Float = 250.0f
+  val baseSpeed: Float = 12f
 
   protected val walkAnimationFrameDuration = 0.1f
   protected val walkAnimationTimer: SimpleTimer = SimpleTimer()
@@ -148,9 +147,12 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
   val dirMap = Map(Left -> 1, Right -> 2, Up -> 3, Down -> 0)
 
+  var currentMaxVelocity: Float = _
+
   var body: Body = _
 
   def alive: Boolean = healthPoints > 0f
+
   def atFullLife: Boolean = healthPoints >= maxHealthPoints
 
   def currentAttack: Attack = {
@@ -199,15 +201,16 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
     currentAttack.update()
 
-    if (GameSystem.cameraFocussedCreature.nonEmpty
-      && this == GameSystem.cameraFocussedCreature.get) {
-      GameSystem.adjustCamera(this)
-    }
 
     if (staminaDrain >= 0.3f) {
       takeStaminaDamage(11f)
 
       staminaDrain = 0.0f
+    }
+
+    if (GameSystem.cameraFocussedCreature.nonEmpty
+      && this == GameSystem.cameraFocussedCreature.get) {
+      GameSystem.adjustCamera(this)
     }
   }
 
@@ -221,8 +224,8 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   def renderHealthBar(shapeDrawer: ShapeDrawer): Unit = {
     val healthBarHeight = 5
     val healthBarWidth = 50
-    val currentHealthBarWidth = healthBarWidth * healthPoints/maxHealthPoints
-    val barPosX = posX + (spriteWidth / 2 - healthBarWidth/2)
+    val currentHealthBarWidth = healthBarWidth * healthPoints / maxHealthPoints
+    val barPosX = posX + (spriteWidth / 2 - healthBarWidth / 2)
     val barPosY = posY + spriteHeight + 10
     shapeDrawer.filledRectangle(new CustomRectangle(barPosX, barPosY, healthBarWidth, healthBarHeight), Color.ORANGE)
     shapeDrawer.filledRectangle(new CustomRectangle(barPosX, barPosY, currentHealthBarWidth, healthBarHeight), Color.RED)
@@ -559,76 +562,49 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     movingDir.x = 0
     movingDir.y = 0
 
-    var adjustedSpeed = this.baseSpeed
+    currentMaxVelocity = this.baseSpeed
 
-    if (isAttacking) adjustedSpeed = adjustedSpeed / 2
+    if (isAttacking) currentMaxVelocity = currentMaxVelocity / 2
     else if (sprinting && staminaPoints > 0) {
-      adjustedSpeed = adjustedSpeed * 2f
+      currentMaxVelocity = currentMaxVelocity * 2f
       staminaDrain += Gdx.graphics.getDeltaTime
     }
-
-    movementIncrement = adjustedSpeed * Gdx.graphics.getDeltaTime
-
   }
 
   def processMovement(): Unit = {
 
     assert(GameSystem.currentArea.nonEmpty)
 
-    val tiledMap = GameSystem.currentArea.get.tiledMap
-    val blockadeList = GameSystem.currentArea.get.blockadeList
-
-
-
     if (!isEffectActive("immobilized") && !knockback) {
 
-      if (totalDirections > 1) movementIncrement = movementIncrement / Math.sqrt(2).toFloat
+      if (totalDirections > 1) currentMaxVelocity = currentMaxVelocity / Math.sqrt(2).toFloat
 
-      // no longer need to check collisions due to box2d taking care of them
-
-
-      //val newPosX = posX + movementIncrement * movingDir.x
-      //val newPosY = posY + movementIncrement * movingDir.y
-
-
-      //if (isMovementAllowedXAxis(newPosX, newPosY, tiledMap, blockadeList)) {
-        //move(movementIncrement * movingDir.x, 0)
-        if (movingDir.x == -1) {
-          if (body.getLinearVelocity.x >= -12f) {
-            body.applyLinearImpulse(new Vector2(2f * movingDir.x, 0), body.getWorldCenter, true)
-          }
+      if (movingDir.x == -1) {
+        if (body.getLinearVelocity.x >= -currentMaxVelocity) {
+          body.applyLinearImpulse(new Vector2(4f * movingDir.x, 0), body.getWorldCenter, true)
         }
-        else if (movingDir.x == 1) {
-          if (body.getLinearVelocity.x <= 12f) {
-            body.applyLinearImpulse(new Vector2(2f * movingDir.x, 0), body.getWorldCenter, true)
-          }
+      }
+      else if (movingDir.x == 1) {
+        if (body.getLinearVelocity.x <= currentMaxVelocity) {
+          body.applyLinearImpulse(new Vector2(4f * movingDir.x, 0), body.getWorldCenter, true)
         }
+      }
 
-        movementVector.x = movementIncrement * movingDir.x
-      //}
-      //else movementVector.x = 0
+      movementVector.x = movementIncrement * movingDir.x
 
-      //if (isMovementAllowedYAxis(newPosX, newPosY, tiledMap, blockadeList)) {
-        //move(0, movementIncrement * movingDir.y)
-        if (movingDir.y == -1) {
-          if (body.getLinearVelocity.y >= -12f) {
-            body.applyLinearImpulse(new Vector2(0, 2f * movingDir.y), body.getWorldCenter, true)
-          }
+      if (movingDir.y == -1) {
+        if (body.getLinearVelocity.y >= -currentMaxVelocity) {
+          body.applyLinearImpulse(new Vector2(0, 4f * movingDir.y), body.getWorldCenter, true)
         }
-        else if (movingDir.y == 1) {
-          if (body.getLinearVelocity.y <= 12f) {
-            body.applyLinearImpulse(new Vector2(0, 2f * movingDir.y), body.getWorldCenter, true)
-          }
+      }
+      else if (movingDir.y == 1) {
+        if (body.getLinearVelocity.y <= currentMaxVelocity) {
+          body.applyLinearImpulse(new Vector2(0, 4f * movingDir.y), body.getWorldCenter, true)
         }
+      }
 
+      movementVector.y = movementIncrement * movingDir.y
 
-        movementVector.y = movementIncrement * movingDir.y
-      //}
-      //else movementVector.y = 0
-
-//      if (movingDir.x == 0 && movingDir.y == 0) {
-//        body.setLinearVelocity(0f,0f)
-//      }
     }
 
     if (isMoving && !wasMoving) if (!isRunningAnimationActive) {
@@ -717,9 +693,11 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   }
 
   def posX: Float = body.getPosition.x * GameSystem.PixelsPerMeter
+
   def posY: Float = body.getPosition.y * GameSystem.PixelsPerMeter
 
   def centerPosX: Float = body.getWorldCenter.x * GameSystem.PixelsPerMeter
+
   def centerPosY: Float = body.getWorldCenter.y * GameSystem.PixelsPerMeter
 
   def setPos(x: Float, y: Float): Unit = {
@@ -738,7 +716,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     shape.setRadius(30 / GameSystem.PixelsPerMeter)
     fixtureDef.shape = shape
     body.createFixture(fixtureDef)
-    body.setLinearDamping(9f)
+    body.setLinearDamping(10f)
   }
 
 }

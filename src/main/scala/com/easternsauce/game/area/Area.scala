@@ -36,9 +36,9 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
 
   var arrowList: mutable.ListBuffer[Arrow] = ListBuffer()
 
-  var world: World = new World(new Vector2(0f,0f), true)
+  var world: World = new World(new Vector2(0f, 0f), true)
 
-  val layer = tiledMap.getLayers.get(0).asInstanceOf[TiledMapTileLayer]
+  val layer: TiledMapTileLayer = tiledMap.getLayers.get(0).asInstanceOf[TiledMapTileLayer]
 
   for {x <- Seq.range(0, layer.getWidth)
        y <- Seq.range(0, layer.getHeight)} {
@@ -59,7 +59,7 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
       val body: Body = world.createBody(bodyDef)
       body.setUserData(this)
 
-      val shape : PolygonShape = new PolygonShape()
+      val shape: PolygonShape = new PolygonShape()
 
       shape.setAsBox((rectW / 2) / GameSystem.PixelsPerMeter, (rectH / 2) / GameSystem.PixelsPerMeter)
 
@@ -202,8 +202,7 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
 
     areaCreatures.values.foreach((creature: Creature) => creature.update())
 
-    world.step(1/60f, 6, 2)
-
+    world.step(Math.min(Gdx.graphics.getDeltaTime, 0.15f), 6, 2)
 
   }
 

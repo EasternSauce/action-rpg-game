@@ -56,7 +56,6 @@ object GameSystem {
   var areas: mutable.Map[String, Area] = mutable.Map()
 
 
-
   var gateList: ListBuffer[AreaGate] = ListBuffer()
 
   var creaturesToMove: ListBuffer[Creature] = ListBuffer()
@@ -120,20 +119,25 @@ object GameSystem {
   }
 
   def adjustCamera(creature: Creature): Unit = {
-    camera.position.x = creature.centerPosX
-    camera.position.y = creature.centerPosY - Gdx.graphics.getHeight * (1 - ScreenProportion) / 2
+
+    // smooth camera following
+    val lerp = 30f
+    val position = camera.position
+    position.x += (creature.centerPosX - position.x) * lerp * Gdx.graphics.getDeltaTime
+    position.y += (creature.centerPosY - Gdx.graphics.getHeight * (1 - ScreenProportion) / 2 - position.y) * lerp * Gdx.graphics.getDeltaTime
+
     camera.update()
   }
 
-//  def distance(rect1: CustomRectangle, rect2: CustomRectangle): Float = {
-//    val center1 = rect1.center
-//    val x1 = center1.x
-//    val y1 = center1.y
-//    val center2 = rect2.center
-//    val x2 = center2.x
-//    val y2 = center2.y
-//    Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)).toFloat
-//  }
+  //  def distance(rect1: CustomRectangle, rect2: CustomRectangle): Float = {
+  //    val center1 = rect1.center
+  //    val x1 = center1.x
+  //    val y1 = center1.y
+  //    val center2 = rect2.center
+  //    val x2 = center2.x
+  //    val y2 = center2.y
+  //    Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)).toFloat
+  //  }
 
   def getVectorPerpendicular(vector: Vector2): CustomVector2 = {
     CustomVector2(-vector.y, vector.x)
@@ -175,10 +179,10 @@ object GameSystem {
     worldShapeDrawer = new ShapeDrawer(worldBatch, worldRegion)
 
     debugRenderer = new Box2DDebugRenderer()
-//    var bodyDef = new BodyDef()
-//    var shape = new PolygonShape()
-//    var fixtureDef = new FixtureDef()
-//    var body = new Body()
+    //    var bodyDef = new BodyDef()
+    //    var shape = new PolygonShape()
+    //    var fixtureDef = new FixtureDef()
+    //    var body = new Body()
 
     init()
 
@@ -209,7 +213,7 @@ object GameSystem {
     lootSystem.placeTreasure(areas("area2"), 168, 3024, ItemType.getItemType("trident"))
     lootSystem.placeTreasure(areas("area1"), 600, 500, ItemType.getItemType("healingPowder"))
 
-    val nonPlayerCharacter = new NonPlayerCharacter("Johnny", true, Assets.male1SpriteSheet,"a1")
+    val nonPlayerCharacter = new NonPlayerCharacter("Johnny", true, Assets.male1SpriteSheet, "a1")
     areas("area1").addNewCreature(nonPlayerCharacter, 1512f, 11f)
     val nonPlayerCharacter2 = new NonPlayerCharacter("Rita", true, Assets.male1SpriteSheet, "a1")
     areas("area2").addNewCreature(nonPlayerCharacter2, 400f, 400f)
@@ -386,7 +390,7 @@ object GameSystem {
   def renderLoadingScreen(hudShapeDrawer: ShapeDrawer): Unit = {
     if (loadingScreenVisible) {
       hudShapeDrawer.setColor(Color.BLACK)
-      hudShapeDrawer.filledRectangle(0,0, Gdx.graphics.getWidth, Gdx.graphics.getHeight)
+      hudShapeDrawer.filledRectangle(0, 0, Gdx.graphics.getWidth, Gdx.graphics.getHeight)
     }
   }
 
@@ -398,11 +402,11 @@ object GameSystem {
     try {
       for (line <- fileContents.getLines) {
         val s = line.split(" ")
-        if(s(0).equals("creature")) {
+        if (s(0).equals("creature")) {
           var foundCreature: Creature = null
 
           var found = false
-          areas.values.foreach (area => {
+          areas.values.foreach(area => {
             if (!found) {
               area.creaturesManager.getCreatureById(s(1)) match {
                 case Some(creature) =>
@@ -416,7 +420,7 @@ object GameSystem {
           creature = foundCreature
 
         }
-        if(s(0).equals("pos")) {
+        if (s(0).equals("pos")) {
           if (creature != null) {
             if (creature.area == null) throw new RuntimeException("position cannot be set before creature is spawned in area")
           }
@@ -427,16 +431,16 @@ object GameSystem {
         if (s(0) == "area") if (creature != null) {
           creature.area = areas(s(1))
           areas(s(1)).moveInCreature(creature, 0f, 0f)
-          if (creature.isInstanceOf[PlayerCharacter]) currentArea= Some(areas(s(1)))
+          if (creature.isInstanceOf[PlayerCharacter]) currentArea = Some(areas(s(1)))
         }
 
-        if(s(0).equals("health")) {
+        if (s(0).equals("health")) {
           if (creature != null) {
             creature.healthPoints = s(1).toFloat
           }
         }
 
-        if(s(0).equals("equipment_item")) {
+        if (s(0).equals("equipment_item")) {
           if (creature != null) {
             val equipmentItems: mutable.Map[Int, Item] = creature.equipmentItems
             val item: Item = new Item(itemType = ItemType.getItemType(s(2)),
@@ -464,9 +468,21 @@ object GameSystem {
           if (creature != null) {
             val inventoryItems: mutable.Map[Int, Item] = inventoryWindow.inventoryItems
             inventoryItems.put(s(1).toInt, new Item(ItemType.getItemType(s(2)), lootPileBackref = null,
-              damage = if (s(3) == "0") {null.asInstanceOf[Float]} else {s(3).toInt.toFloat},
-              armor = if (s(4) == "0") {null.asInstanceOf[Float]} else {s(4).toInt.toFloat},
-              quantity = if (s(5) == "0") {null.asInstanceOf[Int]} else {s(5).toInt}))
+              damage = if (s(3) == "0") {
+                null.asInstanceOf[Float]
+              } else {
+                s(3).toInt.toFloat
+              },
+              armor = if (s(4) == "0") {
+                null.asInstanceOf[Float]
+              } else {
+                s(4).toInt.toFloat
+              },
+              quantity = if (s(5) == "0") {
+                null.asInstanceOf[Int]
+              } else {
+                s(5).toInt
+              }))
           }
         }
 

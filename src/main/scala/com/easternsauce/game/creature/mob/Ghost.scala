@@ -28,7 +28,7 @@ class Ghost(override val id: String, override val mobSpawnPoint: MobSpawnPoint, 
 
   override val onGettingHitSound: Sound = Assets.evilYellingSound
 
-  override val baseSpeed = 300f
+  override val baseSpeed = 12f
 
   private var explodeAbility: ExplodeAbility = _
 
