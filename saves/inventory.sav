@@ -7,5 +7,6 @@ inventory_item 5 steelGloves 0 6 1
 inventory_item 6 ringmailGreaves 0 4 1
 inventory_item 7 trident 60 0 1
 inventory_item 8 steelGreaves 0 12 1
+inventory_item 9 trident 45 0 1
 inventory_item 14 crossbow 41 0 1
 gold 0

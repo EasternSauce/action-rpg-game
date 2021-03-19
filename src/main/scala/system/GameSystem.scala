@@ -266,17 +266,16 @@ object GameSystem {
 
       if (Gdx.input.isKeyJustPressed(Keys.F5)) saveGame()
 
-      camera.update()
-
       val area: Area = currentArea match {
         case Some(value) => value
         case None => throw new RuntimeException("currentArea is not set")
       }
 
 
-      area.tiledMapRenderer.setView(camera)
-
       area.update()
+
+      GameSystem.currentArea.get.tiledMapRenderer.setView(camera)
+
 
       creaturesToMove.clear()
 
@@ -374,7 +373,7 @@ object GameSystem {
 
       hudBatch.end()
 
-      debugRenderer.render(currentArea.get.world, camera.combined.scale(PixelsPerMeter, PixelsPerMeter, 0))
+      debugRenderer.render(currentArea.get.world, camera.combined.scale(PixelsPerMeter, PixelsPerMeter, 1))
 
     }
 

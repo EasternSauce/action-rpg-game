@@ -12,6 +12,7 @@ import com.easternsauce.game.projectile.Arrow
 import com.easternsauce.game.spawn._
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
+import system.GameSystem.{camera, currentArea}
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
@@ -219,7 +220,6 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
 
         fixtureA.getBody.getUserData match {
           case areaGate: AreaGate =>
-            Gdx.app.log("beginContact", "between " + fixtureA.getBody.getUserData + " and " + fixtureB.getBody.getUserData)
             fixtureB.getBody.getUserData match {
               case creature: Creature =>
                 if (!creature.passedGateRecently) {
@@ -232,7 +232,6 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
 
         fixtureB.getBody.getUserData match {
           case areaGate: AreaGate =>
-            Gdx.app.log("beginContact", "between " + fixtureA.getBody.getUserData + " and " + fixtureB.getBody.getUserData)
             fixtureA.getBody.getUserData match {
               case creature: Creature =>
                 if (!creature.passedGateRecently) {
@@ -250,7 +249,6 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
 
         fixtureA.getBody.getUserData match {
           case areaGate: AreaGate =>
-            Gdx.app.log("endContact", "between " + fixtureA.getBody.getUserData + " and " + fixtureB.getBody.getUserData)
             fixtureB.getBody.getUserData match {
               case creature: Creature =>
                 creature.passedGateRecently = false
@@ -261,7 +259,6 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
 
         fixtureB.getBody.getUserData match {
           case areaGate: AreaGate =>
-            Gdx.app.log("endContact", "between " + fixtureA.getBody.getUserData + " and " + fixtureB.getBody.getUserData)
             fixtureA.getBody.getUserData match {
               case creature: Creature =>
                 creature.passedGateRecently = false

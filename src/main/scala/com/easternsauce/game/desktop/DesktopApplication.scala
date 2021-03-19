@@ -1,14 +1,12 @@
 package com.easternsauce.game.desktop
 
-import com.badlogic.gdx.backends.lwjgl.{LwjglApplication, LwjglApplicationConfiguration}
+import com.badlogic.gdx.backends.lwjgl3.{Lwjgl3Application, Lwjgl3ApplicationConfiguration}
 import system.GdxGame
 
 object DesktopApplication {
   def main(arg: Array[String]): Unit = {
-    val config = new LwjglApplicationConfiguration
-    config.width = 1024
-    config.height = 720
-    config.fullscreen = false
-    new LwjglApplication(new GdxGame, config)
+    val config = new Lwjgl3ApplicationConfiguration
+    config.setWindowedMode(1024, 720)
+    new Lwjgl3Application(new GdxGame, config)
   }
 }

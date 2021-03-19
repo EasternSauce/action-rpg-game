@@ -15,7 +15,6 @@ import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.mob.Mob
 import com.easternsauce.game.shapes.{CustomRectangle, CustomVector2}
-import org.lwjgl.util.vector.Vector2f
 import system.GameSystem
 
 import scala.collection.mutable
