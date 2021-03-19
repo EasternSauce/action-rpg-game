@@ -49,7 +49,8 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
 
 
     GameSystem.areaCreatures.filter(creature => !creature.isMob && !creature.isNPC).foreach(creature => { // TODO: exclude npc too
-      if (!foundCreatureToAggro && alive && body.getPosition.dst(creature.body.getPosition) * GameSystem.PixelsPerMeter < aggroDistance) {
+
+      if (!foundCreatureToAggro && alive && GameSystem.distance(body, creature.body) < aggroDistance) {
         aggroedCreature = Some(creature)
         foundCreatureToAggro = true
 

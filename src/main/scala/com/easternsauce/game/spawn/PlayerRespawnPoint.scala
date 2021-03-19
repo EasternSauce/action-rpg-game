@@ -29,7 +29,7 @@ class PlayerRespawnPoint(posX: Int, posY: Int, val area: Area) {
     if (respawnSetTimer.time < respawnSetTime) shapeDrawer.setColor(Color.RED)
     else shapeDrawer.setColor(Color.ORANGE)
 
-    shapeDrawer.filledRectangle(rect.center.x, rect.center.y, width, height)
+    shapeDrawer.filledRectangle(rect.x, rect.y, width, height)
 
   }
 

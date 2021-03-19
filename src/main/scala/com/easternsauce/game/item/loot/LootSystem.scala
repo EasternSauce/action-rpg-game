@@ -34,14 +34,14 @@ class LootSystem {
     visibleItems = new ListBuffer[Item]
 
     for (lootPile <- GameSystem.currentArea.get.lootPileList) {
-      if (GameSystem.currentArea.get == lootPile.area) if (GameSystem.playerCharacter.body.getPosition.dst(lootPile.body.getPosition) * GameSystem.PixelsPerMeter < 40f) {
+      if (GameSystem.currentArea.get == lootPile.area) if (GameSystem.distance(GameSystem.playerCharacter.body, lootPile.body) < 40f) {
         GameSystem.lootOptionWindow.visible = true
         visibleItems.addAll(lootPile.itemList)
       }
     }
 
     for (treasure <- GameSystem.currentArea.get.remainingTreasureList) {
-      if (GameSystem.currentArea.get == treasure.area) if (GameSystem.playerCharacter.body.getPosition.dst(treasure.body.getPosition) * GameSystem.PixelsPerMeter < 40f) {
+      if (GameSystem.currentArea.get == treasure.area) if (GameSystem.distance(GameSystem.playerCharacter.body, treasure.body) < 40f) {
         GameSystem.lootOptionWindow.visible = true
         visibleItems.addAll(treasure.itemList)
       }

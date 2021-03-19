@@ -435,6 +435,8 @@ class InventoryWindow {
         inventoryItems(invPos).quantity = inventoryItems(invPos).quantity + item.quantity
         if (item.lootPileBackref.itemList.size == 1) {
           item.lootPileBackref.visible = false
+          val world = item.lootPileBackref.body.getWorld
+          world.destroyBody(item.lootPileBackref.body)
         }
         item.removeFromLoot()
         itemList -= item
@@ -459,6 +461,8 @@ class InventoryWindow {
         }
         if (item.lootPileBackref.itemList.size == 1) {
           item.lootPileBackref.visible = false
+          val world = item.lootPileBackref.body.getWorld
+          world.destroyBody(item.lootPileBackref.body)
         }
         item.removeFromLoot()
         itemList -= item

@@ -584,5 +584,8 @@ object GameSystem {
     }
   }
 
+  def distance(body1: Body, body2: Body): Float = {
+    body1.getPosition.dst(body2.getPosition) * GameSystem.PixelsPerMeter
+  }
 
 }

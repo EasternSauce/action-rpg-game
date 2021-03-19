@@ -59,7 +59,7 @@ class Wolf(override val id: String, override val mobSpawnPoint: MobSpawnPoint) e
 
     assert(aggroedCreature.nonEmpty)
 
-    if (hasDestination) if (dashAbility.canPerform && body.getPosition.dst(aggroedCreature.get.body.getPosition) * GameSystem.PixelsPerMeter < dashDistance) {
+    if (hasDestination) if (dashAbility.canPerform && GameSystem.distance(aggroedCreature.get.body, body) < dashDistance) {
       dashAbility.setDashVector(new CustomVector2(destinationX - posX, destinationY - posY).normal)
       dashAbility.perform()
     }

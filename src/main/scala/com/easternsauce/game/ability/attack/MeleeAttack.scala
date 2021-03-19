@@ -2,6 +2,8 @@ package com.easternsauce.game.ability.attack
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.physics.box2d.{Body, BodyDef, CircleShape, FixtureDef, PolygonShape}
 import com.easternsauce.game.ability.util.AbilityState
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
@@ -22,6 +24,8 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
   protected var attackRange: Float = _
 
   protected var knockbackPower = 2000f
+
+  var body: Body = _
 
   implicit def rectConversion(s: com.badlogic.gdx.math.Rectangle): CustomRectangle = new CustomRectangle(s.x, s.y, s.width, s.height)
 
@@ -150,6 +154,10 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
       poly.translate(0, -height / 2)
       poly.setScale(scale, scale)
 
+      if (body == null) {
+        initBody(poly.getVertices)
+      }
+
       if (GameSystem.drawAttackHitboxes) {
         shapeDrawer.filledPolygon(poly)
       }
@@ -171,5 +179,23 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
   override def update(): Unit = {
     super.update()
 
+  }
+
+  def initBody(vertices: Array[Float]): Unit = {
+    val bodyDef = new BodyDef()
+    bodyDef.position.set(vertices(0) / GameSystem.PixelsPerMeter, vertices(1) / GameSystem.PixelsPerMeter)
+    bodyDef.`type` = BodyDef.BodyType.DynamicBody
+    body = abilityCreature.area.world.createBody(bodyDef)
+    body.setUserData(this)
+
+    val converted = vertices.map(a => a / GameSystem.PixelsPerMeter)
+
+    val fixtureDef: FixtureDef = new FixtureDef()
+    val shape: PolygonShape = new PolygonShape()
+    //shape.setRadius(30 / GameSystem.PixelsPerMeter)
+    shape.set(converted)
+    fixtureDef.shape = shape
+    body.createFixture(fixtureDef)
+    body.setLinearDamping(10f)
   }
 }
