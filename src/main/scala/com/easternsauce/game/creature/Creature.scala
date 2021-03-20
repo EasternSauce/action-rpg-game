@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.{Body, BodyDef, CircleShape, FixtureDef}
 import com.easternsauce.game.ability.Ability
 import com.easternsauce.game.ability.attack._
-import com.easternsauce.game.area.{Area, AreaGate}
+import com.easternsauce.game.area.Area
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up, WalkDirection}
 import com.easternsauce.game.creature.util.{Bow, Sword, Trident, WalkDirection}
 import com.easternsauce.game.effect.Effect

@@ -1,17 +1,11 @@
 package com.easternsauce.game.area
 
-import java.io.PrintWriter
-
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.math.Rectangle
 import com.easternsauce.game.creature.Creature
-import com.easternsauce.game.creature.npc.NonPlayerCharacter
-import com.easternsauce.game.creature.player.PlayerCharacter
 import com.easternsauce.game.item.Item
-import com.easternsauce.game.shapes.CustomRectangle
 import space.earlygrey.shapedrawer.ShapeDrawer
-import system.GameSystem
 
+import java.io.PrintWriter
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 

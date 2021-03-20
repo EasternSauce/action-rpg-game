@@ -1,7 +1,6 @@
 package com.easternsauce.game.item.util
 
-import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.{Sprite, TextureRegion}
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.util.{AttackType, Bow, Sword, Trident}
 

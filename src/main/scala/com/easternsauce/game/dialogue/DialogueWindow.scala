@@ -1,12 +1,8 @@
 package com.easternsauce.game.dialogue
 
-import java.io.{BufferedReader, FileReader, IOException}
-import java.util
-import java.util.{ArrayList, LinkedList, List}
-
-import com.badlogic.gdx.{Gdx, Input}
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.{Gdx, Input}
 import com.easternsauce.game.creature.npc.NonPlayerCharacter
 import com.easternsauce.game.dialogue.DialogueAction.DialogueAction
 import system.GameSystem

@@ -1,20 +1,16 @@
 package system
 
-import java.io.{File, FileWriter, PrintWriter}
-
 import com.badlogic.gdx.Input.{Buttons, Keys}
 import com.badlogic.gdx.graphics._
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.TextureAtlasData.Region
 import com.badlogic.gdx.graphics.g2d._
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
 import com.badlogic.gdx.math.{Intersector, Vector2}
-import com.badlogic.gdx.physics.box2d.{Body, BodyDef, Box2DDebugRenderer, FixtureDef, PolygonShape, World}
+import com.badlogic.gdx.physics.box2d.{Body, Box2DDebugRenderer}
 import com.badlogic.gdx.{Gdx, Input}
 import com.easternsauce.game.area.{Area, AreaGate}
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.mob.boss.Boss
-import com.easternsauce.game.creature.mob.{Ghost, Goblin, Skeleton, Wolf}
 import com.easternsauce.game.creature.npc.NonPlayerCharacter
 import com.easternsauce.game.creature.player.PlayerCharacter
 import com.easternsauce.game.dialogue.DialogueWindow
@@ -30,6 +26,7 @@ import com.easternsauce.game.utils.SimpleTimer
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameState.{GameState, MainMenu}
 
+import java.io.{File, PrintWriter}
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 import scala.io.Source
@@ -172,10 +169,10 @@ object GameSystem {
     this.hudBatch = hudBatch
     this.worldBatch = worldBatch
 
-    val (hudTexture, hudRegion) = createTextureAndRegion()
+    val (_, hudRegion) = createTextureAndRegion()
     hudShapeDrawer = new ShapeDrawer(hudBatch, hudRegion)
 
-    val (worldTexture, worldRegion) = createTextureAndRegion()
+    val (_, worldRegion) = createTextureAndRegion()
     worldShapeDrawer = new ShapeDrawer(worldBatch, worldRegion)
 
     debugRenderer = new Box2DDebugRenderer()
@@ -232,10 +229,9 @@ object GameSystem {
   }
 
   private def createTextureAndRegion(): (Texture, TextureRegion) = {
-    import com.badlogic.gdx.graphics.Pixmap
     import com.badlogic.gdx.graphics.Pixmap.Format
-    import com.badlogic.gdx.graphics.Texture
     import com.badlogic.gdx.graphics.g2d.TextureRegion
+    import com.badlogic.gdx.graphics.{Pixmap, Texture}
     val pixmap = new Pixmap(1, 1, Format.RGBA8888)
     pixmap.setColor(Color.WHITE)
     pixmap.drawPixel(0, 0)
@@ -266,11 +262,7 @@ object GameSystem {
 
       if (Gdx.input.isKeyJustPressed(Keys.F5)) saveGame()
 
-      val area: Area = currentArea match {
-        case Some(value) => value
-        case None => throw new RuntimeException("currentArea is not set")
-      }
-
+      val area: Area = getCurrentArea
 
       area.update()
 
@@ -336,10 +328,7 @@ object GameSystem {
     }
     else if (state == GameState.Gameplay) {
 
-      val area: Area = currentArea match {
-        case Some(value) => value
-        case None => throw new RuntimeException("currentArea is not set")
-      }
+      val area: Area = getCurrentArea
 
       area.tiledMapRenderer.render() // has to be outside world batch for some reason, otherwise camera issues
 
@@ -377,6 +366,14 @@ object GameSystem {
 
     }
 
+  }
+
+  private def getCurrentArea = {
+    val area: Area = currentArea match {
+      case Some(value) => value
+      case None => throw new RuntimeException("currentArea is not set")
+    }
+    area
   }
 
   private def renderDeathScreen(hudBatch: SpriteBatch) = {

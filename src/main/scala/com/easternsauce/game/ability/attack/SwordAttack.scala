@@ -2,7 +2,6 @@ package com.easternsauce.game.ability.attack
 
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
-import com.easternsauce.game.creature.util.{AttackType, Sword}
 import com.easternsauce.game.shapes.{CustomPolygon, CustomRectangle}
 import com.easternsauce.game.wrappers.EsAnimation
 

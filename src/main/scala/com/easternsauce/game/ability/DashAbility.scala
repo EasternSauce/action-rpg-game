@@ -3,7 +3,7 @@ package com.easternsauce.game.ability
 import com.badlogic.gdx.Gdx
 import com.easternsauce.game.ability.util.AbilityState
 import com.easternsauce.game.creature.Creature
-import com.easternsauce.game.shapes.{CustomRectangle, CustomVector2}
+import com.easternsauce.game.shapes.CustomVector2
 import com.easternsauce.game.spawn.Blockade
 
 import scala.collection.mutable.ListBuffer

@@ -1,7 +1,5 @@
 package com.easternsauce.game.item.inventory
 
-import java.io.{FileWriter, IOException}
-
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.{Gdx, Input}
@@ -13,6 +11,7 @@ import com.easternsauce.game.shapes.CustomRectangle
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
+import java.io.{FileWriter, IOException}
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 

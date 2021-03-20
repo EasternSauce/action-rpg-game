@@ -1,6 +1,5 @@
 package com.easternsauce.game.item.loot
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.easternsauce.game.area.Area
 import com.easternsauce.game.item.Item
 import com.easternsauce.game.item.util.ItemType

@@ -12,7 +12,6 @@ import com.easternsauce.game.projectile.Arrow
 import com.easternsauce.game.spawn._
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
-import system.GameSystem.{camera, currentArea}
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer

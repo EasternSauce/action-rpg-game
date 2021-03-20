@@ -1,10 +1,6 @@
 package com.easternsauce.game.ability
 
-import java.util
-import java.util.Collection
-
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.easternsauce.game.ability.attack.UnarmedAttack
 import com.easternsauce.game.ability.util.AbilityState
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature

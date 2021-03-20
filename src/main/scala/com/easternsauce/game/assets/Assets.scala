@@ -3,7 +3,7 @@ package com.easternsauce.game.assets
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.{Music, Sound}
 import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.{Sprite, TextureAtlas, TextureRegion}
+import com.badlogic.gdx.graphics.g2d.{TextureAtlas, TextureRegion}
 import com.badlogic.gdx.maps.tiled.{TiledMap, TmxMapLoader}
 import com.easternsauce.game.wrappers.EsSpriteSheet
 

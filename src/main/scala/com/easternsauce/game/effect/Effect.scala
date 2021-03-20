@@ -1,6 +1,5 @@
 package com.easternsauce.game.effect
 
-import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.utils.SimpleTimer
 
 class Effect {
