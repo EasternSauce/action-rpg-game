@@ -32,8 +32,6 @@ class SwordAttack(override protected val abilityCreature: Creature) extends Mele
 
     meleeAttackRect = new CustomRectangle(-999, -999, 1, 1)
 
-    meleeAttackHitbox = new CustomPolygon(meleeAttackRect)
-
     width = 40f
     height = 40f
     scale = 2f

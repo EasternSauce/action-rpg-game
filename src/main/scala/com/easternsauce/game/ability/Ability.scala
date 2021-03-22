@@ -19,9 +19,6 @@ abstract class Ability(protected val abilityCreature: Creature) {
 
   protected var meleeAttackRect: CustomRectangle = _
 
-  var meleeAttackHitbox: CustomPolygon = _
-
-
   protected var isAttack = false
 
 
@@ -33,6 +30,10 @@ abstract class Ability(protected val abilityCreature: Creature) {
 
 
   def init()
+
+  def onUpdateHitbox(): Unit = {
+
+  }
 
   def update(): Unit = {
 
@@ -48,8 +49,13 @@ abstract class Ability(protected val abilityCreature: Creature) {
       onStop()
     }
 
+    if (state == AbilityState.Channeling || state == AbilityState.Active) {
+      onUpdateHitbox()
+    }
+
     if (state == AbilityState.Channeling) onUpdateChanneling()
     else if (state == AbilityState.Active) onUpdateActive()
+
 
 
     if ((state == AbilityState.Inactive) && onCooldown) if (activeTimer.time > cooldownTime) onCooldown = false

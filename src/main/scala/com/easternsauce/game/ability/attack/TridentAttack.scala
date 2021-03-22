@@ -33,8 +33,6 @@ class TridentAttack(override protected val abilityCreature: Creature) extends Me
 
     meleeAttackRect = new CustomRectangle(-999, -999, 1, 1)
 
-    meleeAttackHitbox = new CustomPolygon(meleeAttackRect)
-
     width = 64f
     height = 32f
     scale = 2f

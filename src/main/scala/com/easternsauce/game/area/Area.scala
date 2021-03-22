@@ -3,7 +3,7 @@ package com.easternsauce.game.area
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
-import com.badlogic.gdx.math.{Rectangle, Vector2}
+import com.badlogic.gdx.math.{Polygon, Rectangle, Vector2}
 import com.badlogic.gdx.physics.box2d._
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
@@ -76,6 +76,39 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
   createContactListener()
 
   loadSpawns()
+
+  val bodyDef = new BodyDef()
+  bodyDef.`type` = BodyDef.BodyType.StaticBody
+  bodyDef.position.set((0) / GameSystem.PixelsPerMeter, (0) / GameSystem.PixelsPerMeter)
+
+  val body: Body = world.createBody(bodyDef)
+  body.setUserData(this)
+
+  val shape: PolygonShape = new PolygonShape()
+
+  def rectangleVertices(rect: Rectangle) : Array[Float] = {
+    Array(rect.x, rect.y, rect.x + rect.width, rect.y , rect.x + rect.width, rect.y + rect.height, rect.x, rect.y + rect.height)
+  }
+
+  var verts: Array[Float] = rectangleVertices(new Rectangle(0 / GameSystem.PixelsPerMeter,0 / GameSystem.PixelsPerMeter, 100 / GameSystem.PixelsPerMeter, 20 / GameSystem.PixelsPerMeter))
+  println("v: " + verts.mkString("Array(", ", ", ")"))
+  val polygon = new Polygon(verts)
+  polygon.setRotation(270)
+  //polygon.set
+
+  println("poly: " + polygon.getTransformedVertices.mkString("Array(", ", ", ")"))
+
+
+  shape.set(polygon.getTransformedVertices)
+  //shape.setAsBox((rectW / 2) / GameSystem.PixelsPerMeter, (rectH / 2) / GameSystem.PixelsPerMeter)
+
+
+
+  val fixtureDef: FixtureDef = new FixtureDef
+
+  fixtureDef.shape = shape
+
+  body.createFixture(fixtureDef)
 
   private def loadSpawns(): Unit = {
     for (spawnLocation <- spawnLocationsContainer.spawnLocationList) {

@@ -4,7 +4,7 @@ pos 1555.6779 -12324.194
 health 100.0
 creature protagonist
 area area2
-pos 1322.616 410.63486
+pos 180.15997 59.41983
 health 100.0
 equipment_item 0 trident 9999 0
 equipment_item 1 leatherHelmet 0 9
@@ -14,11 +14,11 @@ equipment_item 4 lifeRing 0 0
 equipment_item 5 ringmailGreaves 0 5
 creature Rita
 area area2
-pos 183.0 95.0
+pos 290.18237 -68.151566
 health 100.0
 creature protagonist
 area area2
-pos 1322.616 410.63486
+pos 180.15997 59.41983
 health 100.0
 equipment_item 0 trident 9999 0
 equipment_item 1 leatherHelmet 0 9
