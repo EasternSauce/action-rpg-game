@@ -5,7 +5,7 @@ import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.shapes.{CustomPolygon, CustomRectangle}
 import com.easternsauce.game.wrappers.EsAnimation
 
-class TridentAttack(override protected val abilityCreature: Creature) extends MeleeAttack(abilityCreature) {
+class TridentAttack(override val abilityCreature: Creature) extends MeleeAttack(abilityCreature) {
   override def init(): Unit = {
     var weaponSpeed = 1.0f
 

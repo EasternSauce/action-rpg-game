@@ -8,7 +8,7 @@ import com.easternsauce.game.spawn.Blockade
 
 import scala.collection.mutable.ListBuffer
 
-class DashAbility(override protected val abilityCreature: Creature) extends Ability(abilityCreature) {
+class DashAbility(override val abilityCreature: Creature) extends Ability(abilityCreature) {
   protected var dashFrameSpeed: Float = 0.0f
   protected var dashDistance: Float = 0.0f
   protected var dashVector: CustomVector2 = CustomVector2(0f, 0f)
@@ -32,13 +32,14 @@ class DashAbility(override protected val abilityCreature: Creature) extends Abil
       val newPosY: Float = abilityCreature.posY + dashFrameSpeed * dashVector.y
       val blockadeList: ListBuffer[Blockade] = abilityCreature.area.blockadeList
 
-      if (abilityCreature.isMovementAllowedXAxis(newPosX, newPosY, tiles, blockadeList)) {
-        abilityCreature.move(dashFrameSpeed * dashVector.x, 0f)
-      }
-
-      if (abilityCreature.isMovementAllowedYAxis(newPosX, newPosY, tiles, blockadeList)) {
-        abilityCreature.move(0f, dashFrameSpeed * dashVector.y)
-      }
+      // TODO: box2d dash
+//      if (abilityCreature.isMovementAllowedXAxis(newPosX, newPosY, tiles, blockadeList)) {
+//        abilityCreature.move(dashFrameSpeed * dashVector.x, 0f)
+//      }
+//
+//      if (abilityCreature.isMovementAllowedYAxis(newPosX, newPosY, tiles, blockadeList)) {
+//        abilityCreature.move(0f, dashFrameSpeed * dashVector.y)
+//      }
     }
   }
 

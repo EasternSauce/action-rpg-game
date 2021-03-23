@@ -33,16 +33,25 @@ class LootSystem {
     visibleItems = new ListBuffer[Item]
 
     for (lootPile <- GameSystem.currentArea.get.lootPileList) {
-      if (GameSystem.currentArea.get == lootPile.area) if (GameSystem.distance(GameSystem.playerCharacter.body, lootPile.body) < 40f) {
-        GameSystem.lootOptionWindow.visible = true
-        visibleItems.addAll(lootPile.itemList)
+      if (GameSystem.currentArea.get == lootPile.area && lootPile.bodyCreated) {
+        if (GameSystem.distance(GameSystem.playerCharacter.body, lootPile.body) < 40f) {
+          GameSystem.lootOptionWindow.visible = true
+          visibleItems.addAll(lootPile.itemList)
+        }
+      }
+
+      if (!lootPile.bodyCreated) {
+        lootPile.initBody()
+        lootPile.bodyCreated = true
       }
     }
 
     for (treasure <- GameSystem.currentArea.get.remainingTreasureList) {
-      if (GameSystem.currentArea.get == treasure.area) if (GameSystem.distance(GameSystem.playerCharacter.body, treasure.body) < 40f) {
-        GameSystem.lootOptionWindow.visible = true
-        visibleItems.addAll(treasure.itemList)
+      if (GameSystem.currentArea.get == treasure.area && treasure.bodyCreated) {
+        if (GameSystem.distance(GameSystem.playerCharacter.body, treasure.body) < 40f) {
+          GameSystem.lootOptionWindow.visible = true
+          visibleItems.addAll(treasure.itemList)
+        }
       }
     }
     GameSystem.lootOptionWindow.setLootOptions(visibleItems)

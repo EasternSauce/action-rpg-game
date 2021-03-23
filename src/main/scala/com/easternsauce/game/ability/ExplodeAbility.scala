@@ -9,7 +9,7 @@ import com.easternsauce.game.wrappers.EsAnimation
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
-class ExplodeAbility(override protected val abilityCreature: Creature) extends Ability(abilityCreature) {
+class ExplodeAbility(override val abilityCreature: Creature) extends Ability(abilityCreature) {
 
   protected var explosionAnimation = new EsAnimation(Assets.explosionSpriteSheet, 0, 0.05f)
   protected var explosionRange: Float = _

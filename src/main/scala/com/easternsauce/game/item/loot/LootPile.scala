@@ -22,7 +22,7 @@ class LootPile(val area: Area, x: Float, y: Float) {
 
   val itemList: ListBuffer[Item] = ListBuffer()
 
-  initBody()
+  var bodyCreated = false
 
   def render(shapeDrawer: ShapeDrawer): Unit = {
     if (visible) {
@@ -48,4 +48,5 @@ class LootPile(val area: Area, x: Float, y: Float) {
     body.createFixture(fixtureDef)
 
   }
+
 }

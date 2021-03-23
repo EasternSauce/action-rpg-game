@@ -12,7 +12,7 @@ import system.GameSystem
 
 import scala.language.implicitConversions
 
-abstract class MeleeAttack(override protected val abilityCreature: Creature) extends Attack(abilityCreature) {
+abstract class MeleeAttack(override val abilityCreature: Creature) extends Attack(abilityCreature) {
   protected var attackAnimation: EsAnimation = _
   protected var windupAnimation: EsAnimation = _
   //protected val weaponSound: Sound = Assets.attackSound
@@ -40,6 +40,30 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
 
     Assets.attackSound.play(0.1f)
 
+    var attackVector = abilityCreature.attackVector
+    val theta = CustomVector2(attackVector.x, attackVector.y).angleDeg()
+
+    if (attackVector.len() > 0f) {
+      attackVector = CustomVector2(attackVector.x / attackVector.len(), attackVector.y / attackVector.len())
+    }
+
+    val attackShiftX = attackVector.x * attackRange
+    val attackShiftY = attackVector.y * attackRange
+
+    val attackRectX = attackShiftX + abilityCreature.centerPosX
+    val attackRectY = attackShiftY + abilityCreature.centerPosY
+
+    val poly = new CustomPolygon(new CustomRectangle(0,0, width, height))
+
+    poly.setOrigin(0, height / 2)
+    poly.setRotation(theta)
+    //poly.setPosition(attackRectX, attackRectY)
+    poly.translate(0, -height / 2)
+    poly.setScale(scale, scale)
+
+    hitbox = AttackHitbox(attackRectX, attackRectY, poly)
+
+    initBody(hitbox)
   }
 
   override def onUpdateActive(): Unit = {
@@ -169,7 +193,6 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
 
     hitbox = AttackHitbox(attackRectX, attackRectY, poly)
 
-    initBody(hitbox)
   }
 
 
@@ -190,7 +213,7 @@ abstract class MeleeAttack(override protected val abilityCreature: Creature) ext
 
     val fixtureDef: FixtureDef = new FixtureDef()
     val shape: PolygonShape = new PolygonShape()
-    shape.setRadius(30 / GameSystem.PixelsPerMeter)
+    //shape.setRadius(30 / GameSystem.PixelsPerMeter)
     shape.set(converted)
     fixtureDef.shape = shape
     fixtureDef.isSensor = true

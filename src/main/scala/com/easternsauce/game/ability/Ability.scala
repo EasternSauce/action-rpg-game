@@ -8,7 +8,7 @@ import com.easternsauce.game.shapes.{CustomPolygon, CustomRectangle}
 import com.easternsauce.game.utils.SimpleTimer
 import space.earlygrey.shapedrawer.ShapeDrawer
 
-abstract class Ability(protected val abilityCreature: Creature) {
+abstract class Ability(val abilityCreature: Creature) {
 
   protected var activeTimer: SimpleTimer = SimpleTimer()
   protected var channelTimer: SimpleTimer = SimpleTimer()

@@ -629,8 +629,9 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
       val newPosX: Float = posX + knockbackSpeed * knockbackVector.x
       val newPosY: Float = posY + knockbackSpeed * knockbackVector.y
       val blockadeList: ListBuffer[Blockade] = GameSystem.currentArea.get.blockadeList
-      if (isMovementAllowedXAxis(newPosX, newPosY, tiledMap, blockadeList)) move(knockbackSpeed * knockbackVector.x, 0)
-      if (isMovementAllowedYAxis(newPosX, newPosY, tiledMap, blockadeList)) move(0, knockbackSpeed * knockbackVector.y)
+      // TODO: box2d knockback
+      //if (isMovementAllowedXAxis(newPosX, newPosY, tiledMap, blockadeList)) move(knockbackSpeed * knockbackVector.x, 0)
+      //if (isMovementAllowedYAxis(newPosX, newPosY, tiledMap, blockadeList)) move(0, knockbackSpeed * knockbackVector.y)
       if (knockbackTimer.time > 0.15f) knockback = false
     }
 
@@ -639,22 +640,6 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     }
 
     currentAttack.performMovement()
-  }
-
-  def isMovementAllowedXAxis(newPosX: Float, newPosY: Float, tiledMap: TiledMap, blockadeList: ListBuffer[Blockade]): Boolean = {
-    val notCollidingWithTerrain = !isCollidingX(tiledMap, blockadeList, newPosX, newPosY) && newPosX + hitboxBounds.x >= 0
-    val notCollidingWithAreaBounds = newPosX < GameSystem.getTiledMapRealWidth(tiledMap) - (hitboxBounds.x + hitboxBounds.width)
-    notCollidingWithTerrain && notCollidingWithAreaBounds
-  }
-
-  def isMovementAllowedYAxis(newPosX: Float, newPosY: Float, tiledMap: TiledMap, blockadeList: ListBuffer[Blockade]): Boolean = {
-    val notCollidingWithTerrain = !isCollidingY(tiledMap, blockadeList, newPosX, newPosY) && newPosY + hitboxBounds.y >= 0
-    val notCollidingWithAreaBounds = newPosY < GameSystem.getTiledMapRealHeight(tiledMap) - (hitboxBounds.y + hitboxBounds.height)
-    notCollidingWithTerrain && notCollidingWithAreaBounds
-  }
-
-  def move(dx: Float, dy: Float): Unit = { // TODO: box2d
-    setPos(posX + dx, posY + dy)
   }
 
   def controlMovement(): Unit = {

@@ -5,6 +5,8 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
 import com.badlogic.gdx.math.{Polygon, Rectangle, Vector2}
 import com.badlogic.gdx.physics.box2d._
+import com.easternsauce.game.ability.attack.{Attack, MeleeAttack}
+import com.easternsauce.game.ability.util.AbilityState
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.item.loot.{LootPile, Treasure}
@@ -36,7 +38,7 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
 
   var arrowList: mutable.ListBuffer[Arrow] = ListBuffer()
 
-  var world: World = new World(new Vector2(0f, 0f), true)
+  var world: World = new World(new Vector2(0f, 0f), false)
 
   val layer: TiledMapTileLayer = tiledMap.getLayers.get(0).asInstanceOf[TiledMapTileLayer]
 
@@ -91,13 +93,9 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
   }
 
   var verts: Array[Float] = rectangleVertices(new Rectangle(0 / GameSystem.PixelsPerMeter,0 / GameSystem.PixelsPerMeter, 100 / GameSystem.PixelsPerMeter, 20 / GameSystem.PixelsPerMeter))
-  println("v: " + verts.mkString("Array(", ", ", ")"))
   val polygon = new Polygon(verts)
   polygon.setRotation(270)
   //polygon.set
-
-  println("poly: " + polygon.getTransformedVertices.mkString("Array(", ", ", ")"))
-
 
   shape.set(polygon.getTransformedVertices)
   //shape.setAsBox((rectW / 2) / GameSystem.PixelsPerMeter, (rectH / 2) / GameSystem.PixelsPerMeter)
@@ -251,11 +249,18 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
         val fixtureA = contact.getFixtureB
 
         fixtureA.getBody.getUserData match {
-          case areaGate: AreaGate =>
+          case creature: Creature =>
             fixtureB.getBody.getUserData match {
-              case creature: Creature =>
+              case areaGate: AreaGate =>
                 if (!creature.passedGateRecently) {
                   onPassedAreaGate(areaGate, creature)
+                }
+              case attack: MeleeAttack =>
+
+                if (attack.abilityCreature != creature && attack.state == AbilityState.Active) {
+                  println("collision")
+
+                  creature.takeDamage(30f, false, 30f, 0f, 0f)
                 }
               case _ =>
             }
@@ -263,11 +268,17 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
         }
 
         fixtureB.getBody.getUserData match {
-          case areaGate: AreaGate =>
+          case creature: Creature =>
             fixtureA.getBody.getUserData match {
-              case creature: Creature =>
+              case areaGate: AreaGate =>
                 if (!creature.passedGateRecently) {
                   onPassedAreaGate(areaGate, creature)
+                }
+              case attack: MeleeAttack =>
+                if (attack.abilityCreature != creature && attack.state == AbilityState.Active) {
+                  println("collision")
+
+                  creature.takeDamage(30f, false, 30f, 0f, 0f)
                 }
               case _ =>
             }
@@ -280,9 +291,9 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
         val fixtureA = contact.getFixtureB
 
         fixtureA.getBody.getUserData match {
-          case areaGate: AreaGate =>
+          case creature: Creature =>
             fixtureB.getBody.getUserData match {
-              case creature: Creature =>
+              case areaGate: AreaGate =>
                 creature.passedGateRecently = false
               case _ =>
             }
@@ -290,9 +301,9 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
         }
 
         fixtureB.getBody.getUserData match {
-          case areaGate: AreaGate =>
+          case creature: Creature =>
             fixtureA.getBody.getUserData match {
-              case creature: Creature =>
+              case areaGate: AreaGate =>
                 creature.passedGateRecently = false
               case _ =>
             }

@@ -9,7 +9,7 @@ import com.easternsauce.game.shapes.CustomVector2
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
-class BowAttack(override protected val abilityCreature: Creature) extends Attack(abilityCreature) {
+class BowAttack(override val abilityCreature: Creature) extends Attack(abilityCreature) {
   override def init(): Unit = {
     cooldownTime = 1.5f
     activeTime = 0.3f
