@@ -200,7 +200,7 @@ object GameSystem {
     areas("area2").addRespawnPoint(new PlayerRespawnPoint(1342, 2099, areas("area2")))
 
     GameSystem.playerCharacter = new PlayerCharacter("protagonist")
-    areas("area1").addNewCreature(playerCharacter, 1000f, 1000f)
+    areas("area1").addNewCreature(playerCharacter, 1000f, 1000f) // <- causes problems!! TODO
 
     lootSystem.placeTreasure(areas("area1"), 1920, 8, ItemType.getItemType("leatherArmor"))
     lootSystem.placeTreasure(areas("area1"), 3551, 3840, ItemType.getItemType("woodenSword"))
@@ -403,6 +403,11 @@ object GameSystem {
 
           var found = false
           areas.values.foreach(area => {
+            area.creaturesManager.creatures.foreach(crea => {
+              println("m: " + crea._2.id)
+
+            })
+
             if (!found) {
               area.creaturesManager.getCreatureById(s(1)) match {
                 case Some(creature) =>
@@ -414,6 +419,8 @@ object GameSystem {
           })
 
           creature = foundCreature
+          println("should find: " + s(1))
+          println(" processing creature: " + creature.id)
 
         }
         if (s(0).equals("pos")) {

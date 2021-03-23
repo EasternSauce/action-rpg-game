@@ -1,5 +1,6 @@
 package com.easternsauce.game.creature.mob
 
+import com.badlogic.gdx.physics.box2d.BodyDef
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.util.WalkDirection.WalkDirection
 import com.easternsauce.game.creature.util.{AttackType, Unarmed, WalkDirection}
@@ -196,6 +197,8 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
     }
 
     currentAttack.stopAbility()
+
+    toSetBodyNonInteractive = true
   }
 
 

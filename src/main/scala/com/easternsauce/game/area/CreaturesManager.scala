@@ -54,8 +54,13 @@ class CreaturesManager(private val area: Area) {
   }
 
   def saveToFile(writer: PrintWriter): Unit = {
+    println("area: " + area.id)
+    for (creature <- creatures.values) {
+      println("creature: " + creature.id)
+    }
     for (creature <- creatures.values) {
       if (creature.isPlayer || creature.isNPC) {
+        println("saving " + creature.id)
         writer.write("creature " + creature.id + "\n")
         writer.write("area " + creature.area.id + "\n")
         writer.write("pos " + creature.posX + " " + creature.posY + "\n")

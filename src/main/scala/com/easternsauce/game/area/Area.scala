@@ -79,35 +79,6 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
 
   loadSpawns()
 
-  val bodyDef = new BodyDef()
-  bodyDef.`type` = BodyDef.BodyType.StaticBody
-  bodyDef.position.set((0) / GameSystem.PixelsPerMeter, (0) / GameSystem.PixelsPerMeter)
-
-  val body: Body = world.createBody(bodyDef)
-  body.setUserData(this)
-
-  val shape: PolygonShape = new PolygonShape()
-
-  def rectangleVertices(rect: Rectangle) : Array[Float] = {
-    Array(rect.x, rect.y, rect.x + rect.width, rect.y , rect.x + rect.width, rect.y + rect.height, rect.x, rect.y + rect.height)
-  }
-
-  var verts: Array[Float] = rectangleVertices(new Rectangle(0 / GameSystem.PixelsPerMeter,0 / GameSystem.PixelsPerMeter, 100 / GameSystem.PixelsPerMeter, 20 / GameSystem.PixelsPerMeter))
-  val polygon = new Polygon(verts)
-  polygon.setRotation(270)
-  //polygon.set
-
-  shape.set(polygon.getTransformedVertices)
-  //shape.setAsBox((rectW / 2) / GameSystem.PixelsPerMeter, (rectH / 2) / GameSystem.PixelsPerMeter)
-
-
-
-  val fixtureDef: FixtureDef = new FixtureDef
-
-  fixtureDef.shape = shape
-
-  body.createFixture(fixtureDef)
-
   private def loadSpawns(): Unit = {
     for (spawnLocation <- spawnLocationsContainer.spawnLocationList) {
       val posX = spawnLocation.posX
@@ -258,7 +229,6 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
               case attack: MeleeAttack =>
 
                 if (attack.abilityCreature != creature && attack.state == AbilityState.Active) {
-                  println("collision")
 
                   creature.takeDamage(30f, false, 30f, 0f, 0f)
                 }
@@ -276,7 +246,6 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
                 }
               case attack: MeleeAttack =>
                 if (attack.abilityCreature != creature && attack.state == AbilityState.Active) {
-                  println("collision")
 
                   creature.takeDamage(30f, false, 30f, 0f, 0f)
                 }

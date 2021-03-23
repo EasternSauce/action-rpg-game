@@ -224,7 +224,7 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
   override def onUpdateHitbox(): Unit = {
     super.onUpdateHitbox()
 
-    if (body != null) {
+    if (hitbox != null) {
       var attackVector = abilityCreature.attackVector
 
       if (attackVector.len() > 0f) {
@@ -237,7 +237,9 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
       hitbox.x = attackShiftX + abilityCreature.centerPosX
       hitbox.y = attackShiftY + abilityCreature.centerPosY
 
-      body.setTransform(hitbox.x / GameSystem.PixelsPerMeter, hitbox.y / GameSystem.PixelsPerMeter, 0f)
+      if (body != null) {
+        body.setTransform(hitbox.x / GameSystem.PixelsPerMeter, hitbox.y / GameSystem.PixelsPerMeter, 0f)
+      }
     }
 
   }

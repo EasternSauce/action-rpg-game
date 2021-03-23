@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.physics.box2d.{Body, BodyDef, CircleShape, FixtureDef}
+import com.badlogic.gdx.physics.box2d.{Body, BodyDef, CircleShape, Fixture, FixtureDef}
 import com.easternsauce.game.ability.Ability
 import com.easternsauce.game.ability.attack._
 import com.easternsauce.game.area.Area
@@ -150,6 +150,9 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   var currentMaxVelocity: Float = _
 
   var body: Body = _
+  var fixture: Fixture = _
+
+  var toSetBodyNonInteractive: Boolean = false
 
   def alive: Boolean = healthPoints > 0f
 
@@ -212,6 +215,12 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
       && this == GameSystem.cameraFocussedCreature.get) {
       GameSystem.adjustCamera(this)
     }
+
+    if (toSetBodyNonInteractive) {
+      fixture.setSensor(true)
+      body.setType(BodyDef.BodyType.StaticBody)
+      toSetBodyNonInteractive = false
+    }
   }
 
   def render(shapeDrawer: ShapeDrawer, batch: SpriteBatch): Unit = {
@@ -225,8 +234,8 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     val healthBarHeight = 5
     val healthBarWidth = 50
     val currentHealthBarWidth = healthBarWidth * healthPoints / maxHealthPoints
-    val barPosX = posX + (spriteWidth / 2 - healthBarWidth / 2)
-    val barPosY = posY + spriteHeight + 10
+    val barPosX = posX - healthBarWidth / 2
+    val barPosY = posY + spriteHeight / 2 + 10
     shapeDrawer.filledRectangle(new CustomRectangle(barPosX, barPosY, healthBarWidth, healthBarHeight), Color.ORANGE)
     shapeDrawer.filledRectangle(new CustomRectangle(barPosX, barPosY, currentHealthBarWidth, healthBarHeight), Color.RED)
 
@@ -700,7 +709,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     val shape: CircleShape = new CircleShape()
     shape.setRadius(30 / GameSystem.PixelsPerMeter)
     fixtureDef.shape = shape
-    body.createFixture(fixtureDef)
+    fixture = body.createFixture(fixtureDef)
     body.setLinearDamping(10f)
   }
 
