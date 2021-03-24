@@ -116,8 +116,7 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
     val creatureCenterX = centerPosX
     val creatureCenterY = centerPosY
 
-    //val dist = GameSystem.distance(this.rect, aggroed.rect);
-    val dist = 999 // TODO: box2d distance
+    val dist = GameSystem.distance(this.body, aggroed.body)
 
     if (findNewDestinationTimer.time > 0.2f) {
       if (dist < attackType.holdDistance) {

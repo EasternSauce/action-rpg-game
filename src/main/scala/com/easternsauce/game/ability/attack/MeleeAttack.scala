@@ -23,7 +23,7 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
   protected var scale = 1.0f
   protected var attackRange: Float = _
 
-  protected var knockbackPower = 2000f
+  var knockbackPower = 2000f
 
   var body: Body = _
 
@@ -69,24 +69,6 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
   override def onUpdateActive(): Unit = {
     super.onUpdateActive()
 
-//    updateAttackRect()
-
-    val creatures = abilityCreature.area.creatures.values
-    for (creature <- creatures) {
-      if (creature != this.abilityCreature) { // TODO: box2d collisions
-//        if (GameSystem.checkCollision(meleeAttackHitbox, creature.rect)) if (!(this.abilityCreature.isMob && creature.isMob)) { // mob can't hurt a mob?
-//          if (!creature.isImmune) {
-//            //val weapon: Item = this.abilityCreature.getEquipmentItems.get(0)
-//            val center = abilityCreature.rect.center
-//            creature.takeDamage(10f, immunityFrames = true, knockbackPower, center.x, center.y)
-//            //abilityCreature.onAttack()
-//            //val random: Int = Globals.random.nextInt(100)
-//            //if (random < weapon.getItemType.getPoisonChance * 100f) creature.becomePoisoned()
-//          }
-//
-//        }
-      }
-    }
   }
 
 //  protected def updateAttackRect(): Unit = {

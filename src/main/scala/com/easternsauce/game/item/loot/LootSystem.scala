@@ -53,6 +53,11 @@ class LootSystem {
           visibleItems.addAll(treasure.itemList)
         }
       }
+
+      if (!treasure.bodyCreated) {
+        treasure.initBody()
+        treasure.bodyCreated = true
+      }
     }
     GameSystem.lootOptionWindow.setLootOptions(visibleItems)
     GameSystem.lootOptionWindow.update()

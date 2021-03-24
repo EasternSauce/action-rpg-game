@@ -70,6 +70,7 @@ class PlayerCharacter(id: String) extends Creature(id) {
   }
 
   override def onDeath(): Unit = {
+    super.onDeath()
     respawnTimer.restart()
     respawning = true
     sprinting = false
@@ -83,6 +84,7 @@ class PlayerCharacter(id: String) extends Creature(id) {
     GameSystem.hud.bossHealthBar.hide()
 
     isRunningAnimationActive = false
+    toSetBodyNonInteractive = true
   }
 
   override protected def defineCustomAbilities(): Unit = {
@@ -117,7 +119,7 @@ class PlayerCharacter(id: String) extends Creature(id) {
       for (creature <- area.creatures.values) {
         if (creature != this) {
           if (GameSystem.distance(creature.body, body) < 70f && creature.healthPoints > 0) {
-            creature.asInstanceOf[NonPlayerCharacter].triggerDialogue()
+            creature.asInstanceOf[NonPlayerCharacter].triggerDialogue() // ???? TODO??? some badly copypasted code
           }
         }
       }

@@ -224,8 +224,16 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
               case attack: MeleeAttack =>
 
                 if (attack.abilityCreature != creature && attack.state == AbilityState.Active) {
-
-                  creature.takeDamage(30f, false, 30f, 0f, 0f)
+                  if (!(attack.abilityCreature.isMob && creature.isMob)) { // mob can't hurt a mob?
+                    if (!creature.isImmune) {
+                      //val weapon: Item = this.abilityCreature.getEquipmentItems.get(0) TODO get damage from weapon
+                      creature.takeDamage(10f, immunityFrames = true, attack.knockbackPower,
+                        attack.abilityCreature.centerPosX, attack.abilityCreature.centerPosY)
+                      attack.abilityCreature.onAttack()
+                      //val random: Int = Globals.random.nextInt(100)
+                      //if (random < weapon.getItemType.getPoisonChance * 100f) creature.becomePoisoned()
+                    }
+                  }
                 }
               case _ =>
             }
