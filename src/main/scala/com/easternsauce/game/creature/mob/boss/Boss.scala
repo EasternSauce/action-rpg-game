@@ -27,11 +27,8 @@ class Boss(override val id: String, override val mobSpawnPoint: MobSpawnPoint) e
   }
 
   override def onDeath(): Unit = {
-    GameSystem.lootSystem.spawnLootPile(area, centerPosX, centerPosY, dropTable)
-    for (ability <- abilityList) {
-      ability.stopAbility()
-    }
-    currentAttack.stopAbility()
+    super.onDeath()
+
     bossMusic.stop()
     if (GameSystem.hud.bossHealthBar.boss == this) GameSystem.hud.bossHealthBar.hide()
     mobSpawnPoint.blockade.active = false

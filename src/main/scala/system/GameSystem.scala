@@ -200,7 +200,7 @@ object GameSystem {
     areas("area2").addRespawnPoint(new PlayerRespawnPoint(1342, 2099, areas("area2")))
 
     GameSystem.playerCharacter = new PlayerCharacter("protagonist")
-    areas("area1").addNewCreature(playerCharacter, 1000f, 1000f) // <- causes problems!! TODO
+    areas("area1").moveInCreature(playerCharacter, 1000f, 1000f)
 
     lootSystem.placeTreasure(areas("area1"), 1920, 8, ItemType.getItemType("leatherArmor"))
     lootSystem.placeTreasure(areas("area1"), 3551, 3840, ItemType.getItemType("woodenSword"))
@@ -211,9 +211,9 @@ object GameSystem {
     lootSystem.placeTreasure(areas("area1"), 600, 500, ItemType.getItemType("healingPowder"))
 
     val nonPlayerCharacter = new NonPlayerCharacter("Johnny", true, Assets.male1SpriteSheet, "a1")
-    areas("area1").addNewCreature(nonPlayerCharacter, 1512f, 11f)
+    areas("area1").moveInCreature(nonPlayerCharacter, 1512f, 11f)
     val nonPlayerCharacter2 = new NonPlayerCharacter("Rita", true, Assets.male1SpriteSheet, "a1")
-    areas("area2").addNewCreature(nonPlayerCharacter2, 400f, 400f)
+    areas("area2").moveInCreature(nonPlayerCharacter2, 400f, 400f)
 
     hud = new Hud()
 
@@ -403,10 +403,6 @@ object GameSystem {
 
           var found = false
           areas.values.foreach(area => {
-            area.creaturesManager.creatures.foreach(crea => {
-              println("m: " + crea._2.id)
-
-            })
 
             if (!found) {
               area.creaturesManager.getCreatureById(s(1)) match {
@@ -419,22 +415,31 @@ object GameSystem {
           })
 
           creature = foundCreature
-          println("should find: " + s(1))
-          println(" processing creature: " + creature.id)
 
         }
+
+
+        if (s(0) == "area") if (creature != null) {
+
+          if (areas(s(1)) != creature.area) {
+            if (creature.area != null) {
+              creature.area.removeCreature(creature.id)
+            }
+
+            creature.area = areas(s(1))
+
+            areas(s(1)).moveInCreature(creature, 0f, 0f)
+            if (creature.isPlayer) currentArea = Some(areas(s(1)))
+          }
+
+        }
+
         if (s(0).equals("pos")) {
           if (creature != null) {
             if (creature.area == null) throw new RuntimeException("position cannot be set before creature is spawned in area")
           }
 
           creature.setPos(s(1).toFloat, s(2).toFloat)
-        }
-
-        if (s(0) == "area") if (creature != null) {
-          creature.area = areas(s(1))
-          areas(s(1)).moveInCreature(creature, 0f, 0f)
-          if (creature.isInstanceOf[PlayerCharacter]) currentArea = Some(areas(s(1)))
         }
 
         if (s(0).equals("health")) {

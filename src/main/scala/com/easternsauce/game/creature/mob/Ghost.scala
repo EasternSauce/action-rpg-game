@@ -62,15 +62,6 @@ class Ghost(override val id: String, override val mobSpawnPoint: MobSpawnPoint, 
   }
 
   override def onDeath(): Unit = {
-    isRunningAnimationActive = false
-
-    GameSystem.lootSystem.spawnLootPile(area, centerPosX, centerPosY, dropTable)
-    for (ability <- abilityList) {
-      if (!ability.isInstanceOf[ExplodeAbility]) {
-        ability.stopAbility()
-
-      }
-    }
-    currentAttack.stopAbility()
+    super.onDeath()
   }
 }

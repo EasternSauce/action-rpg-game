@@ -142,25 +142,20 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
   }
 
   def moveInCreature(creature: Creature, x: Float, y: Float): Unit = {
-    creaturesManager.addCreature(creature)
-    creature.area = this
+    if (!creaturesManager.creatures.contains(creature.id)) {
+      creaturesManager.addCreature(creature)
+      creature.area = this
 
-    GameSystem.loadingScreenVisible = false
+      GameSystem.loadingScreenVisible = false
 
-    creature.initBody(x, y)
+      creature.initBody(x, y)
+    }
   }
 
   def removeCreature(id: String): Unit = {
-    creatures.remove(id)
-  }
-
-  def addNewCreature(creature: Creature, x: Float, y: Float): Unit = {
-    creaturesManager.addCreature(creature)
-    creature.area = this
-
-    creature.startingPosX = x
-    creature.startingPosY = y
-
+    if (creatures.contains(id)) {
+      creatures.remove(id)
+    }
   }
 
   def reset(): Unit = {
