@@ -37,7 +37,7 @@ class TridentAttack(override val abilityCreature: Creature) extends MeleeAttack(
     height = 32f
     scale = 2f
     attackRange = 30f
-    knockbackPower = 600f
+    knockbackPower = 30f
 
     aimed = false
   }

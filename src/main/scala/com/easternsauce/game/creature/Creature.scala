@@ -261,11 +261,17 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
         getEffect("immobilized").applyEffect(0.35f)
       }
 
-      if (knockbackable && !knockback && knockbackPower > 0f) {
-        this.knockbackPower = knockbackPower
+      if (knocbackable) {
         knockbackVector = CustomVector2(posX - sourceX, posY - sourceY).normal
-        knockback = true
-        knockbackTimer.restart()
+
+        body.applyLinearImpulse(new Vector2(knockbackVector.x * knockbackPower, knockbackVector.y * knockbackPower), body.getWorldCenter, true)
+      }
+
+      if (knockbackable && !knockback && knockbackPower > 0f) {
+        //this.knockbackPower = knockbackPower
+        //knockbackVector = CustomVector2(posX - sourceX, posY - sourceY).normal
+        //knockback = true
+        //knockbackTimer.restart()
 
       }
 

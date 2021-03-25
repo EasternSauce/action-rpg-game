@@ -36,7 +36,7 @@ class SwordAttack(override val abilityCreature: Creature) extends MeleeAttack(ab
     height = 40f
     scale = 2f
     attackRange = 30f
-    knockbackPower = 450f
+    knockbackPower = 1f
 
     aimed = false
   }

@@ -36,7 +36,7 @@ class UnarmedAttack(override val abilityCreature: Creature) extends MeleeAttack(
     height = 40f
     scale = 1f
     attackRange = 30f
-    knockbackPower = 450f
+    knockbackPower = 25f
 
     aimed = false
   }

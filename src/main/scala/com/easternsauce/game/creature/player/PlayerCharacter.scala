@@ -115,11 +115,12 @@ class PlayerCharacter(id: String) extends Creature(id) {
   }
 
   def interact(): Unit = {
+
     if (GameSystem.lootSystem.getVisibleItemsCount == 0) {
       for (creature <- area.creatures.values) {
         if (creature != this) {
-          if (GameSystem.distance(creature.body, body) < 70f && creature.healthPoints > 0) {
-            creature.asInstanceOf[NonPlayerCharacter].triggerDialogue() // ???? TODO??? some badly copypasted code
+          if (GameSystem.distance(creature.body, body) < 70f && creature.isNPC && creature.healthPoints > 0) {
+            creature.asInstanceOf[NonPlayerCharacter].triggerDialogue()
           }
         }
       }
