@@ -46,12 +46,7 @@ class Boss(override val id: String, override val mobSpawnPoint: MobSpawnPoint) e
       else healthPoints = 0f
       if (beforeHP != healthPoints && healthPoints == 0f) onDeath()
       effectMap("immune").applyEffect(500)
-      if (knocbackable && !knockback && knockbackPower > 0f) {
-        this.knockbackPower = knockbackPower
-        knockbackVector = new CustomVector2(posX - sourceX, posY - sourceY).normal
-        knockback = true
-        knockbackTimer.restart()
-      }
+
       if (GameSystem.random.nextFloat() < 0.3) onGettingHitSound.play(0.1f)
     }
   }

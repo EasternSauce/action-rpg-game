@@ -183,8 +183,7 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
 
   override def onCollideWithCreature(creature: Creature): Unit = { // TODO
     if (abilityCreature != creature && state == AbilityState.Active) {
-
-      creature.takeDamage(30f, false, 30f, 0f, 0f)
+      creature.takeDamage(abilityCreature.weaponDamage, false, 30f, 0f, 0f)
     }
   }
 }

@@ -26,6 +26,7 @@ import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 abstract class Creature(val id: String) extends Ordered[Creature] {
+
   protected var healthRegen = 0.3f
   protected var staminaRegen = 3f
 
@@ -43,8 +44,6 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
   protected var healingTime = 8f
   protected var healingPower = 0f
-
-  protected var knockback: Boolean = false
 
   protected var knockbackVector: CustomVector2 = _
 
@@ -142,7 +141,6 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   protected var staminaOveruseTimer: SimpleTimer = SimpleTimer()
   protected var healingTimer: SimpleTimer = SimpleTimer()
   protected var healingTickTimer: SimpleTimer = SimpleTimer()
-  protected var knockbackTimer: SimpleTimer = SimpleTimer()
 
   protected var knocbackable = true
 
@@ -158,6 +156,10 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   def alive: Boolean = healthPoints > 0f
 
   def atFullLife: Boolean = healthPoints >= maxHealthPoints
+
+  def weaponDamage: Float = {
+    if (equipmentItems.contains(0)) equipmentItems(0).damage else unarmedDamage
+  }
 
   def currentAttack: Attack = {
     if (equipmentItems.contains(0)) {
@@ -266,14 +268,6 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
         knockbackVector = CustomVector2(posX - sourceX, posY - sourceY).normal
 
         body.applyLinearImpulse(new Vector2(knockbackVector.x * knockbackPower, knockbackVector.y * knockbackPower), body.getWorldCenter, true)
-      }
-
-      if (knockbackable && !knockback && knockbackPower > 0f) {
-        //this.knockbackPower = knockbackPower
-        //knockbackVector = CustomVector2(posX - sourceX, posY - sourceY).normal
-        //knockback = true
-        //knockbackTimer.restart()
-
       }
 
       onGettingHitSound.play(0.1f)
@@ -479,67 +473,6 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   def hitbox: CustomRectangle = new CustomRectangle(posX + hitboxBounds.x, posY + hitboxBounds.y,
     hitboxBounds.width, hitboxBounds.height)
 
-  // TODO: check blockade list for collisions
-  def isCollidingX(tiledMap: TiledMap, blockadeList: ListBuffer[Blockade], newPosX: Float, newPosY: Float): Boolean = {
-    val layer = tiledMap.getLayers.get(0).asInstanceOf[TiledMapTileLayer]
-
-    var collided = false
-
-    for {x <- Seq.range(0, layer.getWidth)
-         y <- Seq.range(0, layer.getHeight)} {
-      if (!collided) {
-        val cell: TiledMapTileLayer.Cell = layer.getCell(x, y)
-
-        val traversable: Boolean = cell.getTile.getProperties.get("traversable").asInstanceOf[Boolean]
-
-        if (!traversable) {
-          collided = {
-            val rect1 = new CustomRectangle(x * GameSystem.TiledMapCellSize, y * GameSystem.TiledMapCellSize,
-              GameSystem.TiledMapCellSize, GameSystem.TiledMapCellSize)
-            val rect2 = new CustomRectangle(newPosX + hitboxBounds.x, hitbox.y,
-              hitbox.width, hitbox.height)
-
-            rect1.overlaps(rect2)
-          }
-        }
-
-      }
-
-    }
-
-    collided
-  }
-
-  // TODO: check blockade list for collisions
-  def isCollidingY(tiledMap: TiledMap, blockadeList: ListBuffer[Blockade], newPosX: Float, newPosY: Float): Boolean = {
-    val layer = tiledMap.getLayers.get(0).asInstanceOf[TiledMapTileLayer]
-
-    var collided = false
-
-    // TODO: check collisions for nearby cells only
-    for {x <- Seq.range(0, layer.getWidth)
-         y <- Seq.range(0, layer.getHeight)} {
-      if (!collided) {
-        val cell: TiledMapTileLayer.Cell = layer.getCell(x, y)
-
-        val traversable: Boolean = cell.getTile.getProperties.get("traversable").asInstanceOf[Boolean]
-
-        if (!traversable) {
-          collided = {
-            val rect1 = new CustomRectangle(x * GameSystem.TiledMapCellSize, y * GameSystem.TiledMapCellSize,
-              GameSystem.TiledMapCellSize, GameSystem.TiledMapCellSize)
-            val rect2 = new CustomRectangle(hitbox.x, newPosY + hitboxBounds.y,
-              hitbox.width, hitbox.height)
-
-            rect1.overlaps(rect2)
-          }
-        }
-
-      }
-    }
-
-    collided
-  }
 
   def moveInDirection(dir: WalkDirection): Unit = {
     import com.easternsauce.game.creature.util.WalkDirection._
@@ -591,7 +524,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
     assert(GameSystem.currentArea.nonEmpty)
 
-    if (!isEffectActive("immobilized") && !knockback) {
+    if (!isEffectActive("immobilized")) {
 
       if (totalDirections > 1) currentMaxVelocity = currentMaxVelocity / Math.sqrt(2).toFloat
 
@@ -638,18 +571,6 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     }
 
     wasMoving = isMoving
-
-    if (knockback) {
-      val tiledMap = GameSystem.currentArea.get.tiledMap
-
-      val newPosX: Float = posX + knockbackSpeed * knockbackVector.x
-      val newPosY: Float = posY + knockbackSpeed * knockbackVector.y
-      val blockadeList: ListBuffer[Blockade] = GameSystem.currentArea.get.blockadeList
-      // TODO: box2d knockback
-      //if (isMovementAllowedXAxis(newPosX, newPosY, tiledMap, blockadeList)) move(knockbackSpeed * knockbackVector.x, 0)
-      //if (isMovementAllowedYAxis(newPosX, newPosY, tiledMap, blockadeList)) move(0, knockbackSpeed * knockbackVector.y)
-      if (knockbackTimer.time > 0.15f) knockback = false
-    }
 
     for (ability <- abilityList) {
       ability.performMovement()
