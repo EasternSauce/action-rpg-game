@@ -5,6 +5,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
 import com.badlogic.gdx.math.{Polygon, Rectangle, Vector2}
 import com.badlogic.gdx.physics.box2d._
+import com.easternsauce.game.ability.Ability
 import com.easternsauce.game.ability.attack.{Attack, MeleeAttack}
 import com.easternsauce.game.ability.util.AbilityState
 import com.easternsauce.game.assets.Assets
@@ -211,76 +212,40 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
   def createContactListener(): Unit = {
     val contactListener: ContactListener = new ContactListener {
       override def beginContact(contact: Contact): Unit = {
-        val fixtureB = contact.getFixtureA
-        val fixtureA = contact.getFixtureB
 
-        fixtureA.getBody.getUserData match {
-          case creature: Creature =>
-            fixtureB.getBody.getUserData match {
-              case areaGate: AreaGate =>
-                if (!creature.passedGateRecently) {
-                  onPassedAreaGate(areaGate, creature)
-                }
-              case attack: MeleeAttack =>
+        val objA = contact.getFixtureA.getBody.getUserData
+        val objB = contact.getFixtureB.getBody.getUserData
 
-                if (attack.abilityCreature != creature && attack.state == AbilityState.Active) {
-                  if (!(attack.abilityCreature.isMob && creature.isMob)) { // mob can't hurt a mob?
-                    if (!creature.isImmune) {
-                      //val weapon: Item = this.abilityCreature.getEquipmentItems.get(0) TODO get damage from weapon
-                      creature.takeDamage(10f, immunityFrames = true, attack.knockbackPower,
-                        attack.abilityCreature.centerPosX, attack.abilityCreature.centerPosY)
-                      attack.abilityCreature.onAttack()
-                      //val random: Int = Globals.random.nextInt(100)
-                      //if (random < weapon.getItemType.getPoisonChance * 100f) creature.becomePoisoned()
-                    }
-                  }
-                }
-              case _ =>
-            }
-          case _ =>
+        def onContactStart(pair: (AnyRef, AnyRef)): Unit = {
+          pair match { // will run onContact twice for same type objects!
+            case (creature: Creature, areaGate: AreaGate) =>
+              if (!creature.passedGateRecently) {
+                onPassedAreaGate(areaGate, creature)
+              }
+            case (creature: Creature, ability: Ability) =>
+              ability.onCollideWithCreature(creature)
+            case _ =>
+          }
         }
 
-        fixtureB.getBody.getUserData match {
-          case creature: Creature =>
-            fixtureA.getBody.getUserData match {
-              case areaGate: AreaGate =>
-                if (!creature.passedGateRecently) {
-                  onPassedAreaGate(areaGate, creature)
-                }
-              case attack: MeleeAttack =>
-                if (attack.abilityCreature != creature && attack.state == AbilityState.Active) {
-
-                  creature.takeDamage(30f, false, 30f, 0f, 0f)
-                }
-              case _ =>
-            }
-          case _ =>
-        }
+        onContactStart(objA, objB)
+        onContactStart(objB, objA)
       }
 
       override def endContact(contact: Contact): Unit = {
-        val fixtureB = contact.getFixtureA
-        val fixtureA = contact.getFixtureB
+        val objA = contact.getFixtureA.getBody.getUserData
+        val objB = contact.getFixtureB.getBody.getUserData
 
-        fixtureA.getBody.getUserData match {
-          case creature: Creature =>
-            fixtureB.getBody.getUserData match {
-              case areaGate: AreaGate =>
-                creature.passedGateRecently = false
-              case _ =>
-            }
-          case _ =>
+        def onContactEnd(pair: (AnyRef, AnyRef)): Unit = {
+          pair match { // will run onContact twice for same type objects!
+            case (creature: Creature, areaGate: AreaGate) =>
+              creature.passedGateRecently = false
+            case _ =>
+          }
         }
 
-        fixtureB.getBody.getUserData match {
-          case creature: Creature =>
-            fixtureA.getBody.getUserData match {
-              case areaGate: AreaGate =>
-                creature.passedGateRecently = false
-              case _ =>
-            }
-          case _ =>
-        }
+        onContactEnd(objA, objB)
+        onContactEnd(objB, objA)
       }
 
       override def preSolve(contact: Contact, oldManifold: Manifold): Unit = {}
@@ -316,4 +281,5 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
 
     }
   }
+
 }

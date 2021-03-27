@@ -13,7 +13,7 @@ import system.GameSystem
 import scala.language.implicitConversions
 
 abstract class MeleeAttack(override val abilityCreature: Creature) extends Attack(abilityCreature) {
-  protected var attackAnimation: EsAnimation = _
+  protected var activeAnimation: EsAnimation = _
   protected var windupAnimation: EsAnimation = _
   //protected val weaponSound: Sound = Assets.attackSound
   protected var aimed = false
@@ -34,7 +34,7 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
   override def onActiveStart(): Unit = {
     super.onActiveStart()
 
-    attackAnimation.restart()
+    activeAnimation.restart()
 
     abilityCreature.takeStaminaDamage(15f)
 
@@ -50,8 +50,8 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
     val attackShiftX = attackVector.x * attackRange
     val attackShiftY = attackVector.y * attackRange
 
-    val attackRectX = attackShiftX + abilityCreature.centerPosX
-    val attackRectY = attackShiftY + abilityCreature.centerPosY
+    val attackRectX = attackShiftX + abilityCreature.posX
+    val attackRectY = attackShiftY + abilityCreature.posY
 
     val poly = new CustomPolygon(new CustomRectangle(0,0, width, height))
 
@@ -71,56 +71,9 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
 
   }
 
-//  protected def updateAttackRect(): Unit = {
-//    val attackVector = abilityCreature.attackVector
-//
-//    if (attackVector.length() > 0f) attackVector.normalise()
-//
-//    val attackWidth = width * scale
-//    val attackHeight = 32 * scale
-//
-//
-//    val attackShiftX = attackVector.x * attackRange
-//    val attackShiftY = attackVector.y * attackRange
-//
-//    val attackRectX = attackShiftX + abilityCreature.rect.center.x
-//    val attackRectY = attackShiftY + abilityCreature.rect.center.y
-//
-//    meleeAttackRect = new com.easternsauce.game.shapes.Rectangle(attackRectX, attackRectY - height * scale, attackWidth, attackHeight)
-//
-//    meleeAttackHitbox = new com.easternsauce.game.shapes.Polygon(meleeAttackRect)
-//
-//    val theta = CustomVector2(attackVector.x, attackVector.y).angleDeg()
-//
-//    meleeAttackHitbox.rotate(theta)
-//
-//    meleeAttackHitbox.translate(0, height / 2 * scale)
-//  }
 
   override def render(shapeDrawer: ShapeDrawer, batch: SpriteBatch): Unit = {
     super.render(shapeDrawer, batch)
-
-//    val image = windupAnimation.getFrameByIndex(5)
-//    val attackVector = abilityCreature.facingVector
-//    val theta = -CustomVector2(attackVector.x, attackVector.y).angleDeg()
-//
-//    if (attackVector.length() > 0f) attackVector.normalise()
-//
-//    val attackShiftX = attackVector.x * attackRange
-//    val attackShiftY = -attackVector.y * attackRange
-//
-//    println(attackShiftX + " " + attackShiftY)
-//
-//    val attackRectX = attackShiftX + abilityCreature.rect.center.x
-//    val attackRectY = attackShiftY + abilityCreature.rect.center.y
-//
-//    image.setOrigin(0, height / 2 * scale)
-//    image.setRotation(theta)
-//    image.setPosition(attackRectX, attackRectY)
-//    image.translate(0, -height / 2  * scale)
-//
-//    image.draw(batch)
-
 
     if (state == AbilityState.Channeling) {
       val image = windupAnimation.currentFrame
@@ -132,12 +85,7 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
         image.getRegionWidth, image.getRegionHeight, scale, scale, theta)
     }
     if (state == AbilityState.Active) {
-      val image = attackAnimation.currentFrame
-
-
-//      if (GameSystem.drawAttackHitboxes) {
-//        shapeDrawer.filledPolygon(poly)
-//      }
+      val image = activeAnimation.currentFrame
 
       val attackVector = abilityCreature.attackVector
       val theta = CustomVector2(attackVector.x, attackVector.y).angleDeg()
@@ -162,8 +110,8 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
     val attackShiftX = attackVector.x * attackRange
     val attackShiftY = attackVector.y * attackRange
 
-    val attackRectX = attackShiftX + abilityCreature.centerPosX
-    val attackRectY = attackShiftY + abilityCreature.centerPosY
+    val attackRectX = attackShiftX + abilityCreature.posX
+    val attackRectY = attackShiftY + abilityCreature.posY
 
     val poly = new CustomPolygon(new CustomRectangle(0,0, width, height))
 
@@ -216,8 +164,8 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
       val attackShiftX = attackVector.x * attackRange
       val attackShiftY = attackVector.y * attackRange
 
-      hitbox.x = attackShiftX + abilityCreature.centerPosX
-      hitbox.y = attackShiftY + abilityCreature.centerPosY
+      hitbox.x = attackShiftX + abilityCreature.posX
+      hitbox.y = attackShiftY + abilityCreature.posY
 
       if (body != null) {
         body.setTransform(hitbox.x / GameSystem.PixelsPerMeter, hitbox.y / GameSystem.PixelsPerMeter, 0f)
@@ -231,6 +179,13 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
 
     body.getWorld.destroyBody(body)
 
+  }
+
+  override def onCollideWithCreature(creature: Creature): Unit = { // TODO
+    if (abilityCreature != creature && state == AbilityState.Active) {
+
+      creature.takeDamage(30f, false, 30f, 0f, 0f)
+    }
   }
 }
 

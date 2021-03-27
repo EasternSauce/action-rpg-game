@@ -21,6 +21,8 @@ abstract class Ability(val abilityCreature: Creature) {
 
   protected var isAttack = false
 
+  protected val isStoppable: Boolean = true
+
 
   var state: AbilityState = Inactive
   var onCooldown = false
@@ -77,8 +79,12 @@ abstract class Ability(val abilityCreature: Creature) {
 
   }
 
+
   def stopAbility(): Unit = {
-    state = AbilityState.Inactive
+    if (isStoppable) {
+      state = AbilityState.Inactive
+
+    }
   }
 
   def isOnCooldown: Boolean = onCooldown
@@ -110,6 +116,10 @@ abstract class Ability(val abilityCreature: Creature) {
 
   def active: Boolean = {
     state == AbilityState.Active
+  }
+
+  def onCollideWithCreature(creature: Creature): Unit = {
+
   }
 
 }

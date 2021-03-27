@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.{Body, BodyDef, CircleShape, Fixture, Fixt
 import com.easternsauce.game.ability.Ability
 import com.easternsauce.game.ability.attack._
 import com.easternsauce.game.area.Area
+import com.easternsauce.game.creature.mob.Ghost
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up, WalkDirection}
 import com.easternsauce.game.creature.util.{Bow, Sword, Trident, WalkDirection}
 import com.easternsauce.game.effect.Effect
@@ -695,10 +696,6 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   def posX: Float = body.getPosition.x * GameSystem.PixelsPerMeter
 
   def posY: Float = body.getPosition.y * GameSystem.PixelsPerMeter
-
-  def centerPosX: Float = body.getWorldCenter.x * GameSystem.PixelsPerMeter
-
-  def centerPosY: Float = body.getWorldCenter.y * GameSystem.PixelsPerMeter
 
   def setPos(x: Float, y: Float): Unit = {
     body.setTransform(x / GameSystem.PixelsPerMeter, y / GameSystem.PixelsPerMeter, 0)

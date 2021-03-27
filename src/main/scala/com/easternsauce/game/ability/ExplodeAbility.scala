@@ -14,6 +14,9 @@ class ExplodeAbility(override val abilityCreature: Creature) extends Ability(abi
   protected var explosionAnimation = new EsAnimation(Assets.explosionSpriteSheet, 0, 0.05f)
   protected var explosionRange: Float = _
 
+  override protected val isStoppable: Boolean = false
+
+
   override def init(): Unit = {
     cooldownTime = 0.8f
     activeTime = 0.9f
@@ -32,8 +35,8 @@ class ExplodeAbility(override val abilityCreature: Creature) extends Ability(abi
     val creatures = abilityCreature.area.creatures
     for ((_, creature) <- creatures) {
       if (creature != this.abilityCreature) {
-        if (GameSystem.distance(creature.body, abilityCreature.body) < explosionRange && activeTimer.time < 0.1f) {
-          if (!(this.abilityCreature.isInstanceOf[Mob] && creature.isInstanceOf[Mob]) && creature.alive) { // mob can't hurt a mob?
+        if (GameSystem.distance(creature.body, abilityCreature.body) < explosionRange && activeTimer.time < 0.1f) { // TODO change to box2d body?
+          if (!(this.abilityCreature.isMob && creature.isMob) && creature.alive) { // mob can't hurt a mob?
             if (!creature.isImmune) creature.takeDamage(700f, immunityFrames = true, 0, 0, 0)
           }
         }
@@ -47,11 +50,14 @@ class ExplodeAbility(override val abilityCreature: Creature) extends Ability(abi
 
   override def render(shapeDrawer: ShapeDrawer, batch: SpriteBatch): Unit = {
     if (state == AbilityState.Active) {
-      val spriteWidth = 64
-      val scale = explosionRange * 2 / spriteWidth
       val image = explosionAnimation.currentFrame
 
-      batch.draw(image, abilityCreature.centerPosX - image.getRegionWidth / 2f, abilityCreature.centerPosY - image.getRegionHeight / 2f, 0,0,
+      val scale = explosionRange * 2 / image.getRegionWidth
+
+      val scaledWidth = image.getRegionWidth * scale
+      val scaledHeight = image.getRegionHeight * scale
+
+      batch.draw(image, abilityCreature.posX - scaledWidth / 2f, abilityCreature.posY - scaledHeight / 2f, 0,0,
         image.getRegionWidth, image.getRegionHeight, scale, scale, 0.0f)
     }
   }

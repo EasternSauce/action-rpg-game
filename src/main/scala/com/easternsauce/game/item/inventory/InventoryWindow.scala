@@ -379,7 +379,7 @@ class InventoryWindow {
             val item = inventoryItems(currentSelected)
 
             assert(GameSystem.currentArea.nonEmpty)
-            GameSystem.lootSystem.spawnLootPile(GameSystem.currentArea.get, player.centerPosX, player.centerPosY, item)
+            GameSystem.lootSystem.spawnLootPile(GameSystem.currentArea.get, player.posX, player.posY, item)
             inventoryItems.remove(currentSelected)
           }
         }

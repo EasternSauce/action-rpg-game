@@ -6,6 +6,7 @@ import com.easternsauce.game.shapes.{CustomPolygon, CustomRectangle}
 import com.easternsauce.game.wrappers.EsAnimation
 
 class TridentAttack(override val abilityCreature: Creature) extends MeleeAttack(abilityCreature) {
+
   override def init(): Unit = {
     var weaponSpeed = 1.0f
 
@@ -29,7 +30,7 @@ class TridentAttack(override val abilityCreature: Creature) extends MeleeAttack(
     val spriteHeight = 32
 
     windupAnimation = new EsAnimation(Assets.tridentThrustWindupSpriteSheet, 0, channelFrameDuration)
-    attackAnimation = new EsAnimation(Assets.tridentThrustSpriteSheet, 0, frameDuration)
+    activeAnimation = new EsAnimation(Assets.tridentThrustSpriteSheet, 0, frameDuration)
 
     meleeAttackRect = new CustomRectangle(-999, -999, 1, 1)
 

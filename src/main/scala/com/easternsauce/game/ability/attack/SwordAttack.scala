@@ -28,7 +28,7 @@ class SwordAttack(override val abilityCreature: Creature) extends MeleeAttack(ab
 
     windupAnimation = new EsAnimation(Assets.slashWindupSpriteSheet, 0, channelFrameDuration)
     
-    attackAnimation = new EsAnimation(Assets.slashSpriteSheet,0, frameDuration)
+    activeAnimation = new EsAnimation(Assets.slashSpriteSheet,0, frameDuration)
 
     meleeAttackRect = new CustomRectangle(-999, -999, 1, 1)
 

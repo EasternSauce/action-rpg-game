@@ -72,8 +72,8 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
   }
 
   def walkTowards(gotoPosX: Float, gotoPosY: Float): Unit = {
-    val creatureCenterX = centerPosX
-    val creatureCenterY = centerPosY
+    val creatureCenterX = posX
+    val creatureCenterY = posY
 
     import com.easternsauce.game.creature.util.WalkDirection._
 
@@ -110,11 +110,11 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
       case None => throw new RuntimeException("aggroed creature is not set")
     }
 
-    val aggroedCenterX = aggroed.centerPosX
-    val aggroedCenterY = aggroed.centerPosY
+    val aggroedCenterX = aggroed.posX
+    val aggroedCenterY = aggroed.posY
 
-    val creatureCenterX = centerPosX
-    val creatureCenterY = centerPosY
+    val creatureCenterX = posX
+    val creatureCenterY = posY
 
     val dist = GameSystem.distance(this.body, aggroed.body)
 
@@ -189,7 +189,7 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
   override def onDeath(): Unit = {
     isRunningAnimationActive = false
 
-    GameSystem.lootSystem.spawnLootPile(area, centerPosX, centerPosY, dropTable)
+    GameSystem.lootSystem.spawnLootPile(area, posX, posY, dropTable)
 
     for (ability <- abilityList) {
       ability.stopAbility()
@@ -208,7 +208,7 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
   override def setFacingDirection(): Unit = {
     if (aggroedCreature.nonEmpty) {
       val aggroed = aggroedCreature.get
-      facingVector = CustomVector2(aggroed.centerPosX - centerPosX, aggroed.centerPosY - centerPosY)
+      facingVector = CustomVector2(aggroed.posX - posX, aggroed.posY - posY)
     }
   }
 

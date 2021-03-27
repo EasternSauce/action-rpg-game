@@ -1,5 +1,4 @@
 spawnPoint skeletonCrossbow 1727 2305
-spawnPoint ghost 970 1639
 spawnPoint skeletonSword 258 997
 spawnPoint skeletonSword 1424 997
 spawnPoint goblin 1882 1618
@@ -9,10 +8,9 @@ spawnPoint skeletonSword 2381 3537
 spawnPoint skeletonSword 2381 3470
 spawnPoint goblin 410 2651
 spawnPoint skeletonCrossbow 1836 2651
-spawnPoint ghost 1496 4818
+spawnPoint ghost 0 0
 spawnPoint skeletonSword 500 3964
 spawnPoint skeletonSword 473 3900
-spawnPoint ghost 2966 1055
 spawnPoint skeletonSword 3547 1049
 spawnPoint skeletonCrossbow 1120 398
 spawnPoint skeletonSword 2477 3000

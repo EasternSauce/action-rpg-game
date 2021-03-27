@@ -120,8 +120,8 @@ object GameSystem {
     // smooth camera following
     val lerp = 30f
     val position = camera.position
-    position.x += (creature.centerPosX - position.x) * lerp * Gdx.graphics.getDeltaTime
-    position.y += (creature.centerPosY - Gdx.graphics.getHeight * (1 - ScreenProportion) / 2 - position.y) * lerp * Gdx.graphics.getDeltaTime
+    position.x += (creature.posX - position.x) * lerp * Gdx.graphics.getDeltaTime
+    position.y += (creature.posY - Gdx.graphics.getHeight * (1 - ScreenProportion) / 2 - position.y) * lerp * Gdx.graphics.getDeltaTime
 
     camera.update()
   }
