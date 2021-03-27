@@ -32,8 +32,6 @@ class TridentAttack(override val abilityCreature: Creature) extends MeleeAttack(
     windupAnimation = new EsAnimation(Assets.tridentThrustWindupSpriteSheet, 0, channelFrameDuration)
     activeAnimation = new EsAnimation(Assets.tridentThrustSpriteSheet, 0, frameDuration)
 
-    meleeAttackRect = new CustomRectangle(-999, -999, 1, 1)
-
     width = 64f
     height = 32f
     scale = 2f

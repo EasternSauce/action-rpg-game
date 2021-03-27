@@ -17,8 +17,6 @@ abstract class Ability(val abilityCreature: Creature) {
   protected var activeTime = 0f
   protected var channelTime = 0f
 
-  protected var meleeAttackRect: CustomRectangle = _
-
   protected var isAttack = false
 
   protected val isStoppable: Boolean = true

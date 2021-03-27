@@ -1,6 +1,8 @@
 package com.easternsauce.game.ability
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.physics.box2d.{Body, BodyDef, CircleShape, FixtureDef, PolygonShape}
+import com.easternsauce.game.ability.attack.AttackHitbox
 import com.easternsauce.game.ability.util.AbilityState
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
@@ -16,12 +18,16 @@ class ExplodeAbility(override val abilityCreature: Creature) extends Ability(abi
 
   override protected val isStoppable: Boolean = false
 
+  var body: Body = _
+
+  var exploded = false
 
   override def init(): Unit = {
     cooldownTime = 0.8f
     activeTime = 0.9f
     channelTime = 1.3f
     explosionRange = 150f
+
   }
 
   override protected def onActiveStart(): Unit = {
@@ -29,23 +35,22 @@ class ExplodeAbility(override val abilityCreature: Creature) extends Ability(abi
     abilityCreature.takeStaminaDamage(25f)
     abilityCreature.takeDamage(700f, immunityFrames = false, 0, 0, 0)
     Assets.explosionSound.play(0.07f)
+
+    initBody(abilityCreature.posX, abilityCreature.posY)
+
+    println("creating hitbox at " + abilityCreature.posX + " " + abilityCreature.posY)
   }
 
   override protected def onUpdateActive(): Unit = {
-    val creatures = abilityCreature.area.creatures
-    for ((_, creature) <- creatures) {
-      if (creature != this.abilityCreature) {
-        if (GameSystem.distance(creature.body, abilityCreature.body) < explosionRange && activeTimer.time < 0.1f) { // TODO change to box2d body?
-          if (!(this.abilityCreature.isMob && creature.isMob) && creature.alive) { // mob can't hurt a mob?
-            if (!creature.isImmune) creature.takeDamage(700f, immunityFrames = true, 0, 0, 0)
-          }
-        }
-      }
+    if (!exploded && activeTimer.time > 0.1f) {
+      body.getWorld.destroyBody(body)
+      exploded = true
     }
   }
 
   override def onChannellingStart(): Unit = {
     abilityCreature.getEffect("immobilized").applyEffect(channelTime + activeTime)
+    exploded = false
   }
 
   override def render(shapeDrawer: ShapeDrawer, batch: SpriteBatch): Unit = {
@@ -61,6 +66,34 @@ class ExplodeAbility(override val abilityCreature: Creature) extends Ability(abi
         image.getRegionWidth, image.getRegionHeight, scale, scale, 0.0f)
     }
   }
+
+  def initBody(x: Float, y: Float): Unit = {
+    val bodyDef = new BodyDef()
+    bodyDef.position.set(x / GameSystem.PixelsPerMeter, y / GameSystem.PixelsPerMeter)
+
+    bodyDef.`type` = BodyDef.BodyType.StaticBody
+    body = abilityCreature.area.world.createBody(bodyDef)
+    body.setUserData(this)
+
+    val fixtureDef: FixtureDef = new FixtureDef()
+    val shape: CircleShape = new CircleShape()
+    shape.setRadius(explosionRange / GameSystem.PixelsPerMeter)
+    fixtureDef.shape = shape
+    fixtureDef.isSensor = true
+    body.createFixture(fixtureDef)
+    //body.setLinearDamping(10f)
+  }
+
+  override def onStop() {
+    super.onStop()
+
+  }
+
+  override def onCollideWithCreature(creature: Creature): Unit = {
+    if (!(this.abilityCreature.isMob && creature.isMob) && creature.alive) { // mob can't hurt a mob?
+      if (!creature.isImmune) creature.takeDamage(700f, immunityFrames = true, 0, 0, 0)
+    }
+  }
 }
 
 object ExplodeAbility {
@@ -69,4 +102,5 @@ object ExplodeAbility {
     ability.init()
     ability
   }
+
 }

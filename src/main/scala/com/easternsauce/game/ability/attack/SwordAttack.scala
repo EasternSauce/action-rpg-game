@@ -30,8 +30,6 @@ class SwordAttack(override val abilityCreature: Creature) extends MeleeAttack(ab
     
     activeAnimation = new EsAnimation(Assets.slashSpriteSheet,0, frameDuration)
 
-    meleeAttackRect = new CustomRectangle(-999, -999, 1, 1)
-
     width = 40f
     height = 40f
     scale = 2f
