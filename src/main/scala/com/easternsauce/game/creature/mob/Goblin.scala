@@ -1,9 +1,9 @@
 package com.easternsauce.game.creature.mob
 
 import com.badlogic.gdx.audio.Sound
+import com.badlogic.gdx.math.Rectangle
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up}
-import com.easternsauce.game.shapes.CustomRectangle
 import com.easternsauce.game.spawn.MobSpawnPoint
 import com.easternsauce.game.utils.SimpleTimer
 
@@ -20,7 +20,7 @@ class Goblin(override val id: String, override val mobSpawnPoint: MobSpawnPoint,
 
   loadSprites(Assets.goblinSpriteSheet, Map(Left -> 1, Right -> 3, Up -> 2, Down -> 4), 0)
 
-  override val hitbox = new CustomRectangle(17, 15, 30, 46)
+  override val hitbox = new Rectangle(17, 15, 30, 46)
 
   override val onGettingHitSound: Sound = Assets.evilYellingSound
 

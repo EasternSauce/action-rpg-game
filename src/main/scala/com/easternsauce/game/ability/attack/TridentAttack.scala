@@ -2,7 +2,7 @@ package com.easternsauce.game.ability.attack
 
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
-import com.easternsauce.game.shapes.{CustomPolygon, CustomRectangle}
+import com.easternsauce.game.shapes.CustomPolygon
 import com.easternsauce.game.wrappers.EsAnimation
 
 class TridentAttack(override val abilityCreature: Creature) extends MeleeAttack(abilityCreature) {
@@ -10,9 +10,9 @@ class TridentAttack(override val abilityCreature: Creature) extends MeleeAttack(
   override def init(): Unit = {
     var weaponSpeed = 1.0f
 
-    //TODO
-    //if (this.abilityCreature.equipmentItems(0) != null) weaponSpeed = this.abilityCreature.equipmentItems(0).itemType.weaponSpeed
-
+    if (abilityCreature.equipmentItems.contains(0)) {
+      weaponSpeed = abilityCreature.equipmentItems(0).itemType.weaponSpeed
+    }
 
     val baseChannelTime = 0.6f
     val baseActiveTime = 0.275f

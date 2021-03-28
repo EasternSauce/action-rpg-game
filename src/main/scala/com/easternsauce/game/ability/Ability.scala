@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.easternsauce.game.ability.util.AbilityState
 import com.easternsauce.game.ability.util.AbilityState.{AbilityState, Inactive}
 import com.easternsauce.game.creature.Creature
-import com.easternsauce.game.shapes.{CustomPolygon, CustomRectangle}
+import com.easternsauce.game.shapes.CustomPolygon
 import com.easternsauce.game.utils.SimpleTimer
 import space.earlygrey.shapedrawer.ShapeDrawer
 
@@ -45,8 +45,9 @@ abstract class Ability(val abilityCreature: Creature) {
       onCooldown = true
     }
     if ((state == AbilityState.Active) && activeTimer.time > activeTime) {
-      state = AbilityState.Inactive
       onStop()
+
+      state = AbilityState.Inactive
     }
 
     if (state == AbilityState.Channeling || state == AbilityState.Active) {
@@ -64,6 +65,7 @@ abstract class Ability(val abilityCreature: Creature) {
   protected def onActiveStart(): Unit = {
   }
 
+  // ALWAYS run before setting state to inactive, not after
   protected def onStop(): Unit = {
   }
 
@@ -78,10 +80,11 @@ abstract class Ability(val abilityCreature: Creature) {
   }
 
 
-  def stopAbility(): Unit = {
-    if (isStoppable) {
-      state = AbilityState.Inactive
+  def forceStop(): Unit = {
+    if (isStoppable && state != AbilityState.Inactive) {
+      onStop()
 
+      state = AbilityState.Inactive
     }
   }
 

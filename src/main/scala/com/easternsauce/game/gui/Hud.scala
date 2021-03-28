@@ -3,8 +3,8 @@ package com.easternsauce.game.gui
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.math.Rectangle
 import com.easternsauce.game.creature.npc.NonPlayerCharacter
-import com.easternsauce.game.shapes.CustomRectangle
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
@@ -13,14 +13,14 @@ class Hud {
   private val h = Gdx.graphics.getHeight
   private val proportion = 1 - GameSystem.ScreenProportion
 
-  private val bottomRect = new CustomRectangle(0, 0, w, h * proportion)
+  private val bottomRect = new Rectangle(0, 0, w, h * proportion)
 
   private val pc = GameSystem.playerCharacter
 
-  private var maxHealthRect = new CustomRectangle(10, h * proportion + 40, 100, 10)
-  private var healthRect = new CustomRectangle(10, h * proportion + 40, 100 * pc.healthPoints / pc.maxHealthPoints, 10)
-  private var maxStaminaRect = new CustomRectangle(10, h * proportion + 25, 100, 10)
-  private var staminaRect = new CustomRectangle(10, h * proportion + 25, 100 * pc.healthPoints / pc.maxHealthPoints, 10)
+  private var maxHealthRect = new Rectangle(10, h * proportion + 40, 100, 10)
+  private var healthRect = new Rectangle(10, h * proportion + 40, 100 * pc.healthPoints / pc.maxHealthPoints, 10)
+  private var maxStaminaRect = new Rectangle(10, h * proportion + 25, 100, 10)
+  private var staminaRect = new Rectangle(10, h * proportion + 25, 100 * pc.healthPoints / pc.maxHealthPoints, 10)
 
   var bossHealthBar = new BossHealthBar
 
@@ -57,8 +57,8 @@ class Hud {
 
   def update(): Unit = {
     val h = Gdx.graphics.getHeight
-    healthRect = new CustomRectangle(10, h * proportion + 40, 100 * pc.healthPoints / pc.maxHealthPoints, 10)
-    staminaRect = new CustomRectangle(10, h * proportion + 25, 100 * pc.staminaPoints / pc.maxStaminaPoints, 10)
+    healthRect = new Rectangle(10, h * proportion + 40, 100 * pc.healthPoints / pc.maxHealthPoints, 10)
+    staminaRect = new Rectangle(10, h * proportion + 25, 100 * pc.staminaPoints / pc.maxStaminaPoints, 10)
 
     bossHealthBar.update()
   }

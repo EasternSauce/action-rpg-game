@@ -2,12 +2,12 @@ package com.easternsauce.game.item.inventory
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.{Gdx, Input}
 import com.easternsauce.game.area.Area
 import com.easternsauce.game.item.Item
 import com.easternsauce.game.item.loot.Treasure
 import com.easternsauce.game.item.util.ItemType
-import com.easternsauce.game.shapes.CustomRectangle
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
@@ -16,11 +16,11 @@ import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 class InventoryWindow {
-  private val background: CustomRectangle = new CustomRectangle((Gdx.graphics.getWidth * 0.2).toInt, (Gdx.graphics.getHeight * 0.3).toInt, (Gdx.graphics.getWidth * 0.6).toInt, (Gdx.graphics.getHeight * 0.6).toInt)
+  private val background: Rectangle = new Rectangle((Gdx.graphics.getWidth * 0.2).toInt, (Gdx.graphics.getHeight * 0.3).toInt, (Gdx.graphics.getWidth * 0.6).toInt, (Gdx.graphics.getHeight * 0.6).toInt)
 
-  private var slotList: ListBuffer[CustomRectangle] = ListBuffer()
-  private var equipmentSlotList: ListBuffer[CustomRectangle] = ListBuffer()
-  private var traderInventorySlotList: ListBuffer[CustomRectangle] = ListBuffer()
+  private var slotList: ListBuffer[Rectangle] = ListBuffer()
+  private var equipmentSlotList: ListBuffer[Rectangle] = ListBuffer()
+  private var traderInventorySlotList: ListBuffer[Rectangle] = ListBuffer()
 
 
 
@@ -78,20 +78,20 @@ class InventoryWindow {
   for (i <- 0 until inventorySlots) {
     val col = i % inventoryColumns
     val row = i / inventoryColumns
-    val slot = new CustomRectangle(background.getX + margin + (space + slotWidth) * col, background.getY + background.getHeight - (margin + (space + slotHeight) * (row + 1)), slotWidth, slotHeight)
+    val slot = new Rectangle(background.getX + margin + (space + slotWidth) * col, background.getY + background.getHeight - (margin + (space + slotHeight) * (row + 1)), slotWidth, slotHeight)
     slotList += slot
   }
 
   for (i <- 0 until equipmentSlots) {
     val col = inventoryColumns + 2
-    val slot = new CustomRectangle(background.getX + margin + (space + slotWidth) * col, background.getY + background.getHeight - (margin + (space + slotHeight) * (i + 1)), slotWidth, slotHeight)
+    val slot = new Rectangle(background.getX + margin + (space + slotWidth) * col, background.getY + background.getHeight - (margin + (space + slotHeight) * (i + 1)), slotWidth, slotHeight)
     equipmentSlotList += slot
   }
 
   for (i <- 0 until tradeInventorySlots) {
     val col = inventoryColumns + 1 + i % tradeInventoryColumns
     val row = i / tradeInventoryColumns
-    val slot = new CustomRectangle(background.getX + margin + (space + slotWidth) * col, background.getY + background.getHeight - (margin + (space + slotHeight) * (row + 1) + 30), slotWidth, slotHeight)
+    val slot = new Rectangle(background.getX + margin + (space + slotWidth) * col, background.getY + background.getHeight - (margin + (space + slotHeight) * (row + 1) + 30), slotWidth, slotHeight)
     traderInventorySlotList += slot
   }
 

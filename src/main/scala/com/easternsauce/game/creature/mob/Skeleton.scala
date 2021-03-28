@@ -1,14 +1,14 @@
 package com.easternsauce.game.creature.mob
 
 import com.badlogic.gdx.audio.Sound
+import com.badlogic.gdx.math.Rectangle
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up}
-import com.easternsauce.game.shapes.CustomRectangle
 import com.easternsauce.game.spawn.MobSpawnPoint
 import com.easternsauce.game.utils.SimpleTimer
 
 class Skeleton(override val id: String, override val mobSpawnPoint: MobSpawnPoint, val weaponType: String) extends Mob(id, mobSpawnPoint) {
-  override val hitboxBounds = new CustomRectangle(18, 0, 28, 64)
+  override val hitboxBounds = new Rectangle(18, 0, 28, 64)
   override val baseSpeed = 12f
 
   override protected val onGettingHitSound: Sound = Assets.boneClickSound
@@ -27,7 +27,7 @@ class Skeleton(override val id: String, override val mobSpawnPoint: MobSpawnPoin
 
   loadSprites(Assets.skeletonSpriteSheet, Map(Left -> 2, Right -> 4, Up -> 1, Down -> 3), 0)
 
-  override def hitbox: CustomRectangle = new CustomRectangle(17, 15, 30, 46);
+  override def hitbox: Rectangle = new Rectangle(17, 15, 30, 46);
 
   creatureType = "skeleton"
 

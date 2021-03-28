@@ -3,16 +3,16 @@ package com.easternsauce.game.gui
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.math.Rectangle
 import com.easternsauce.game.creature.Creature
-import com.easternsauce.game.shapes.CustomRectangle
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
 class BossHealthBar {
   private var visible = false
 
-  private var maxHealthRect: CustomRectangle = _
-  private var healthRect: CustomRectangle = _
+  private var maxHealthRect: Rectangle = _
+  private var healthRect: Rectangle = _
 
   var boss: Creature = _
 
@@ -38,8 +38,8 @@ class BossHealthBar {
 
   def update(): Unit = {
     if (visible && boss != null) {
-      maxHealthRect = new CustomRectangle(Gdx.graphics.getWidth / 2f - 250, 40, 500, 20)
-      healthRect = new CustomRectangle(Gdx.graphics.getWidth / 2f - 250, 40, 500 * boss.healthPoints / boss.maxHealthPoints, 20)
+      maxHealthRect = new Rectangle(Gdx.graphics.getWidth / 2f - 250, 40, 500, 20)
+      healthRect = new Rectangle(Gdx.graphics.getWidth / 2f - 250, 40, 500 * boss.healthPoints / boss.maxHealthPoints, 20)
     }
   }
 }

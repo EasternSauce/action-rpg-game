@@ -4,7 +4,7 @@ import com.badlogic.gdx.Input.{Buttons, Keys}
 import com.badlogic.gdx.graphics._
 import com.badlogic.gdx.graphics.g2d._
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
-import com.badlogic.gdx.math.{Intersector, Vector2}
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.{Body, Box2DDebugRenderer}
 import com.badlogic.gdx.{Gdx, Input}
 import com.easternsauce.game.area.{Area, AreaGate}
@@ -20,7 +20,7 @@ import com.easternsauce.game.item.inventory.InventoryWindow
 import com.easternsauce.game.item.loot.LootSystem
 import com.easternsauce.game.item.util.ItemType
 import com.easternsauce.game.projectile.Arrow
-import com.easternsauce.game.shapes.{CustomPolygon, CustomRectangle, CustomVector2}
+import com.easternsauce.game.shapes.CustomVector2
 import com.easternsauce.game.spawn.{PlayerRespawnPoint, SpawnLocationsContainer}
 import com.easternsauce.game.utils.SimpleTimer
 import space.earlygrey.shapedrawer.ShapeDrawer
@@ -126,34 +126,8 @@ object GameSystem {
     camera.update()
   }
 
-  //  def distance(rect1: CustomRectangle, rect2: CustomRectangle): Float = {
-  //    val center1 = rect1.center
-  //    val x1 = center1.x
-  //    val y1 = center1.y
-  //    val center2 = rect2.center
-  //    val x2 = center2.x
-  //    val y2 = center2.y
-  //    Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)).toFloat
-  //  }
-
   def getVectorPerpendicular(vector: Vector2): CustomVector2 = {
     CustomVector2(-vector.y, vector.x)
-  }
-
-  def checkCollision(polygon1: CustomPolygon, rect: CustomRectangle): Boolean = { // TODO: to improve, use Box2d for collision in future?
-
-
-    val polygon2 = new CustomPolygon(rect)
-
-    val v1 = new Vector2
-    polygon1.getBoundingRectangle.getCenter(v1)
-
-    val v2 = new Vector2
-    polygon2.getBoundingRectangle.getCenter(v2)
-
-    val result = Intersector.intersectPolygons(polygon1, polygon2, null)
-
-    result
   }
 
   def create(worldBatch: SpriteBatch, hudBatch: SpriteBatch): Unit = {
@@ -169,17 +143,13 @@ object GameSystem {
     this.hudBatch = hudBatch
     this.worldBatch = worldBatch
 
-    val (_, hudRegion) = createTextureAndRegion()
+    val hudRegion = createTextureAndRegion()
     hudShapeDrawer = new ShapeDrawer(hudBatch, hudRegion)
 
-    val (_, worldRegion) = createTextureAndRegion()
+    val worldRegion = createTextureAndRegion()
     worldShapeDrawer = new ShapeDrawer(worldBatch, worldRegion)
 
     debugRenderer = new Box2DDebugRenderer()
-    //    var bodyDef = new BodyDef()
-    //    var shape = new PolygonShape()
-    //    var fixtureDef = new FixtureDef()
-    //    var body = new Body()
 
     init()
 
@@ -228,7 +198,7 @@ object GameSystem {
     markRespawnAreaForReset = false
   }
 
-  private def createTextureAndRegion(): (Texture, TextureRegion) = {
+  private def createTextureAndRegion(): TextureRegion = {
     import com.badlogic.gdx.graphics.Pixmap.Format
     import com.badlogic.gdx.graphics.g2d.TextureRegion
     import com.badlogic.gdx.graphics.{Pixmap, Texture}
@@ -238,8 +208,7 @@ object GameSystem {
     val texture = new Texture(pixmap) //remember to dispose of later
 
     pixmap.dispose()
-    val region = new TextureRegion(texture, 0, 0, 1, 1)
-    (texture, region)
+    new TextureRegion(texture, 0, 0, 1, 1)
   }
 
   def update(): Unit = {

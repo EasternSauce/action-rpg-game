@@ -5,7 +5,7 @@ import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
-import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.math.{Rectangle, Vector2}
 import com.badlogic.gdx.physics.box2d.{Body, BodyDef, CircleShape, Fixture, FixtureDef}
 import com.easternsauce.game.ability.Ability
 import com.easternsauce.game.ability.attack._
@@ -15,7 +15,7 @@ import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up,
 import com.easternsauce.game.creature.util.{Bow, Sword, Trident, WalkDirection}
 import com.easternsauce.game.effect.Effect
 import com.easternsauce.game.item.Item
-import com.easternsauce.game.shapes.{CustomRectangle, CustomVector2}
+import com.easternsauce.game.shapes.CustomVector2
 import com.easternsauce.game.spawn.Blockade
 import com.easternsauce.game.utils.{IntPair, SimpleTimer}
 import com.easternsauce.game.wrappers.{EsAnimation, EsSpriteSheet}
@@ -66,7 +66,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   val spriteWidth: Float = 64
   val spriteHeight: Float = 64
 
-  val hitboxBounds: CustomRectangle = new CustomRectangle(2, 2, 60, 60)
+  val hitboxBounds: Rectangle = new Rectangle(2, 2, 60, 60)
 
   val isPlayer = false
   val isMob = false
@@ -239,8 +239,8 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     val currentHealthBarWidth = healthBarWidth * healthPoints / maxHealthPoints
     val barPosX = posX - healthBarWidth / 2
     val barPosY = posY + spriteHeight / 2 + 10
-    shapeDrawer.filledRectangle(new CustomRectangle(barPosX, barPosY, healthBarWidth, healthBarHeight), Color.ORANGE)
-    shapeDrawer.filledRectangle(new CustomRectangle(barPosX, barPosY, currentHealthBarWidth, healthBarHeight), Color.RED)
+    shapeDrawer.filledRectangle(new Rectangle(barPosX, barPosY, healthBarWidth, healthBarHeight), Color.ORANGE)
+    shapeDrawer.filledRectangle(new Rectangle(barPosX, barPosY, currentHealthBarWidth, healthBarHeight), Color.RED)
 
   }
 
@@ -470,7 +470,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
   }
 
-  def hitbox: CustomRectangle = new CustomRectangle(posX + hitboxBounds.x, posY + hitboxBounds.y,
+  def hitbox: Rectangle = new Rectangle(posX + hitboxBounds.x, posY + hitboxBounds.y,
     hitboxBounds.width, hitboxBounds.height)
 
 

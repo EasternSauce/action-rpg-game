@@ -2,14 +2,12 @@ package com.easternsauce.game.ability.attack
 
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
-import com.easternsauce.game.shapes.{CustomPolygon, CustomRectangle}
+import com.easternsauce.game.shapes.CustomPolygon
 import com.easternsauce.game.wrappers.EsAnimation
 
 class UnarmedAttack(override val abilityCreature: Creature) extends MeleeAttack(abilityCreature) {
   override def init(): Unit = {
     var weaponSpeed = 1.0f
-    // TODO
-    //    if (this.abilityCreature.getEquipmentItems.get(0) != null) weaponSpeed = this.abilityCreature.getEquipmentItems.get(0).getItemType.getWeaponSpeed
 
     val baseChannelTime = 0.3f
     val baseActiveTime = 0.3f

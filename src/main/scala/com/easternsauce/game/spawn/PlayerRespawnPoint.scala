@@ -1,9 +1,9 @@
 package com.easternsauce.game.spawn
 
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.physics.box2d.{Body, BodyDef, FixtureDef, PolygonShape}
 import com.easternsauce.game.area.Area
-import com.easternsauce.game.shapes.CustomRectangle
 import com.easternsauce.game.utils.SimpleTimer
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
@@ -13,7 +13,7 @@ class PlayerRespawnPoint(posX: Int, posY: Int, val area: Area) {
   val width = 30f
   val height = 30f
 
-  val rect: CustomRectangle = new CustomRectangle(posX, posY, width, height)
+  val rect: Rectangle = new Rectangle(posX, posY, width, height)
 
   private var respawnSetTimer = SimpleTimer()
 

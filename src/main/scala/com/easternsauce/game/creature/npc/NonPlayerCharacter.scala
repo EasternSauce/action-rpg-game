@@ -62,9 +62,9 @@ class NonPlayerCharacter(id: String, trader: Boolean, spriteSheet: EsSpriteSheet
     isRunningAnimationActive = false
 
     for (ability <- abilityList) {
-      ability.stopAbility()
+      ability.forceStop()
     }
-    currentAttack.stopAbility()
+    currentAttack.forceStop()
   }
 
   def triggerDialogue(): Unit = {

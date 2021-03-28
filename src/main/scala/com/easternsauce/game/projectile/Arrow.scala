@@ -4,11 +4,12 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.easternsauce.game.area.Area
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
-import com.easternsauce.game.shapes.{CustomRectangle, CustomVector2}
+import com.easternsauce.game.shapes.CustomVector2
 import system.GameSystem
 
 import scala.collection.mutable
@@ -21,7 +22,7 @@ class Arrow(var x: Float, var y: Float, val area: Area, var speedVector: CustomV
   private val arrowTexture: Texture = Assets.arrowTexture
 
 
-  private var hitboxBounds: CustomRectangle = new CustomRectangle(19, 19, 2, 2);
+  private var hitboxBounds: Rectangle = new Rectangle(19, 19, 2, 2);
 
   speedVector = speedVector.normal
 
@@ -70,9 +71,9 @@ class Arrow(var x: Float, var y: Float, val area: Area, var speedVector: CustomV
 
         if (!traversable) {
           collided = {
-            val rect1 = new CustomRectangle(x * GameSystem.TiledMapCellSize, y * GameSystem.TiledMapCellSize,
+            val rect1 = new Rectangle(x * GameSystem.TiledMapCellSize, y * GameSystem.TiledMapCellSize,
               GameSystem.TiledMapCellSize, GameSystem.TiledMapCellSize)
-            val rect2 = new CustomRectangle(newPosX + hitboxBounds.x, newPosY + hitboxBounds.y,
+            val rect2 = new Rectangle(newPosX + hitboxBounds.x, newPosY + hitboxBounds.y,
               hitboxBounds.width, hitboxBounds.height)
 
             rect1.overlaps(rect2)
@@ -91,7 +92,7 @@ class Arrow(var x: Float, var y: Float, val area: Area, var speedVector: CustomV
       if (creature != shooter) {
         // TODO: box2d collisions
 //        val creatureRect = creature.rect
-//        val arrowRect = new CustomRectangle(newPosX + hitboxBounds.getX, newPosY + hitboxBounds.getY, hitboxBounds.getWidth, hitboxBounds.getHeight)
+//        val arrowRect = new Rectangle(newPosX + hitboxBounds.getX, newPosY + hitboxBounds.getY, hitboxBounds.getWidth, hitboxBounds.getHeight)
 //        if (!(shooter.isInstanceOf[Mob] && creature.isInstanceOf[Mob])) { // mob can't hurt a mob?
 //          if (creatureRect.intersects(arrowRect)) {
 //            if (speedVector == new Vector2f(0f, 0f) || creature.healthPoints <= 0.0f) return false

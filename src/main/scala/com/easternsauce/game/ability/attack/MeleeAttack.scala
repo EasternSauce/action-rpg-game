@@ -1,11 +1,12 @@
 package com.easternsauce.game.ability.attack
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.physics.box2d.{Body, BodyDef, FixtureDef, PolygonShape}
 import com.easternsauce.game.ability.util.AbilityState
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
-import com.easternsauce.game.shapes.{CustomPolygon, CustomRectangle, CustomVector2}
+import com.easternsauce.game.shapes.{CustomPolygon, CustomVector2}
 import com.easternsauce.game.wrappers.EsAnimation
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
@@ -29,7 +30,9 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
 
   var hitbox: AttackHitbox = _
 
-  implicit def rectConversion(s: com.badlogic.gdx.math.Rectangle): CustomRectangle = new CustomRectangle(s.x, s.y, s.width, s.height)
+  var toRemoveBody = false
+
+  implicit def rectConversion(s: com.badlogic.gdx.math.Rectangle): Rectangle = new Rectangle(s.x, s.y, s.width, s.height)
 
   override def onActiveStart(): Unit = {
     super.onActiveStart()
@@ -53,7 +56,7 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
     val attackRectX = attackShiftX + abilityCreature.posX
     val attackRectY = attackShiftY + abilityCreature.posY
 
-    val poly = new CustomPolygon(new CustomRectangle(0,0, width, height))
+    val poly = new CustomPolygon(new Rectangle(0,0, width, height))
 
     poly.setOrigin(0, height / 2)
     poly.setRotation(theta)
@@ -64,6 +67,8 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
     hitbox = AttackHitbox(attackRectX, attackRectY, poly)
 
     initBody(hitbox)
+
+    toRemoveBody = false
   }
 
   override def onUpdateActive(): Unit = {
@@ -113,7 +118,7 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
     val attackRectX = attackShiftX + abilityCreature.posX
     val attackRectY = attackShiftY + abilityCreature.posY
 
-    val poly = new CustomPolygon(new CustomRectangle(0,0, width, height))
+    val poly = new CustomPolygon(new Rectangle(0,0, width, height))
 
     poly.setOrigin(0, height / 2)
     poly.setRotation(theta)
@@ -129,6 +134,10 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
   override def update(): Unit = {
     super.update()
 
+    if (body != null && toRemoveBody) {
+      body.getWorld.destroyBody(body)
+      toRemoveBody = false
+    }
   }
 
   def initBody(hitbox: AttackHitbox): Unit = {
@@ -177,7 +186,8 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
   override def onStop() {
     super.onStop()
 
-    body.getWorld.destroyBody(body)
+    if (state == AbilityState.Active) toRemoveBody = true // IMPORTANT: ability has to be active
+    // if we remove during channeling we could remove it before body is created, causing BOX2D crash
 
   }
 

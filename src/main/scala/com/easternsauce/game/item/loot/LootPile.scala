@@ -1,10 +1,10 @@
 package com.easternsauce.game.item.loot
 
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.physics.box2d.{Body, BodyDef, FixtureDef, PolygonShape}
 import com.easternsauce.game.area.Area
 import com.easternsauce.game.item.Item
-import com.easternsauce.game.shapes.CustomRectangle
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
@@ -18,7 +18,7 @@ class LootPile(val area: Area, x: Float, y: Float) {
 
   var visible = true
 
-  val rect: CustomRectangle = new CustomRectangle(x,y,width,height)
+  val rect: Rectangle = new Rectangle(x,y,width,height)
 
   val itemList: ListBuffer[Item] = ListBuffer()
 

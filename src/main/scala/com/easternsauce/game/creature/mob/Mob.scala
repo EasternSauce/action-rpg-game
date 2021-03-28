@@ -192,10 +192,10 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
     GameSystem.lootSystem.spawnLootPile(area, posX, posY, dropTable)
 
     for (ability <- abilityList) {
-      ability.stopAbility()
+      ability.forceStop()
     }
 
-    currentAttack.stopAbility()
+    currentAttack.forceStop()
 
     toSetBodyNonInteractive = true
   }

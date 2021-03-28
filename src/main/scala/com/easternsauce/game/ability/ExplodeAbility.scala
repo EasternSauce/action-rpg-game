@@ -37,8 +37,6 @@ class ExplodeAbility(override val abilityCreature: Creature) extends Ability(abi
     Assets.explosionSound.play(0.07f)
 
     initBody(abilityCreature.posX, abilityCreature.posY)
-
-    println("creating hitbox at " + abilityCreature.posX + " " + abilityCreature.posY)
   }
 
   override protected def onUpdateActive(): Unit = {

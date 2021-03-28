@@ -3,20 +3,21 @@ package com.easternsauce.game.creature.player
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys._
 import com.badlogic.gdx.audio.Sound
+import com.badlogic.gdx.math.Rectangle
 import com.easternsauce.game.ability.DashAbility
 import com.easternsauce.game.area.Area
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.npc.NonPlayerCharacter
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up}
-import com.easternsauce.game.shapes.{CustomRectangle, CustomVector2}
+import com.easternsauce.game.shapes.CustomVector2
 import com.easternsauce.game.spawn.PlayerRespawnPoint
 import com.easternsauce.game.utils.SimpleTimer
 import system.GameSystem
 
 class PlayerCharacter(id: String) extends Creature(id) {
 
-  override val hitboxBounds = new CustomRectangle(18, 0, 28, 64)
+  override val hitboxBounds = new Rectangle(18, 0, 28, 64)
   override val isPlayer = true
 
   override protected val onGettingHitSound: Sound = Assets.painSound
@@ -76,10 +77,10 @@ class PlayerCharacter(id: String) extends Creature(id) {
     sprinting = false
 
     for (ability <- abilityList) {
-      ability.stopAbility()
+      ability.forceStop()
     }
 
-    currentAttack.stopAbility()
+    currentAttack.forceStop()
 
     GameSystem.hud.bossHealthBar.hide()
 
