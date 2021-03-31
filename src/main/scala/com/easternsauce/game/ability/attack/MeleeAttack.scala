@@ -152,12 +152,10 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
 
     val fixtureDef: FixtureDef = new FixtureDef()
     val shape: PolygonShape = new PolygonShape()
-    //shape.setRadius(30 / GameSystem.PixelsPerMeter)
     shape.set(converted)
     fixtureDef.shape = shape
     fixtureDef.isSensor = true
     body.createFixture(fixtureDef)
-    //body.setLinearDamping(10f)
   }
 
   override def onUpdateHitbox(): Unit = {
@@ -191,9 +189,11 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
 
   }
 
-  override def onCollideWithCreature(creature: Creature): Unit = { // TODO
-    if (abilityCreature != creature && state == AbilityState.Active) {
-      creature.takeDamage(abilityCreature.weaponDamage, false, 30f, 0f, 0f)
+  override def onCollideWithCreature(creature: Creature): Unit = {
+    if (!(abilityCreature.isMob && creature.isMob)) {
+      if (abilityCreature != creature && state == AbilityState.Active) {
+        creature.takeDamage(abilityCreature.weaponDamage, immunityFrames = true, 30f, 0f, 0f)
+      }
     }
   }
 }

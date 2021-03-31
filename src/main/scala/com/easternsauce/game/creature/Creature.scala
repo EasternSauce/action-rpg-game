@@ -539,7 +539,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
         }
       }
 
-      movementVector.x = movementIncrement * movingDir.x
+      movementVector.x = movingDir.x
 
       if (movingDir.y == -1) {
         if (body.getLinearVelocity.y >= -currentMaxVelocity) {
@@ -552,7 +552,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
         }
       }
 
-      movementVector.y = movementIncrement * movingDir.y
+      movementVector.y = movingDir.y
 
     }
 
