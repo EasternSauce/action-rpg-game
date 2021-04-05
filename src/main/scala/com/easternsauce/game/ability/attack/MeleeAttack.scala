@@ -1,12 +1,12 @@
 package com.easternsauce.game.ability.attack
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.math.{Rectangle, Vector2}
 import com.badlogic.gdx.physics.box2d.{Body, BodyDef, FixtureDef, PolygonShape}
 import com.easternsauce.game.ability.util.AbilityState
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
-import com.easternsauce.game.shapes.{CustomPolygon, CustomVector2}
+import com.easternsauce.game.shapes.CustomPolygon
 import com.easternsauce.game.wrappers.EsAnimation
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
@@ -44,10 +44,10 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
     Assets.attackSound.play(0.1f)
 
     var attackVector = abilityCreature.attackVector
-    val theta = CustomVector2(attackVector.x, attackVector.y).angleDeg()
+    val theta = new Vector2(attackVector.x, attackVector.y).angleDeg()
 
     if (attackVector.len() > 0f) {
-      attackVector = CustomVector2(attackVector.x / attackVector.len(), attackVector.y / attackVector.len())
+      attackVector = new Vector2(attackVector.x / attackVector.len(), attackVector.y / attackVector.len())
     }
 
     val attackShiftX = attackVector.x * attackRange
@@ -84,7 +84,7 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
       val image = windupAnimation.currentFrame
 
       val attackVector = abilityCreature.attackVector
-      val theta = CustomVector2(attackVector.x, attackVector.y).angleDeg()
+      val theta = new Vector2(attackVector.x, attackVector.y).angleDeg()
 
       batch.draw(image, hitbox.x, hitbox.y - height / 2, 0, height / 2,
         image.getRegionWidth, image.getRegionHeight, scale, scale, theta)
@@ -93,7 +93,7 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
       val image = activeAnimation.currentFrame
 
       val attackVector = abilityCreature.attackVector
-      val theta = CustomVector2(attackVector.x, attackVector.y).angleDeg()
+      val theta = new Vector2(attackVector.x, attackVector.y).angleDeg()
 
       batch.draw(image, hitbox.x, hitbox.y - height / 2, 0, height / 2,
         image.getRegionWidth, image.getRegionHeight, scale, scale, theta)
@@ -106,10 +106,10 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
     abilityCreature.isAttacking = true
 
     var attackVector = abilityCreature.attackVector
-    val theta = CustomVector2(attackVector.x, attackVector.y).angleDeg()
+    val theta = new Vector2(attackVector.x, attackVector.y).angleDeg()
 
     if (attackVector.len() > 0f) {
-      attackVector = CustomVector2(attackVector.x / attackVector.len(), attackVector.y / attackVector.len())
+      attackVector = new Vector2(attackVector.x / attackVector.len(), attackVector.y / attackVector.len())
     }
 
     val attackShiftX = attackVector.x * attackRange
@@ -165,7 +165,7 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
       var attackVector = abilityCreature.attackVector
 
       if (attackVector.len() > 0f) {
-        attackVector = CustomVector2(attackVector.x / attackVector.len(), attackVector.y / attackVector.len())
+        attackVector = new Vector2(attackVector.x / attackVector.len(), attackVector.y / attackVector.len())
       }
 
       val attackShiftX = attackVector.x * attackRange

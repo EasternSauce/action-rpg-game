@@ -2,7 +2,6 @@ package com.easternsauce.game.creature.mob.boss
 
 import com.badlogic.gdx.audio.Music
 import com.easternsauce.game.creature.mob.Mob
-import com.easternsauce.game.shapes.CustomVector2
 import com.easternsauce.game.spawn.MobSpawnPoint
 import system.GameSystem
 
@@ -39,7 +38,7 @@ class Boss(override val id: String, override val mobSpawnPoint: MobSpawnPoint) e
   }
 
   override def takeDamage(damage: Float, immunityFrames: Boolean, knockbackPower: Float, sourceX: Float, sourceY: Float): Unit = {
-    if (alive) {
+    if (isAlive) {
       val beforeHP = healthPoints
       val actualDamage = damage * 100f / (100f + totalArmor)
       if (healthPoints - actualDamage > 0) healthPoints -= actualDamage

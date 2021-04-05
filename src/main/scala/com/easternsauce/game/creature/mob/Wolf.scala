@@ -1,11 +1,10 @@
 package com.easternsauce.game.creature.mob
 
 import com.badlogic.gdx.audio.Sound
-import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.math.{Rectangle, Vector2}
 import com.easternsauce.game.ability.DashAbility
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up}
-import com.easternsauce.game.shapes.CustomVector2
 import com.easternsauce.game.spawn.MobSpawnPoint
 import com.easternsauce.game.utils.SimpleTimer
 import system.GameSystem
@@ -61,7 +60,7 @@ class Wolf(override val id: String, override val mobSpawnPoint: MobSpawnPoint) e
     assert(aggroedCreature.nonEmpty)
 
     if (hasDestination) if (dashAbility.canPerform && GameSystem.distance(aggroedCreature.get.body, body) < dashDistance) {
-      dashAbility.setDashVector(new CustomVector2(destinationX - posX, destinationY - posY).normal)
+      dashAbility.setDashVector(new Vector2(destinationX - posX, destinationY - posY).nor())
       dashAbility.perform()
     }
   }

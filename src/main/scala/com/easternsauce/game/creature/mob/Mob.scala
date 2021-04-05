@@ -1,10 +1,9 @@
 package com.easternsauce.game.creature.mob
 
-import com.badlogic.gdx.physics.box2d.BodyDef
+import com.badlogic.gdx.math.Vector2
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.util.WalkDirection.WalkDirection
 import com.easternsauce.game.creature.util.{AttackType, Unarmed, WalkDirection}
-import com.easternsauce.game.shapes.CustomVector2
 import com.easternsauce.game.spawn.MobSpawnPoint
 import com.easternsauce.game.utils.SimpleTimer
 import system.GameSystem
@@ -51,7 +50,7 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
 
     GameSystem.areaCreatures.filter(creature => !creature.isMob && !creature.isNPC).foreach(creature => { // TODO: exclude npc too
 
-      if (!foundCreatureToAggro && alive && GameSystem.distance(body, creature.body) < aggroDistance) {
+      if (!foundCreatureToAggro && isAlive && GameSystem.distance(body, creature.body) < aggroDistance) {
         aggroedCreature = Some(creature)
         foundCreatureToAggro = true
 
@@ -125,7 +124,7 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
             if (circlingDir == 0) {
               destinationX = aggroedCenterX
               destinationY = aggroedCenterY
-              val destinationVector = CustomVector2(destinationX - creatureCenterX, destinationY - creatureCenterY)
+              val destinationVector = new Vector2(destinationX - creatureCenterX, destinationY - creatureCenterY)
               val perpendicular = GameSystem.getVectorPerpendicular(destinationVector)
               destinationX = aggroedCenterX + perpendicular.x
               destinationY = aggroedCenterY + perpendicular.y
@@ -134,9 +133,9 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
             else {
               destinationX = aggroedCenterX
               destinationY = aggroedCenterY
-              val destinationVector = CustomVector2(destinationX - creatureCenterX, destinationY - creatureCenterY)
+              val destinationVector = new Vector2(destinationX - creatureCenterX, destinationY - creatureCenterY)
               val perpendicular = GameSystem.getVectorPerpendicular(destinationVector)
-              val negated = CustomVector2(-perpendicular.x, -perpendicular.y)
+              val negated = new Vector2(-perpendicular.x, -perpendicular.y)
 
               destinationX = creatureCenterX + negated.x
               destinationY = creatureCenterY + negated.y
@@ -208,7 +207,7 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
   override def setFacingDirection(): Unit = {
     if (aggroedCreature.nonEmpty) {
       val aggroed = aggroedCreature.get
-      facingVector = CustomVector2(aggroed.posX - posX, aggroed.posY - posY)
+      facingVector = new Vector2(aggroed.posX - posX, aggroed.posY - posY)
     }
   }
 

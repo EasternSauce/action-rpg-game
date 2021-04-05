@@ -1,12 +1,13 @@
 package com.easternsauce.game.gui
 
+import java.io.{BufferedWriter, IOException}
+import java.nio.file.{Files, Paths}
+
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.{Gdx, Input}
 import system.{GameState, GameSystem}
 
-import java.io.{BufferedWriter, IOException}
-import java.nio.file.{Files, Paths}
 import scala.collection.mutable.ListBuffer
 
 class MainMenu {

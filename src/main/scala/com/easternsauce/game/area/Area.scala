@@ -3,11 +3,9 @@ package com.easternsauce.game.area
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
-import com.badlogic.gdx.math.{Polygon, Rectangle, Vector2}
+import com.badlogic.gdx.math.{Rectangle, Vector2}
 import com.badlogic.gdx.physics.box2d._
 import com.easternsauce.game.ability.Ability
-import com.easternsauce.game.ability.attack.{Attack, MeleeAttack}
-import com.easternsauce.game.ability.util.AbilityState
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.item.loot.{LootPile, Treasure}
@@ -177,7 +175,7 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
 
   def softReset(): Unit = {
     for (creature <- creaturesManager.creatures.values) {
-      if (creature.alive && !creature.isPlayer && !creature.isNPC) creature.reset()
+      if (creature.isAlive && !creature.isPlayer && !creature.isNPC) creature.reset()
     }
   }
 
@@ -191,6 +189,7 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
       arrow.update()
       if (arrow.markedForDeletion) {
         toBeDeleted += arrow
+        arrow.area.world.destroyBody(arrow.body)
       }
     }
 
@@ -224,6 +223,10 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
               }
             case (creature: Creature, ability: Ability) =>
               ability.onCollideWithCreature(creature)
+            case (creature: Creature, arrow: Arrow) =>
+              arrow.onCollideWithCreature(creature)
+            case (area: Area, arrow: Arrow) =>
+              arrow.onCollideWithTerrain()
             case _ =>
           }
         }

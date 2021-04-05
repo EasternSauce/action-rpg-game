@@ -1,5 +1,7 @@
 package system
 
+import java.io.{File, PrintWriter}
+
 import com.badlogic.gdx.Input.{Buttons, Keys}
 import com.badlogic.gdx.graphics._
 import com.badlogic.gdx.graphics.g2d._
@@ -20,13 +22,11 @@ import com.easternsauce.game.item.inventory.InventoryWindow
 import com.easternsauce.game.item.loot.LootSystem
 import com.easternsauce.game.item.util.ItemType
 import com.easternsauce.game.projectile.Arrow
-import com.easternsauce.game.shapes.CustomVector2
 import com.easternsauce.game.spawn.{PlayerRespawnPoint, SpawnLocationsContainer}
 import com.easternsauce.game.utils.SimpleTimer
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameState.{GameState, MainMenu}
 
-import java.io.{File, PrintWriter}
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 import scala.io.Source
@@ -126,8 +126,8 @@ object GameSystem {
     camera.update()
   }
 
-  def getVectorPerpendicular(vector: Vector2): CustomVector2 = {
-    CustomVector2(-vector.y, vector.x)
+  def getVectorPerpendicular(vector: Vector2): Vector2 = {
+    new Vector2(-vector.y, vector.x)
   }
 
   def create(worldBatch: SpriteBatch, hudBatch: SpriteBatch): Unit = {
@@ -428,7 +428,7 @@ object GameSystem {
         }
 
         if (creature.isPlayer) {
-          if (!creature.alive) {
+          if (!creature.isAlive) {
             creature.onDeath()
           }
         }

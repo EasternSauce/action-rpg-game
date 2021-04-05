@@ -1,12 +1,10 @@
 package com.easternsauce.game.ability
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.physics.box2d.{Body, BodyDef, CircleShape, FixtureDef, PolygonShape}
-import com.easternsauce.game.ability.attack.AttackHitbox
+import com.badlogic.gdx.physics.box2d.{Body, BodyDef, CircleShape, FixtureDef}
 import com.easternsauce.game.ability.util.AbilityState
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
-import com.easternsauce.game.creature.mob.Mob
 import com.easternsauce.game.wrappers.EsAnimation
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
@@ -88,7 +86,7 @@ class ExplodeAbility(override val abilityCreature: Creature) extends Ability(abi
   }
 
   override def onCollideWithCreature(creature: Creature): Unit = {
-    if (!(this.abilityCreature.isMob && creature.isMob) && creature.alive) { // mob can't hurt a mob?
+    if (!(this.abilityCreature.isMob && creature.isMob) && creature.isAlive) { // mob can't hurt a mob?
       if (!creature.isImmune) creature.takeDamage(700f, immunityFrames = true, 0, 0, 0)
     }
   }

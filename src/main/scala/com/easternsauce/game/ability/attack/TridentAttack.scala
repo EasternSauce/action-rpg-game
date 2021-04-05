@@ -2,7 +2,6 @@ package com.easternsauce.game.ability.attack
 
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
-import com.easternsauce.game.shapes.CustomPolygon
 import com.easternsauce.game.wrappers.EsAnimation
 
 class TridentAttack(override val abilityCreature: Creature) extends MeleeAttack(abilityCreature) {

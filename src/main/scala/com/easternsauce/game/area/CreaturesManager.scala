@@ -1,11 +1,12 @@
 package com.easternsauce.game.area
 
+import java.io.PrintWriter
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.item.Item
 import space.earlygrey.shapedrawer.ShapeDrawer
 
-import java.io.PrintWriter
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
@@ -38,7 +39,7 @@ class CreaturesManager(private val area: Area) {
     }
 
     for (creature <- creatures.values) {
-      if (creature.alive && !creature.atFullLife) creature.renderHealthBar(shapeDrawer)
+      if (creature.isAlive && !creature.atFullLife) creature.renderHealthBar(shapeDrawer)
     }
   }
 

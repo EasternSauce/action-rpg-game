@@ -3,14 +3,13 @@ package com.easternsauce.game.creature.player
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys._
 import com.badlogic.gdx.audio.Sound
-import com.badlogic.gdx.math.Rectangle
+import com.badlogic.gdx.math.{Rectangle, Vector2}
 import com.easternsauce.game.ability.DashAbility
 import com.easternsauce.game.area.Area
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.npc.NonPlayerCharacter
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up}
-import com.easternsauce.game.shapes.CustomVector2
 import com.easternsauce.game.spawn.PlayerRespawnPoint
 import com.easternsauce.game.utils.SimpleTimer
 import system.GameSystem
@@ -65,9 +64,9 @@ class PlayerCharacter(id: String) extends Creature(id) {
     val mouseY = Gdx.input.getY
 
     val centerX = Gdx.graphics.getWidth / 2f
-    val centerY = (1 - GameSystem.ScreenProportion) * Gdx.graphics.getHeight + GameSystem.ScreenProportion * Gdx.graphics.getHeight / 2f
+    val centerY = (1f - GameSystem.ScreenProportion) * Gdx.graphics.getHeight + GameSystem.ScreenProportion * Gdx.graphics.getHeight / 2f
 
-    facingVector = CustomVector2(mouseX - centerX, (Gdx.graphics.getHeight - mouseY) - centerY) // we need to reverse y due to mouse coordinates being in different system
+    facingVector = new Vector2(mouseX - centerX, (Gdx.graphics.getHeight - mouseY) - centerY).nor() // we need to reverse y due to mouse coordinates being in different system
   }
 
   override def onDeath(): Unit = {

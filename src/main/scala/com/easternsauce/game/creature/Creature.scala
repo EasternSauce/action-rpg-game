@@ -4,19 +4,15 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
 import com.badlogic.gdx.math.{Rectangle, Vector2}
-import com.badlogic.gdx.physics.box2d.{Body, BodyDef, CircleShape, Fixture, FixtureDef}
+import com.badlogic.gdx.physics.box2d._
 import com.easternsauce.game.ability.Ability
 import com.easternsauce.game.ability.attack._
 import com.easternsauce.game.area.Area
-import com.easternsauce.game.creature.mob.Ghost
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up, WalkDirection}
 import com.easternsauce.game.creature.util.{Bow, Sword, Trident, WalkDirection}
 import com.easternsauce.game.effect.Effect
 import com.easternsauce.game.item.Item
-import com.easternsauce.game.shapes.CustomVector2
-import com.easternsauce.game.spawn.Blockade
 import com.easternsauce.game.utils.{IntPair, SimpleTimer}
 import com.easternsauce.game.wrappers.{EsAnimation, EsSpriteSheet}
 import space.earlygrey.shapedrawer.ShapeDrawer
@@ -45,7 +41,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   protected var healingTime = 8f
   protected var healingPower = 0f
 
-  protected var knockbackVector: CustomVector2 = _
+  protected var knockbackVector: Vector2 = _
 
   protected var knockbackSpeed: Float = 0f
 
@@ -76,8 +72,8 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
   var area: Area = _
 
-  var attackVector: CustomVector2 = CustomVector2(0f, 0f)
-  var facingVector: CustomVector2 = CustomVector2(0f, 0f)
+  var attackVector: Vector2 = new Vector2(0f, 0f)
+  var facingVector: Vector2 = new Vector2(0f, 0f)
 
   var maxHealthPoints = 100f
   var healthPoints: Float = maxHealthPoints
@@ -114,7 +110,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   protected var movementIncrement: Float = 0
   protected var runningStoppedTimer: SimpleTimer = SimpleTimer()
 
-  var movementVector: CustomVector2 = CustomVector2(0f, 0f)
+  var movementVector: Vector2 = new Vector2(0f, 0f)
 
   val baseSpeed: Float = 12f
 
@@ -153,7 +149,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
   var toSetBodyNonInteractive: Boolean = false
 
-  def alive: Boolean = healthPoints > 0f
+  def isAlive: Boolean = healthPoints > 0f
 
   def atFullLife: Boolean = healthPoints >= maxHealthPoints
 
@@ -179,7 +175,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   }
 
   def update(): Unit = {
-    if (alive) {
+    if (isAlive) {
       onUpdateStart()
 
       for (ability <- abilityList) {
@@ -248,7 +244,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
 
   def takeDamage(damage: Float, immunityFrames: Boolean, knockbackPower: Float, sourceX: Float, sourceY: Float): Unit = {
-    if (alive) {
+    if (isAlive) {
       val beforeHP = healthPoints
 
       val actualDamage = damage * 100f / (100f + totalArmor)
@@ -265,7 +261,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
       }
 
       if (knocbackable) {
-        knockbackVector = CustomVector2(posX - sourceX, posY - sourceY).normal
+        knockbackVector = new Vector2(posX - sourceX, posY - sourceY).nor()
 
         body.applyLinearImpulse(new Vector2(knockbackVector.x * knockbackPower, knockbackVector.y * knockbackPower), body.getWorldCenter, true)
       }
@@ -605,7 +601,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
       var rotation = 0.0f
 
-      if (!alive) {
+      if (!isAlive) {
         rotation = 90f
       }
 

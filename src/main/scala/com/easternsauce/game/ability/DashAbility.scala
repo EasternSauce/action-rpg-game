@@ -1,13 +1,8 @@
 package com.easternsauce.game.ability
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.math.Vector2
 import com.easternsauce.game.ability.util.AbilityState
 import com.easternsauce.game.creature.Creature
-import com.easternsauce.game.shapes.CustomVector2
-import com.easternsauce.game.spawn.Blockade
-
-import scala.collection.mutable.ListBuffer
 
 class DashAbility(override val abilityCreature: Creature) extends Ability(abilityCreature) {
   protected var dashAcceleration: Float = 0.0f
@@ -63,7 +58,7 @@ class DashAbility(override val abilityCreature: Creature) extends Ability(abilit
 
   }
 
-  def setDashVector(dashVector: CustomVector2): Unit = {
+  def setDashVector(dashVector: Vector2): Unit = {
     this.dashVector = dashVector
   }
 }

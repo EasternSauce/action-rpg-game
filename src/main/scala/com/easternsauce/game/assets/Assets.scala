@@ -57,7 +57,7 @@ object Assets {
 
   def createAssets(): Unit = {
     textureAtlas = new TextureAtlas("assets/atlas/packed_atlas.atlas")
-    textureAtlas.getTextures.forEach(texture => texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear))
+    textureAtlas.getTextures.forEach(texture => texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest))
 
     male1SpriteSheet = new EsSpriteSheet("male1", 32, 32)
     skeletonSpriteSheet = new EsSpriteSheet("skeleton", 64, 64)
