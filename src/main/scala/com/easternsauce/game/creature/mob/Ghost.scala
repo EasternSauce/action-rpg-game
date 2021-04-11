@@ -33,12 +33,10 @@ class Ghost(override val id: String, override val mobSpawnPoint: MobSpawnPoint, 
   private var explodeAbility: ExplodeAbility = _
 
 
-  creatureType = "goblin"
+  creatureType = "ghost"
 
   maxHealthPoints = 300f
   healthPoints = maxHealthPoints
-
-  //grantWeapon(weapon)
 
   override def performAggroedBehavior(): Unit = {
     super.performAggroedBehavior()

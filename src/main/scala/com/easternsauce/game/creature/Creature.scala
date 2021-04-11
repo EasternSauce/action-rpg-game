@@ -53,7 +53,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
   protected val onGettingHitSound: Sound = null
 
-  protected var creatureType: String = "regularCreature"
+  protected var creatureType: String = _
 
   protected var effectMap: mutable.Map[String, Effect] = mutable.Map()
 
@@ -589,11 +589,12 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   }
 
   def drawRunningAnimation(batch: SpriteBatch): Unit = {
+    val realWidth = spriteWidth * scale
+    val realHeight = spriteHeight * scale
 
     if (isRunningAnimationActive) {
       val currentFrame = walkAnimation(lastMovingDir).currentFrame
-
-      batch.draw(currentFrame, posX - spriteWidth / 2, posY - spriteHeight / 2, spriteWidth / 2, spriteHeight / 2, spriteWidth, spriteHeight,
+      batch.draw(currentFrame, posX - realWidth / 2, posY - realHeight / 2, realWidth / 2, realHeight / 2, realWidth, realHeight,
         1.0f, 1.0f, 0f)
     }
     else {
@@ -605,7 +606,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
         rotation = 90f
       }
 
-      batch.draw(currentFrame, posX - spriteWidth / 2, posY - spriteHeight / 2, spriteWidth / 2, spriteHeight / 2, spriteWidth, spriteHeight,
+      batch.draw(currentFrame, posX - realWidth / 2, posY - realHeight / 2, realWidth / 2, realHeight / 2, realWidth, realHeight,
         1.0f, 1.0f, rotation)
     }
   }
@@ -627,7 +628,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
     val fixtureDef: FixtureDef = new FixtureDef()
     val shape: CircleShape = new CircleShape()
-    shape.setRadius(30 / GameSystem.PixelsPerMeter)
+    shape.setRadius(spriteWidth * scale / 2 / GameSystem.PixelsPerMeter)
     fixtureDef.shape = shape
     fixture = body.createFixture(fixtureDef)
     body.setLinearDamping(10f)

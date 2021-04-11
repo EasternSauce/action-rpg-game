@@ -130,7 +130,6 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
     Assets.abandonedPlainsMusic.stop()
 
     if (id == "area1") {
-      Assets.abandonedPlainsMusic.setVolume(0.1f)
       Assets.abandonedPlainsMusic.play()
     }
     creaturesManager.onAreaEntry()
@@ -180,7 +179,9 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
   }
 
   def addBlockade(mobSpawnPoint: MobSpawnPoint, blockadePosX: Int, blockadePosY: Int): Unit = {
-    // TODO
+    val blockade = new Blockade(mobSpawnPoint, blockadePosX, blockadePosY)
+    blockadeList += blockade
+    mobSpawnPoint.blockade = blockade
   }
 
   def update(): Unit = {

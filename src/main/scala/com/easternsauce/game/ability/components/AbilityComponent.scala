@@ -1,4 +1,4 @@
-package com.easternsauce.game.ability.ability_components
+package com.easternsauce.game.ability.components
 
 import com.badlogic.gdx.physics.box2d.Body
 

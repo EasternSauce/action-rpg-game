@@ -65,6 +65,8 @@ object Assets {
     goblinSpriteSheet = new EsSpriteSheet("goblin", 32, 32)
     ghostSpriteSheet = new EsSpriteSheet("ghost", 32, 32)
 
+    fireDemonSpriteSheet = new EsSpriteSheet("taurus", 80, 80)
+
     iconsSpriteSheet = new EsSpriteSheet("nice_icons", 32, 32)
 
     slashSpriteSheet = new EsSpriteSheet("slash", 40, 40)

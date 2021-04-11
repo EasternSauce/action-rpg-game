@@ -21,8 +21,10 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
 
   protected var width: Float = _
   protected var height: Float = _
-  protected var scale = 1.0f
-  protected var attackRange: Float = _
+
+
+  var scale = 1.0f
+  var attackRange: Float = 0.0f
 
   var knockbackPower = 15f
 
