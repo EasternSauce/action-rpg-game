@@ -45,8 +45,6 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
   protected var knockbackSpeed: Float = 0f
 
-  protected var scale: Float = 1f
-
   protected var knockbackable = true
 
   protected var dropTable: mutable.Map[String, Float] = mutable.Map()
@@ -58,6 +56,8 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   protected var effectMap: mutable.Map[String, Effect] = mutable.Map()
 
   protected var staminaDrain = 0.0f
+
+  var scale: Float = 1f
 
   val spriteWidth: Float = 64
   val spriteHeight: Float = 64

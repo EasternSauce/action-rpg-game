@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.{Body, BodyDef, FixtureDef, PolygonShape}
 import com.easternsauce.game.ability.util.AbilityState
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
+import com.easternsauce.game.projectile.Arrow
 import com.easternsauce.game.shapes.CustomPolygon
 import com.easternsauce.game.wrappers.EsAnimation
 import space.earlygrey.shapedrawer.ShapeDrawer
@@ -33,6 +34,8 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
   var hitbox: AttackHitbox = _
 
   var toRemoveBody = false
+  var bodyActive = false // IMPORTANT: do NOT use body after already destroyed (otherwise weird behavior occurs, because, for some reason,
+  // the reference can STILL be attached to some other random body after destruction, like arrow bodies)
 
   implicit def rectConversion(s: com.badlogic.gdx.math.Rectangle): Rectangle = new Rectangle(s.x, s.y, s.width, s.height)
 
@@ -69,6 +72,7 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
     hitbox = AttackHitbox(attackRectX, attackRectY, poly)
 
     initBody(hitbox)
+    bodyActive = true
 
     toRemoveBody = false
   }
@@ -139,6 +143,7 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
     if (body != null && toRemoveBody) {
       body.getWorld.destroyBody(body)
       toRemoveBody = false
+      bodyActive = false
     }
   }
 
@@ -146,7 +151,7 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
     val bodyDef = new BodyDef()
     bodyDef.position.set(hitbox.x / GameSystem.PixelsPerMeter, hitbox.y / GameSystem.PixelsPerMeter)
 
-    bodyDef.`type` = BodyDef.BodyType.StaticBody
+    bodyDef.`type` = BodyDef.BodyType.KinematicBody
     body = abilityCreature.area.world.createBody(bodyDef)
     body.setUserData(this)
 
@@ -160,8 +165,8 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
     body.createFixture(fixtureDef)
   }
 
-  override def onUpdateHitbox(): Unit = {
-    super.onUpdateHitbox()
+  override def updateHitbox(): Unit = {
+    super.updateHitbox()
 
     if (hitbox != null) {
       var attackVector = abilityCreature.attackVector
@@ -176,7 +181,7 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
       hitbox.x = attackShiftX + abilityCreature.posX
       hitbox.y = attackShiftY + abilityCreature.posY
 
-      if (body != null) {
+      if (bodyActive) {
         body.setTransform(hitbox.x / GameSystem.PixelsPerMeter, hitbox.y / GameSystem.PixelsPerMeter, 0f)
       }
     }
@@ -192,6 +197,7 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
   }
 
   override def onCollideWithCreature(creature: Creature): Unit = {
+    super.onCollideWithCreature(creature)
     if (!(abilityCreature.isMob && creature.isMob)) {
       if (abilityCreature != creature && state == AbilityState.Active) {
         creature.takeDamage(abilityCreature.weaponDamage, immunityFrames = true, 30f, 0f, 0f)

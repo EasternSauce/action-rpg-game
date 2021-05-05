@@ -30,7 +30,7 @@ abstract class Ability(val abilityCreature: Creature) {
 
   def init()
 
-  def onUpdateHitbox(): Unit = {
+  def updateHitbox(): Unit = {
 
   }
 
@@ -50,7 +50,7 @@ abstract class Ability(val abilityCreature: Creature) {
     }
 
     if (state == AbilityState.Channeling || state == AbilityState.Active) {
-      onUpdateHitbox()
+      updateHitbox()
     }
 
     if (state == AbilityState.Channeling) onUpdateChanneling()

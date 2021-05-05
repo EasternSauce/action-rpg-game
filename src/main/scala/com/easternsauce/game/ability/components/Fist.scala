@@ -1,5 +1,7 @@
 package com.easternsauce.game.ability.components
 
-class Fist {
+import com.easternsauce.game.ability.MeteorCrashAbility
+
+class Fist(override val mainAbility: MeteorCrashAbility) extends AbilityComponent(mainAbility) {
 
 }

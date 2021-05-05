@@ -92,7 +92,8 @@ class Arrow(var startX: Float, var startY: Float, val area: Area, var dirVector:
   }
 
   def onCollideWithCreature(creature: Creature): Unit = {
-    if (!(shooter.isMob && creature.isMob) && isActive ) {
+    if (!(shooter.isMob && creature.isMob) && isActive) {
+
       if (shooter != creature && creature.isAlive) {
         creature.takeDamage(damage, immunityFrames = true, 30f, startX, startY)
         markedForDeletion = true
@@ -113,7 +114,7 @@ class Arrow(var startX: Float, var startY: Float, val area: Area, var dirVector:
     body = area.world.createBody(bodyDef)
     body.setUserData(this)
 
-    val radius = 10f
+    val radius = 25f
 
     val fixtureDef: FixtureDef = new FixtureDef()
     val shape: CircleShape = new CircleShape()

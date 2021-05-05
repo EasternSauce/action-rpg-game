@@ -96,6 +96,8 @@ object GameSystem {
 
   var drawAttackHitboxes: Boolean = false
 
+  var testCounter: Int = 0
+
   var debugRenderer: Box2DDebugRenderer = _
 
   var PixelsPerMeter: Float = 32f
@@ -563,6 +565,10 @@ object GameSystem {
 
   def distance(body1: Body, body2: Body): Float = {
     body1.getPosition.dst(body2.getPosition) * GameSystem.PixelsPerMeter
+  }
+
+  def distance(vector: Vector2, body: Body): Float = {
+    vector.dst(body.getPosition) * GameSystem.PixelsPerMeter
   }
 
 }

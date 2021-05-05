@@ -14,7 +14,7 @@ class FireDemon(override val id: String, override val mobSpawnPoint: MobSpawnPoi
   protected var meteorRainAbility: MeteorRainAbility = _
   protected var fistSlamAbility: FistSlamAbility = _
   protected var meteorCrashAbility: MeteorCrashAbility = _
-  protected var dashAbility: DashAbility = _
+//  protected var dashAbility: DashAbility = _
 
   scale = 2.0f
 
@@ -36,45 +36,49 @@ class FireDemon(override val id: String, override val mobSpawnPoint: MobSpawnPoi
   name = "Magma Stalker"
 
   aggroDistance = 500f
-  attackDistance = 500f
+  attackDistance = 200f
   walkUpDistance = 500f
 
   bossMusic = Assets.fireDemonMusic
 
   override val onGettingHitSound: Sound = Assets.roarSound
 
-  override val baseSpeed = 0.1f
+  override val baseSpeed = 10f
 
   creatureType = "fireDemon"
 
+  grantWeapon("demonTrident")
+
   override def performAggroedBehavior(): Unit = {
+    super.performAggroedBehavior()
+
     if (!effectMap("immobilized").isActive && isNoAbilityActive && aggroedCreature.nonEmpty) {
-      if (meteorRainAbility.canPerform && healthPoints < maxHealthPoints * 0.7) {
+      if (meteorRainAbility.canPerform && healthPoints < maxHealthPoints * 0.99) {
         meteorRainAbility.perform()
         Assets.monsterGrowlSound.play(0.5f)
       }
       else if (fistSlamAbility.canPerform && GameSystem.distance(aggroedCreature.get.body, body) < 80f) fistSlamAbility.perform()
       else if (meteorCrashAbility.canPerform && GameSystem.distance(aggroedCreature.get.body, body) > 220f) meteorCrashAbility.perform()
       else if (currentAttack.canPerform && GameSystem.distance(aggroedCreature.get.body, body) < 170f) currentAttack.perform()
-      else if (dashAbility.canPerform && GameSystem.distance(aggroedCreature.get.body, body) > 300f) if (hasDestination) {
-        dashAbility.setDashVector(new Vector2(destinationX - posX, destinationY - posY).nor())
-        dashAbility.perform()
-      }
+//      else if (dashAbility.canPerform && GameSystem.distance(aggroedCreature.get.body, body) > 300f) if (hasDestination) {
+//        dashAbility.setDashVector(new Vector2(destinationX - posX, destinationY - posY).nor())
+//        dashAbility.perform()
+//      }
     }
   }
 
   override protected def defineCustomAbilities(): Unit = {
 
     tridentAttack.attackRange = 45f
-    tridentAttack.scale = 2.0f
+    tridentAttack.scale = 2.5f
     meteorRainAbility = MeteorRainAbility(this)
     fistSlamAbility = FistSlamAbility(this)
     meteorCrashAbility = MeteorCrashAbility(this)
-    dashAbility = DashAbility(this)
+//    dashAbility = DashAbility(this)
     abilityList += meteorRainAbility
     abilityList += fistSlamAbility
     abilityList += meteorCrashAbility
-    abilityList += dashAbility
+//    abilityList += dashAbility
   }
 
   override def onAggroed(): Unit = {

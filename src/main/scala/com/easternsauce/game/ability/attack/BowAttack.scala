@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.projectile.Arrow
+import system.GameSystem
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer

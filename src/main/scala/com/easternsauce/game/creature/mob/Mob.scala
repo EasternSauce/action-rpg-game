@@ -4,6 +4,8 @@ import com.badlogic.gdx.math.Vector2
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.util.WalkDirection.WalkDirection
 import com.easternsauce.game.creature.util.{AttackType, Unarmed, WalkDirection}
+import com.easternsauce.game.item.Item
+import com.easternsauce.game.item.util.ItemType
 import com.easternsauce.game.spawn.MobSpawnPoint
 import com.easternsauce.game.utils.SimpleTimer
 import system.GameSystem
@@ -201,7 +203,9 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
 
 
   def grantWeapon(weaponName: String) {
-    // TODO
+    val weaponItemType = ItemType.getItemType(weaponName)
+    equipmentItems.put(0, new Item(weaponItemType, null))
+
   }
 
   override def setFacingDirection(): Unit = {

@@ -9,7 +9,7 @@ import com.easternsauce.game.wrappers.EsAnimation
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
-class ExplodeAbility(override val abilityCreature: Creature) extends Ability(abilityCreature) {
+class ExplosionAbility(override val abilityCreature: Creature) extends Ability(abilityCreature) {
 
   protected var explosionAnimation = new EsAnimation(Assets.explosionSpriteSheet, 0, 0.05f)
   protected var explosionRange: Float = _
@@ -86,15 +86,16 @@ class ExplodeAbility(override val abilityCreature: Creature) extends Ability(abi
   }
 
   override def onCollideWithCreature(creature: Creature): Unit = {
+    super.onCollideWithCreature(creature)
     if (!(this.abilityCreature.isMob && creature.isMob) && creature.isAlive) { // mob can't hurt a mob?
       if (!creature.isImmune) creature.takeDamage(700f, immunityFrames = true, 0, 0, 0)
     }
   }
 }
 
-object ExplodeAbility {
-  def apply(creature: Creature): ExplodeAbility = {
-    val ability = new ExplodeAbility(creature)
+object ExplosionAbility {
+  def apply(creature: Creature): ExplosionAbility = {
+    val ability = new ExplosionAbility(creature)
     ability.init()
     ability
   }

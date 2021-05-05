@@ -6,6 +6,7 @@ import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
 import com.badlogic.gdx.math.{Rectangle, Vector2}
 import com.badlogic.gdx.physics.box2d._
 import com.easternsauce.game.ability.Ability
+import com.easternsauce.game.ability.components.AbilityComponent
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.item.loot.{LootPile, Treasure}
@@ -130,6 +131,7 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
     Assets.abandonedPlainsMusic.stop()
 
     if (id == "area1") {
+      Assets.abandonedPlainsMusic.setVolume(0.1f)
       Assets.abandonedPlainsMusic.play()
     }
     creaturesManager.onAreaEntry()
@@ -224,9 +226,11 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
               }
             case (creature: Creature, ability: Ability) =>
               ability.onCollideWithCreature(creature)
+            case (creature: Creature, abilityComponent: AbilityComponent) =>
+              abilityComponent.onCollideWithCreature(creature)
             case (creature: Creature, arrow: Arrow) =>
               arrow.onCollideWithCreature(creature)
-            case (area: Area, arrow: Arrow) =>
+            case (_: Area, arrow: Arrow) =>
               arrow.onCollideWithTerrain()
             case _ =>
           }

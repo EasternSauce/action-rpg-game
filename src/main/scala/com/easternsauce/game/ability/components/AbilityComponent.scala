@@ -1,14 +1,21 @@
 package com.easternsauce.game.ability.components
 
-import com.badlogic.gdx.physics.box2d.Body
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.easternsauce.game.ability.Ability
+import com.easternsauce.game.creature.Creature
+import space.earlygrey.shapedrawer.ShapeDrawer
 
-class AbilityComponent {
-  var body: Body = _
+abstract class AbilityComponent(val mainAbility: Ability) {
 
-  var damaging = false
-
-  def initBody() {
+  def onUpdateActive(): Unit = {
 
   }
 
+  def render(shapeDrawer: ShapeDrawer, batch: SpriteBatch): Unit = {
+
+  }
+
+  def onCollideWithCreature(creature: Creature): Unit = {
+
+  }
 }

@@ -2,7 +2,7 @@ package com.easternsauce.game.creature.mob
 
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.math.Rectangle
-import com.easternsauce.game.ability.ExplodeAbility
+import com.easternsauce.game.ability.ExplosionAbility
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up}
 import com.easternsauce.game.spawn.MobSpawnPoint
@@ -30,7 +30,7 @@ class Ghost(override val id: String, override val mobSpawnPoint: MobSpawnPoint, 
 
   override val baseSpeed = 12f
 
-  private var explodeAbility: ExplodeAbility = _
+  private var explodeAbility: ExplosionAbility = _
 
 
   creatureType = "ghost"
@@ -51,7 +51,7 @@ class Ghost(override val id: String, override val mobSpawnPoint: MobSpawnPoint, 
   override def onInit(): Unit = {
     super.onInit()
 
-    explodeAbility = ExplodeAbility(this)
+    explodeAbility = ExplosionAbility(this)
 
     explodeAbility.onChannelAction = () => {Assets.darkLaughSound.play(0.1f)}
 
