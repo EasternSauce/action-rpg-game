@@ -1,12 +1,17 @@
 package com.easternsauce.game.desktop
 
 import com.badlogic.gdx.backends.lwjgl3.{Lwjgl3Application, Lwjgl3ApplicationConfiguration}
-import system.GdxGame
+import system.{GameSystem, GdxGame}
 
 object DesktopApplication {
+
+  var windowWidth: Float = 1280f
+  var windowHeight: Float = 720f
+
   def main(arg: Array[String]): Unit = {
+
     val config = new Lwjgl3ApplicationConfiguration
-    config.setWindowedMode(1280, 720)
+    config.setWindowedMode(windowWidth.toInt, windowHeight.toInt)
     new Lwjgl3Application(new GdxGame, config)
   }
 }

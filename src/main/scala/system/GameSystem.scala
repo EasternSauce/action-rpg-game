@@ -18,6 +18,7 @@ import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.mob.boss.Boss
 import com.easternsauce.game.creature.npc.NonPlayerCharacter
 import com.easternsauce.game.creature.player.PlayerCharacter
+import com.easternsauce.game.desktop.DesktopApplication
 import com.easternsauce.game.dialogue.DialogueWindow
 import com.easternsauce.game.gui.{Hud, LootOptionWindow, MainMenu}
 import com.easternsauce.game.item.Item
@@ -42,6 +43,10 @@ object GameSystem {
   var camera: OrthographicCamera = _
 
   val TiledMapCellSize = 64
+
+  var originalWidth: Float = DesktopApplication.windowWidth
+  var originalHeight: Float = DesktopApplication.windowHeight
+
 
   var cameraFocussedCreature: Option[Creature] = None
 
@@ -116,8 +121,6 @@ object GameSystem {
 
   var PixelsPerMeter: Float = 32f
 
-  var originalWidth: Float = _
-  var originalHeight: Float = _
 
   def getTiledMapRealWidth(tiledMap: TiledMap): Int = {
     val layer = tiledMap.getLayers.get(0).asInstanceOf[TiledMapTileLayer]
@@ -153,9 +156,6 @@ object GameSystem {
     Assets.createAssets()
 
     ItemType.loadItemTypes()
-
-    originalWidth = Gdx.graphics.getWidth
-    originalHeight = Gdx.graphics.getHeight
 
     camera = new OrthographicCamera
     camera.setToOrtho(false, originalWidth, originalHeight)

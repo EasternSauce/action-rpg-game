@@ -24,8 +24,6 @@ class InventoryWindow {
   private var traderInventorySlotList: ListBuffer[Rectangle] = ListBuffer()
 
 
-
-
   private var currentSelected: Int = 0
 
   private var moving: Boolean = false
@@ -101,6 +99,7 @@ class InventoryWindow {
 
   def render(hudBatch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
     if (inventoryOpen) {
+      println("rendering inventory window")
 
       shapeDrawer.filledRectangle(background, Color.LIGHT_GRAY)
 
