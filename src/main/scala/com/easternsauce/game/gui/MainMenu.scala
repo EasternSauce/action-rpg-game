@@ -40,15 +40,15 @@ class MainMenu {
     if (!prompt) for (i <- 0 until Math.min(4, optionList.size)) {
       GameSystem.font.setColor(Color.WHITE)
       GameSystem.font.draw(batch, (if (currentSelected == i) ">"
-      else "") + optionList(i), 100, Gdx.graphics.getHeight - (100 + 30 * i))
+      else "") + optionList(i), 100, GameSystem.originalHeight - (100 + 30 * i))
     }
     else {
       GameSystem.font.setColor(Color.WHITE)
-      GameSystem.font.draw(batch, promptText, 100, Gdx.graphics.getHeight - 100)
+      GameSystem.font.draw(batch, promptText, 100, GameSystem.originalHeight - 100)
       for (i <- 0 until Math.min(4, optionList.size)) {
         GameSystem.font.setColor(Color.WHITE)
         GameSystem.font.draw(batch, (if (currentSelected == i) ">"
-        else "") + optionList(i), 100, Gdx.graphics.getHeight - (130 + 30 * i))
+        else "") + optionList(i), 100, GameSystem.originalHeight - (130 + 30 * i))
       }
     }
   }

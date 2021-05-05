@@ -17,7 +17,7 @@ import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 class InventoryWindow {
-  private val background: Rectangle = new Rectangle((Gdx.graphics.getWidth * 0.2).toInt, (Gdx.graphics.getHeight * 0.3).toInt, (Gdx.graphics.getWidth * 0.6).toInt, (Gdx.graphics.getHeight * 0.6).toInt)
+  private val background: Rectangle = new Rectangle((GameSystem.originalWidth * 0.2).toInt, (GameSystem.originalHeight * 0.3).toInt, (GameSystem.originalWidth * 0.6).toInt, (GameSystem.originalHeight * 0.6).toInt)
 
   private var slotList: ListBuffer[Rectangle] = ListBuffer()
   private var equipmentSlotList: ListBuffer[Rectangle] = ListBuffer()

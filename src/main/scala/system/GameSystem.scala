@@ -3,11 +3,14 @@ package system
 import java.io.{File, PrintWriter}
 
 import com.badlogic.gdx.Input.{Buttons, Keys}
+import com.badlogic.gdx.graphics.Texture.TextureFilter
 import com.badlogic.gdx.graphics._
 import com.badlogic.gdx.graphics.g2d._
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.{Body, Box2DDebugRenderer}
+import com.badlogic.gdx.utils.viewport.{FitViewport, Viewport}
 import com.badlogic.gdx.{Gdx, Input}
 import com.easternsauce.game.area.{Area, AreaGate}
 import com.easternsauce.game.assets.Assets
@@ -67,7 +70,18 @@ object GameSystem {
   val textureRegionPrefix = "Tile_"
   val textureRegionName: String = textureRegionPrefix + "1"
 
-  val font = new BitmapFont
+  val generator = new FreeTypeFontGenerator(Gdx.files.internal("assets/font/YoungSerif-Regular.ttf"))
+  val parameter = new FreeTypeFontGenerator.FreeTypeFontParameter
+  parameter.size = 16
+  val font: BitmapFont = generator.generateFont(parameter)
+  generator.dispose()
+
+  val generator2 = new FreeTypeFontGenerator(Gdx.files.internal("assets/font/YoungSerif-Regular.ttf"))
+  val parameter2 = new FreeTypeFontGenerator.FreeTypeFontParameter
+  parameter2.size = 64
+  val hugeFont: BitmapFont = generator2.generateFont(parameter2)
+  generator2.dispose()
+
 
   val dirKeysMap: mutable.Map[Int, Boolean] = mutable.Map(
     Input.Keys.A -> false,
@@ -101,6 +115,9 @@ object GameSystem {
   var debugRenderer: Box2DDebugRenderer = _
 
   var PixelsPerMeter: Float = 32f
+
+  var originalWidth: Float = _
+  var originalHeight: Float = _
 
   def getTiledMapRealWidth(tiledMap: TiledMap): Int = {
     val layer = tiledMap.getLayers.get(0).asInstanceOf[TiledMapTileLayer]
@@ -137,10 +154,11 @@ object GameSystem {
 
     ItemType.loadItemTypes()
 
-    val w = Gdx.graphics.getWidth
-    val h = Gdx.graphics.getHeight
+    originalWidth = Gdx.graphics.getWidth
+    originalHeight = Gdx.graphics.getHeight
+
     camera = new OrthographicCamera
-    camera.setToOrtho(false, w, h)
+    camera.setToOrtho(false, originalWidth, originalHeight)
 
     this.hudBatch = hudBatch
     this.worldBatch = worldBatch
@@ -349,15 +367,16 @@ object GameSystem {
 
   private def renderDeathScreen(hudBatch: SpriteBatch) = {
     if (playerCharacter.respawning) {
-      GameSystem.font.setColor(Color.RED)
-      GameSystem.font.draw(hudBatch, "YOU DIED", Gdx.graphics.getWidth / 2f - 130, Gdx.graphics.getHeight * GameSystem.ScreenProportion / 2f - 50)
+      GameSystem.hugeFont.setColor(Color.RED)
+      GameSystem.hugeFont.draw(hudBatch, "YOU DIED", GameSystem.originalWidth / 2f - 170,
+        GameSystem.originalHeight - GameSystem.originalHeight * GameSystem.ScreenProportion / 2f + 100)
     }
   }
 
   def renderLoadingScreen(hudShapeDrawer: ShapeDrawer): Unit = {
     if (loadingScreenVisible) {
       hudShapeDrawer.setColor(Color.BLACK)
-      hudShapeDrawer.filledRectangle(0, 0, Gdx.graphics.getWidth, Gdx.graphics.getHeight)
+      hudShapeDrawer.filledRectangle(0, 0, GameSystem.originalWidth, GameSystem.originalHeight)
     }
   }
 
@@ -571,4 +590,7 @@ object GameSystem {
     vector.dst(body.getPosition) * GameSystem.PixelsPerMeter
   }
 
+  def drawText(): Unit = {
+
+  }
 }

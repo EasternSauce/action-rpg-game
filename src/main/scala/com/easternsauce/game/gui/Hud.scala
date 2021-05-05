@@ -9,18 +9,18 @@ import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
 class Hud {
-  private val w = Gdx.graphics.getWidth
-  private val h = Gdx.graphics.getHeight
+  private val w = GameSystem.originalWidth
+  private val h = GameSystem.originalHeight
   private val proportion = 1 - GameSystem.ScreenProportion
 
-  private val bottomRect = new Rectangle(0, 0, w, h * proportion)
+  private var bottomRect = new Rectangle(0, 0, w, h * proportion)
 
   private val pc = GameSystem.playerCharacter
 
   private var maxHealthRect = new Rectangle(10, h * proportion + 40, 100, 10)
   private var healthRect = new Rectangle(10, h * proportion + 40, 100 * pc.healthPoints / pc.maxHealthPoints, 10)
   private var maxStaminaRect = new Rectangle(10, h * proportion + 25, 100, 10)
-  private var staminaRect = new Rectangle(10, h * proportion + 25, 100 * pc.healthPoints / pc.maxHealthPoints, 10)
+  private var staminaRect = new Rectangle(10, h * proportion + 25, 100 * pc.staminaPoints / pc.maxStaminaPoints, 10)
 
   var bossHealthBar = new BossHealthBar
 
@@ -48,7 +48,7 @@ class Hud {
         for (playerRespawnPoint <- GameSystem.currentArea.get.respawnList) {
           if (GameSystem.distance(GameSystem.playerCharacter.body, playerRespawnPoint.body) < 70f) triggerMessage = "> Set respawn"
         }
-        GameSystem.font.draw(hudBatch, triggerMessage, 10, Gdx.graphics.getHeight - (Gdx.graphics.getHeight * GameSystem.ScreenProportion + 10))
+        GameSystem.font.draw(hudBatch, triggerMessage, 10, GameSystem.originalHeight - (GameSystem.originalHeight * GameSystem.ScreenProportion + 10))
       }
       bossHealthBar.render(shapeDrawer, hudBatch)
     }
@@ -56,9 +56,10 @@ class Hud {
 
 
   def update(): Unit = {
-    val h = Gdx.graphics.getHeight
-    healthRect = new Rectangle(10, h * proportion + 40, 100 * pc.healthPoints / pc.maxHealthPoints, 10)
-    staminaRect = new Rectangle(10, h * proportion + 25, 100 * pc.staminaPoints / pc.maxStaminaPoints, 10)
+    maxHealthRect = new Rectangle(10, bottomRect.height + 40, 100, 10)
+    healthRect = new Rectangle(10, bottomRect.height + 40, 100 * pc.healthPoints / pc.maxHealthPoints, 10)
+    maxStaminaRect = new Rectangle(10, bottomRect.height + 25, 100, 10)
+    staminaRect = new Rectangle(10, bottomRect.height + 25, 100 * pc.staminaPoints / pc.maxStaminaPoints, 10)
 
     bossHealthBar.update()
   }

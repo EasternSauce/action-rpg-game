@@ -28,7 +28,7 @@ class LootOptionWindow {
 
       GameSystem.font.setColor(Color.WHITE)
       GameSystem.font.draw(batch, (if (currentSelected == (i + scroll) && activated) ">"
-      else "") + itemList(i + scroll).name, 10, Gdx.graphics.getHeight - (Gdx.graphics.getHeight * GameSystem.ScreenProportion + 10 + 30 * i))
+      else "") + itemList(i + scroll).name, 10, GameSystem.originalHeight - (GameSystem.originalHeight * GameSystem.ScreenProportion + 10 + 30 * i))
     }
   }
 

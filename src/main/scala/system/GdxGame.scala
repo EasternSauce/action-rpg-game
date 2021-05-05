@@ -66,4 +66,10 @@ class GdxGame extends ApplicationAdapter with InputProcessor {
 
   override def scrolled(amountX: Float, amountY: Float): Boolean = false
 
+  override def resize(width: Int, height: Int) {
+    super.resize(width, height)
+
+    camera.viewportWidth = width
+    camera.viewportHeight = height
+  }
 }
