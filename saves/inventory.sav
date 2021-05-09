@@ -1,12 +1,15 @@
-inventory_item 0 healingPowder 0 0 7
+inventory_item 0 healingPowder 0 0 10
 inventory_item 1 leatherArmor 0 8 1
 inventory_item 2 woodenSword 33 0 1
 inventory_item 3 leatherHelmet 0 8 1
 inventory_item 4 hideGloves 0 4 1
 inventory_item 5 steelGloves 0 6 1
 inventory_item 6 ringmailGreaves 0 4 1
-inventory_item 7 trident 60 0 1
+inventory_item 7 crossbow 41 0 1
 inventory_item 8 steelGreaves 0 12 1
 inventory_item 9 trident 45 0 1
+inventory_item 10 woodenSword 34 0 1
+inventory_item 11 hideGloves 0 5 1
+inventory_item 12 ringmailGreaves 0 5 1
 inventory_item 14 trident 9999 0 1
 gold 0

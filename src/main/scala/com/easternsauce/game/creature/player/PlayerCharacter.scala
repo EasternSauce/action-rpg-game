@@ -88,6 +88,10 @@ class PlayerCharacter(id: String) extends Creature(id) {
 
     isRunningAnimationActive = false
     toSetBodyNonInteractive = true
+
+    // TODO: add music manager
+    Assets.abandonedPlainsMusic.stop()
+    Assets.fireDemonMusic.stop()
   }
 
   override protected def defineCustomAbilities(): Unit = {

@@ -145,9 +145,11 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
   def onEntry(): Unit = {
     //TODO: add music manager or smth
     Assets.abandonedPlainsMusic.stop()
+    Assets.fireDemonMusic.stop()
 
     if (id == "area1") {
       Assets.abandonedPlainsMusic.setVolume(0.1f)
+      Assets.abandonedPlainsMusic.setLooping(true)
       Assets.abandonedPlainsMusic.play()
     }
     creaturesManager.onAreaEntry()

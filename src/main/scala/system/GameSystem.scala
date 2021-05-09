@@ -187,7 +187,7 @@ object GameSystem {
 
     areas("area1").addRespawnPoint(new PlayerRespawnPoint(2650, 6270, areas("area1")))
 
-    areas("area2").addRespawnPoint(new PlayerRespawnPoint(594, 133, areas("area2")))
+    areas("area2").addRespawnPoint(new PlayerRespawnPoint(657, 1517, areas("area2")))
 
     areas("area3").addRespawnPoint(new PlayerRespawnPoint(594, 133, areas("area3")))
     areas("area3").addRespawnPoint(new PlayerRespawnPoint(1342, 2099, areas("area3")))

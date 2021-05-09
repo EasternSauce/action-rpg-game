@@ -12,7 +12,7 @@ import system.GameSystem
 
 abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) extends Creature(id) {
   protected var aggroedCreature: Option[Creature] = None
-  protected var aggroDistance: Float = 1000f
+  protected var aggroDistance: Float = 600f
 
   protected var destinationX = 0f
   protected var destinationY = 0f
@@ -35,7 +35,6 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
   protected var stayInPlace = false
 
   protected var currentDirection: WalkDirection = WalkDirection.Down
-
 
   protected var attackDistance: Float = null.asInstanceOf[Float]
   protected var walkUpDistance: Float = null.asInstanceOf[Float]
@@ -172,8 +171,8 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
 
   def performIdleBehavior(): Unit = {
     if (actionTimer.time > 0.5f) {
-      lastMovingDir = WalkDirection.randomDir()
-      stayInPlace = Math.abs(GameSystem.random.nextInt) % 10 < 8
+      stayInPlace = Math.abs(GameSystem.random.nextInt) % 10 < 9
+      currentDirection = WalkDirection.randomDir()
       actionTimer.restart()
     }
 

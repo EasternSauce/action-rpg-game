@@ -31,7 +31,7 @@ class Skeleton(override val id: String, override val mobSpawnPoint: MobSpawnPoin
 
   creatureType = "skeleton"
 
-  maxHealthPoints = 10f
+  maxHealthPoints = 200f
   healthPoints = maxHealthPoints
 
   grantWeapon(weaponType)

@@ -27,7 +27,7 @@ object ItemType {
     val itemType1 = new ItemType("leatherArmor", "Leather Armor", "-", Assets.getItemIcon(8, 7), "body", 150, null.asInstanceOf[Float], 13f, false, false)
     val itemType2 = new ItemType("ringmailGreaves", "Ringmail Greaves", "-", Assets.getItemIcon(3, 8), "boots", 50, null.asInstanceOf[Float], 7f, false, false)
     val itemType3 = new ItemType("hideGloves", "Hide Gloves", "-", Assets.getItemIcon(0, 8), "gloves", 70, null.asInstanceOf[Float], 5f, false, false)
-    val itemType4 = new ItemType("crossbow", "Crossbow", "-", Assets.getItemIcon(4, 6), "weapon", 500, 75f, null.asInstanceOf[Float], false, false)
+    val itemType4 = new ItemType("crossbow", "Crossbow", "-", Assets.getItemIcon(4, 6), "weapon", 500, 45f, null.asInstanceOf[Float], false, false)
     itemType4.attackType = Bow
 
     val itemType5 = new ItemType("ironSword", "Iron Sword", "-", Assets.getItemIcon(2, 5), "weapon", 100, 60f, null.asInstanceOf[Float], false, false)

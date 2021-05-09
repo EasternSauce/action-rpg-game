@@ -37,8 +37,6 @@ class Arrow(var startX: Float, var startY: Float, val area: Area, var dirVector:
 
   val shooterRelatedMaxVelocity: Vector2 = new Vector2(dirVector.x * maxVelocityRelative, dirVector.y * maxVelocityRelative).add(shooter.body.getLinearVelocity)
 
-  println("dir vector: " + dirVector + " max velocity relative: " + maxVelocityRelative)
-
   dirVector = shooterRelatedMaxVelocity.cpy().nor()
 
   arrowImage.setOriginX(arrowTexture.getWidth / 2)
@@ -102,7 +100,6 @@ class Arrow(var startX: Float, var startY: Float, val area: Area, var dirVector:
         && (body.getPosition.y * GameSystem.PixelsPerMeter >= 0 - margin
         && body.getPosition.y * GameSystem.PixelsPerMeter < GameSystem.getTiledMapRealHeight(tiledMap) + margin))) markedForDeletion = true
 
-      println("vel= " + body.getLinearVelocity)
     }
   }
 
