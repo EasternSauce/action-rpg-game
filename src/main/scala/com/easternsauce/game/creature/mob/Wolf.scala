@@ -11,9 +11,9 @@ import system.GameSystem
 
 class Wolf(override val id: String, override val mobSpawnPoint: MobSpawnPoint) extends Mob(id, mobSpawnPoint) {
 
-  override val baseSpeed: Float = 200f
+  override val baseSpeed: Float = 10f
 
-  private var dashAbility: DashAbility = null
+  private var dashAbility: DashAbility = _
 
   actionTimer = SimpleTimer(true)
 
@@ -30,7 +30,7 @@ class Wolf(override val id: String, override val mobSpawnPoint: MobSpawnPoint) e
   override protected val onGettingHitSound: Sound = Assets.dogWhineSound
 
 
-  maxHealthPoints = 10f
+  maxHealthPoints = 150f
   healthPoints = maxHealthPoints
 
   unarmedDamage = 30f

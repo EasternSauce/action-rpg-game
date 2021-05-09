@@ -148,7 +148,7 @@ class PlayerCharacter(id: String) extends Creature(id) {
   override def update(): Unit = {
     super.update()
 
-//    println("pos= " +  posX.toInt + ", " + posY.toInt)
+    println("pos= " +  posX.toInt + ", " + posY.toInt)
 
     if (respawning && respawnTimer.time > 3f) {
       respawning = false

@@ -14,6 +14,7 @@ import com.easternsauce.game.projectile.Arrow
 import com.easternsauce.game.spawn._
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
+import system.GameSystem.TiledMapCellSize
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
@@ -89,6 +90,64 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
     }
 
 
+  }
+
+  val firstLayer: TiledMapTileLayer = tiledMap.getLayers.get(0).asInstanceOf[TiledMapTileLayer]
+
+  firstLayer.getWidth * TiledMapCellSize
+
+  for {x <- Seq.range(0, firstLayer.getWidth)} {
+
+    var rectX = x * firstLayer.getTileWidth * scale
+    var rectY = (-1) * firstLayer.getTileHeight * scale
+    var rectW = firstLayer.getTileWidth * scale
+    var rectH = firstLayer.getTileHeight * scale
+
+    createBorderTile(rectX, rectY, rectW, rectH)
+
+    rectX = x * firstLayer.getTileWidth * scale
+    rectY = (firstLayer.getHeight) * firstLayer.getTileHeight * scale
+    rectW = firstLayer.getTileWidth * scale
+    rectH = firstLayer.getTileHeight * scale
+
+    createBorderTile(rectX, rectY, rectW, rectH)
+  }
+
+  for {y <- Seq.range(0, firstLayer.getHeight)} {
+
+    var rectX = (-1) * firstLayer.getTileWidth * scale
+    var rectY = y * firstLayer.getTileHeight * scale
+    var rectW = firstLayer.getTileWidth * scale
+    var rectH = firstLayer.getTileHeight * scale
+
+    createBorderTile(rectX, rectY, rectW, rectH)
+
+    rectX = (firstLayer.getWidth) * firstLayer.getTileWidth * scale
+    rectY = y * firstLayer.getTileHeight * scale
+    rectW = firstLayer.getTileWidth * scale
+    rectH = firstLayer.getTileHeight * scale
+
+    createBorderTile(rectX, rectY, rectW, rectH)
+  }
+
+  private def createBorderTile(rectX: Float, rectY: Float, rectW: Float, rectH: Float) = {
+    val bodyDef = new BodyDef()
+    bodyDef.`type` = BodyDef.BodyType.StaticBody
+    bodyDef.position.set((rectX + rectH / 2) / GameSystem.PixelsPerMeter, (rectY + rectH / 2) / GameSystem.PixelsPerMeter)
+
+    val body: Body = world.createBody(bodyDef)
+
+    body.setUserData(this)
+
+    val shape: PolygonShape = new PolygonShape()
+
+    shape.setAsBox((rectW / 2) / GameSystem.PixelsPerMeter, (rectH / 2) / GameSystem.PixelsPerMeter)
+
+    val fixtureDef: FixtureDef = new FixtureDef
+
+    fixtureDef.shape = shape
+
+    body.createFixture(fixtureDef)
   }
 
   createContactListener()

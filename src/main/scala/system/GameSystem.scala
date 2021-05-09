@@ -204,9 +204,9 @@ object GameSystem {
     lootSystem.placeTreasure(areas("area1"), 600, 500, ItemType.getItemType("healingPowder"))
 
     val nonPlayerCharacter = new NonPlayerCharacter("Johnny", true, Assets.male1SpriteSheet, "a1")
-    areas("area1").moveInCreature(nonPlayerCharacter, 1512f, 11f)
+    areas("area2").moveInCreature(nonPlayerCharacter, 344, 1431)
     val nonPlayerCharacter2 = new NonPlayerCharacter("Rita", true, Assets.male1SpriteSheet, "a1")
-    areas("area2").moveInCreature(nonPlayerCharacter2, 400f, 400f)
+    areas("area2").moveInCreature(nonPlayerCharacter2, 1279, 1383)
 
     hud = new Hud()
 
@@ -356,7 +356,7 @@ object GameSystem {
       hudBatch.end()
 
       //DEBUG
-      //debugRenderer.render(currentArea.get.world, camera.combined.scale(PixelsPerMeter, PixelsPerMeter, 1))
+      debugRenderer.render(currentArea.get.world, camera.combined.scale(PixelsPerMeter, PixelsPerMeter, 1))
 
     }
 
