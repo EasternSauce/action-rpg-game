@@ -24,7 +24,7 @@ class Arrow(var startX: Float, var startY: Float, val area: Area, var dirVector:
 
   var markedForDeletion: Boolean = false
 
-  val maxSpeedRelative = 36f
+  val maxVelocityRelative = 36f
 
   var body: Body = _
 
@@ -35,9 +35,11 @@ class Arrow(var startX: Float, var startY: Float, val area: Area, var dirVector:
   var landed: Boolean = false
   var arrowLandedTimer: SimpleTimer = SimpleTimer()
 
+  val shooterRelatedMaxVelocity: Vector2 = new Vector2(dirVector.x * maxVelocityRelative, dirVector.y * maxVelocityRelative).add(shooter.body.getLinearVelocity)
 
-  val shooterRelatedVelocity: Vector2 = new Vector2(dirVector.x * maxSpeedRelative, dirVector.y * maxSpeedRelative).add(shooter.body.getLinearVelocity)
-  dirVector = shooterRelatedVelocity.cpy().nor()
+  println("dir vector: " + dirVector + " max velocity relative: " + maxVelocityRelative)
+
+  dirVector = shooterRelatedMaxVelocity.cpy().nor()
 
   arrowImage.setOriginX(arrowTexture.getWidth / 2)
   arrowImage.setOriginY(arrowTexture.getHeight / 2)
@@ -60,7 +62,7 @@ class Arrow(var startX: Float, var startY: Float, val area: Area, var dirVector:
         }
       }
 
-      val acceleration = 3f
+      val acceleration = 10f
 
       var accX = 0f
       var accY = 0f
@@ -68,23 +70,23 @@ class Arrow(var startX: Float, var startY: Float, val area: Area, var dirVector:
       // accelerate proportional to dirVector value!
 
       if (dirVector.x < 0) {
-        if (body.getLinearVelocity.x > shooterRelatedVelocity.x) {
+        if (body.getLinearVelocity.x > shooterRelatedMaxVelocity.x) {
           accX = -acceleration * Math.abs(dirVector.x)
         }
       }
       else if (dirVector.x > 0) {
-        if (body.getLinearVelocity.x < shooterRelatedVelocity.x) {
+        if (body.getLinearVelocity.x < shooterRelatedMaxVelocity.x) {
           accX = acceleration * Math.abs(dirVector.x)
         }
       }
 
       if (dirVector.y < 0) {
-        if (body.getLinearVelocity.y > shooterRelatedVelocity.y) {
+        if (body.getLinearVelocity.y > shooterRelatedMaxVelocity.y) {
           accY = -acceleration * Math.abs(dirVector.y)
         }
       }
       else if (dirVector.y > 0) {
-        if (body.getLinearVelocity.y < shooterRelatedVelocity.y) {
+        if (body.getLinearVelocity.y < shooterRelatedMaxVelocity.y) {
           accY = acceleration * Math.abs(dirVector.y)
         }
       }
@@ -100,6 +102,7 @@ class Arrow(var startX: Float, var startY: Float, val area: Area, var dirVector:
         && (body.getPosition.y * GameSystem.PixelsPerMeter >= 0 - margin
         && body.getPosition.y * GameSystem.PixelsPerMeter < GameSystem.getTiledMapRealHeight(tiledMap) + margin))) markedForDeletion = true
 
+      println("vel= " + body.getLinearVelocity)
     }
   }
 

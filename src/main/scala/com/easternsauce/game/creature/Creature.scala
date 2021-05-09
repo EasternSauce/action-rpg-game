@@ -10,7 +10,7 @@ import com.easternsauce.game.ability.Ability
 import com.easternsauce.game.ability.attack._
 import com.easternsauce.game.area.Area
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up, WalkDirection}
-import com.easternsauce.game.creature.util.{Bow, Sword, Trident, WalkDirection}
+import com.easternsauce.game.creature.util.{AttackType, Bow, Sword, Trident, Unarmed, WalkDirection}
 import com.easternsauce.game.effect.Effect
 import com.easternsauce.game.item.Item
 import com.easternsauce.game.utils.{IntPair, SimpleTimer}
@@ -170,6 +170,15 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     }
   }
 
+  def currentAttackType: AttackType = {
+    if (equipmentItems.contains(0)) {
+      equipmentItems(0).itemType.attackType
+    }
+    else {
+      Unarmed
+    }
+  }
+
   def setFacingDirection(): Unit = {
 
   }
@@ -299,7 +308,6 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
     defineCustomAbilities()
 
-    updateAttackType()
   }
 
   protected def defineCustomAbilities(): Unit = {
@@ -310,10 +318,6 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     effectMap.put("immobilized", new Effect())
     effectMap.put("staminaRegenStopped", new Effect())
     effectMap.put("poisoned", new Effect())
-  }
-
-  def updateAttackType(): Unit = {
-
   }
 
   def regenerate(): Unit = {

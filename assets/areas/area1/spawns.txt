@@ -1,3 +1,6 @@
+spawnPoint skeletonSword 3458 5878
+spawnPoint skeletonCrossbow 357 6121
+
 spawnPoint skeletonCrossbow 1600 2200
 spawnPoint wolf 1600 2400
 spawnPoint skeletonSword 50 50

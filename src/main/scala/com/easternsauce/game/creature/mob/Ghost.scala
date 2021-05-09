@@ -43,7 +43,7 @@ class Ghost(override val id: String, override val mobSpawnPoint: MobSpawnPoint, 
 
     assert(aggroedCreature.nonEmpty)
 
-    if (GameSystem.distance(aggroedCreature.get.body, this.body) < (if (attackDistance == null.asInstanceOf[Float]) attackType.attackDistance else attackDistance)) {
+    if (GameSystem.distance(aggroedCreature.get.body, this.body) < (if (attackDistance == null.asInstanceOf[Float]) currentAttackType.attackDistance else attackDistance)) {
       if (healthPoints <= maxHealthPoints * 0.50) if (explodeAbility.canPerform) explodeAbility.perform()
     }
   }

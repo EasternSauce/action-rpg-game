@@ -305,7 +305,6 @@ class InventoryWindow {
             equipmentItems.putNonNull(currentMoved, to)
             equipmentItems.putNonNull(currentSelected, from)
             moving = false
-            player.updateAttackType()
           }
         }
         else {
@@ -318,7 +317,6 @@ class InventoryWindow {
             equipmentItems.putNonNull(currentMoved, to)
             inventoryItems.putNonNull(currentSelected, from)
             moving = false
-            player.updateAttackType()
           }
         }
         else if (inEquipment) {
@@ -331,7 +329,6 @@ class InventoryWindow {
             inventoryItems.putNonNull(currentMoved, to)
             equipmentItems.putNonNull(currentSelected, from)
             moving = false
-            player.updateAttackType()
           }
         }
         else {
@@ -342,7 +339,6 @@ class InventoryWindow {
           inventoryItems.putNonNull(currentMoved, to)
           inventoryItems.putNonNull(currentSelected, from)
           moving = false
-          player.updateAttackType()
         }
 
         if (player.healthPoints > player.maxHealthPoints) player.healthPoints = player.maxHealthPoints

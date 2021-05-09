@@ -12,7 +12,7 @@ import system.GameSystem
 
 abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) extends Creature(id) {
   protected var aggroedCreature: Option[Creature] = None
-  protected var aggroDistance: Float = 800
+  protected var aggroDistance: Float = 1000f
 
   protected var destinationX = 0f
   protected var destinationY = 0f
@@ -39,9 +39,6 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
 
   protected var attackDistance: Float = null.asInstanceOf[Float]
   protected var walkUpDistance: Float = null.asInstanceOf[Float]
-
-  val attackType: AttackType = Unarmed // TODO: val attackType: AttackType = currentAttack.getAttackType
-
 
   override def performActions(): Unit = {
 
@@ -104,7 +101,6 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
       circlingDirectionTimer.restart()
     }
 
-    //val attackType = currentAttack.getAttackType
 
     val aggroed = aggroedCreature match {
       case Some(value) => value
@@ -120,7 +116,7 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
     val dist = GameSystem.distance(this.body, aggroed.body)
 
     if (findNewDestinationTimer.time > 0.2f) {
-      if (dist < attackType.holdDistance) {
+      if (dist < currentAttackType.holdDistance) {
         if (hold) {
           if (circling) {
             if (circlingDir == 0) {
@@ -154,7 +150,7 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
           hasDestination = true
         }
       }
-      else if (dist < (if (walkUpDistance == null.asInstanceOf[Float]) attackType.walkUpDistance else walkUpDistance)) {
+      else if (dist < (if (walkUpDistance == null.asInstanceOf[Float]) currentAttackType.walkUpDistance else walkUpDistance)) {
         destinationX = aggroedCenterX
         destinationY = aggroedCenterY
         hasDestination = true
@@ -168,7 +164,7 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
 
     if (hasDestination) walkTowards(destinationX, destinationY)
 
-    if (dist < (if (attackDistance == null.asInstanceOf[Float]) attackType.attackDistance else attackDistance)) {
+    if (dist < (if (attackDistance == null.asInstanceOf[Float]) currentAttackType.attackDistance else attackDistance)) {
       if (currentAttack.canPerform) currentAttack.perform()
     }
 
@@ -211,7 +207,7 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
   override def setFacingDirection(): Unit = {
     if (aggroedCreature.nonEmpty) {
       val aggroed = aggroedCreature.get
-      facingVector = new Vector2(aggroed.posX - posX, aggroed.posY - posY)
+      facingVector = new Vector2(aggroed.posX - posX, aggroed.posY - posY).nor()
     }
   }
 

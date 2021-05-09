@@ -185,8 +185,7 @@ object GameSystem {
     areas += ("area2" -> new Area("area2", Assets.area2Map, 4.0f, area2SpawnPoints))
     areas += ("area3" -> new Area("area3", Assets.area3Map, 4.0f, area3SpawnPoints))
 
-    areas("area1").addRespawnPoint(new PlayerRespawnPoint(400, 500, areas("area1")))
-    areas("area1").addRespawnPoint(new PlayerRespawnPoint(3650, 4909, areas("area1")))
+    areas("area1").addRespawnPoint(new PlayerRespawnPoint(2650, 6270, areas("area1")))
 
     areas("area2").addRespawnPoint(new PlayerRespawnPoint(594, 133, areas("area2")))
 
@@ -194,7 +193,7 @@ object GameSystem {
     areas("area3").addRespawnPoint(new PlayerRespawnPoint(1342, 2099, areas("area3")))
 
     GameSystem.playerCharacter = new PlayerCharacter("protagonist")
-    areas("area1").moveInCreature(playerCharacter, 1000f, 1000f)
+    areas("area1").moveInCreature(playerCharacter, 2674, 6292)
 
     lootSystem.placeTreasure(areas("area1"), 1920, 8, ItemType.getItemType("leatherArmor"))
     lootSystem.placeTreasure(areas("area1"), 3551, 3840, ItemType.getItemType("woodenSword"))
