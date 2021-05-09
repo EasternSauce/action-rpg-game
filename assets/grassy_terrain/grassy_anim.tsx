@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.4" tiledversion="1.4.3" name="grassy_anim" tilewidth="16" tileheight="16" tilecount="224" columns="14">
+<tileset version="1.5" tiledversion="1.6.0" name="grassy_anim" tilewidth="16" tileheight="16" tilecount="224" columns="14">
  <image source="TileSet/AnimTiles.png" width="224" height="256"/>
  <tile id="0">
   <properties>
@@ -590,6 +590,10 @@
   <properties>
    <property name="traversable" type="bool" value="false"/>
   </properties>
+  <animation>
+   <frame tileid="85" duration="500"/>
+   <frame tileid="92" duration="500"/>
+  </animation>
  </tile>
  <tile id="86">
   <properties>
@@ -614,11 +618,19 @@
   <properties>
    <property name="traversable" type="bool" value="true"/>
   </properties>
+  <animation>
+   <frame tileid="89" duration="500"/>
+   <frame tileid="96" duration="500"/>
+  </animation>
  </tile>
  <tile id="90">
   <properties>
    <property name="traversable" type="bool" value="true"/>
   </properties>
+  <animation>
+   <frame tileid="90" duration="500"/>
+   <frame tileid="97" duration="500"/>
+  </animation>
  </tile>
  <tile id="91">
   <properties>
@@ -696,11 +708,19 @@
   <properties>
    <property name="traversable" type="bool" value="true"/>
   </properties>
+  <animation>
+   <frame tileid="103" duration="500"/>
+   <frame tileid="110" duration="500"/>
+  </animation>
  </tile>
  <tile id="104">
   <properties>
    <property name="traversable" type="bool" value="true"/>
   </properties>
+  <animation>
+   <frame tileid="104" duration="500"/>
+   <frame tileid="111" duration="500"/>
+  </animation>
  </tile>
  <tile id="105">
   <properties>
@@ -766,11 +786,19 @@
   <properties>
    <property name="traversable" type="bool" value="false"/>
   </properties>
+  <animation>
+   <frame tileid="117" duration="500"/>
+   <frame tileid="124" duration="500"/>
+  </animation>
  </tile>
  <tile id="118">
   <properties>
    <property name="traversable" type="bool" value="false"/>
   </properties>
+  <animation>
+   <frame tileid="118" duration="500"/>
+   <frame tileid="125" duration="500"/>
+  </animation>
  </tile>
  <tile id="119">
   <properties>
@@ -836,11 +864,19 @@
   <properties>
    <property name="traversable" type="bool" value="false"/>
   </properties>
+  <animation>
+   <frame tileid="131" duration="500"/>
+   <frame tileid="138" duration="500"/>
+  </animation>
  </tile>
  <tile id="132">
   <properties>
    <property name="traversable" type="bool" value="false"/>
   </properties>
+  <animation>
+   <frame tileid="132" duration="500"/>
+   <frame tileid="139" duration="500"/>
+  </animation>
  </tile>
  <tile id="133">
   <properties>
@@ -906,11 +942,19 @@
   <properties>
    <property name="traversable" type="bool" value="false"/>
   </properties>
+  <animation>
+   <frame tileid="145" duration="500"/>
+   <frame tileid="152" duration="500"/>
+  </animation>
  </tile>
  <tile id="146">
   <properties>
    <property name="traversable" type="bool" value="false"/>
   </properties>
+  <animation>
+   <frame tileid="146" duration="500"/>
+   <frame tileid="153" duration="500"/>
+  </animation>
  </tile>
  <tile id="147">
   <properties>
@@ -976,11 +1020,19 @@
   <properties>
    <property name="traversable" type="bool" value="false"/>
   </properties>
+  <animation>
+   <frame tileid="159" duration="500"/>
+   <frame tileid="166" duration="500"/>
+  </animation>
  </tile>
  <tile id="160">
   <properties>
    <property name="traversable" type="bool" value="false"/>
   </properties>
+  <animation>
+   <frame tileid="160" duration="500"/>
+   <frame tileid="167" duration="500"/>
+  </animation>
  </tile>
  <tile id="161">
   <properties>
@@ -1046,11 +1098,19 @@
   <properties>
    <property name="traversable" type="bool" value="false"/>
   </properties>
+  <animation>
+   <frame tileid="173" duration="500"/>
+   <frame tileid="180" duration="500"/>
+  </animation>
  </tile>
  <tile id="174">
   <properties>
    <property name="traversable" type="bool" value="false"/>
   </properties>
+  <animation>
+   <frame tileid="174" duration="500"/>
+   <frame tileid="181" duration="500"/>
+  </animation>
  </tile>
  <tile id="175">
   <properties>
@@ -1106,21 +1166,37 @@
   <properties>
    <property name="traversable" type="bool" value="false"/>
   </properties>
+  <animation>
+   <frame tileid="185" duration="500"/>
+   <frame tileid="192" duration="500"/>
+  </animation>
  </tile>
  <tile id="186">
   <properties>
    <property name="traversable" type="bool" value="false"/>
   </properties>
+  <animation>
+   <frame tileid="186" duration="500"/>
+   <frame tileid="193" duration="500"/>
+  </animation>
  </tile>
  <tile id="187">
   <properties>
    <property name="traversable" type="bool" value="false"/>
   </properties>
+  <animation>
+   <frame tileid="187" duration="500"/>
+   <frame tileid="194" duration="500"/>
+  </animation>
  </tile>
  <tile id="188">
   <properties>
    <property name="traversable" type="bool" value="false"/>
   </properties>
+  <animation>
+   <frame tileid="188" duration="500"/>
+   <frame tileid="195" duration="500"/>
+  </animation>
  </tile>
  <tile id="189">
   <properties>
@@ -1176,21 +1252,37 @@
   <properties>
    <property name="traversable" type="bool" value="false"/>
   </properties>
+  <animation>
+   <frame tileid="199" duration="500"/>
+   <frame tileid="206" duration="500"/>
+  </animation>
  </tile>
  <tile id="200">
   <properties>
    <property name="traversable" type="bool" value="false"/>
   </properties>
+  <animation>
+   <frame tileid="200" duration="500"/>
+   <frame tileid="207" duration="500"/>
+  </animation>
  </tile>
  <tile id="201">
   <properties>
    <property name="traversable" type="bool" value="false"/>
   </properties>
+  <animation>
+   <frame tileid="201" duration="500"/>
+   <frame tileid="208" duration="500"/>
+  </animation>
  </tile>
  <tile id="202">
   <properties>
    <property name="traversable" type="bool" value="false"/>
   </properties>
+  <animation>
+   <frame tileid="202" duration="500"/>
+   <frame tileid="209" duration="500"/>
+  </animation>
  </tile>
  <tile id="203">
   <properties>
@@ -1246,21 +1338,37 @@
   <properties>
    <property name="traversable" type="bool" value="false"/>
   </properties>
+  <animation>
+   <frame tileid="213" duration="500"/>
+   <frame tileid="220" duration="500"/>
+  </animation>
  </tile>
  <tile id="214">
   <properties>
    <property name="traversable" type="bool" value="false"/>
   </properties>
+  <animation>
+   <frame tileid="214" duration="500"/>
+   <frame tileid="221" duration="500"/>
+  </animation>
  </tile>
  <tile id="215">
   <properties>
    <property name="traversable" type="bool" value="false"/>
   </properties>
+  <animation>
+   <frame tileid="215" duration="500"/>
+   <frame tileid="222" duration="500"/>
+  </animation>
  </tile>
  <tile id="216">
   <properties>
    <property name="traversable" type="bool" value="false"/>
   </properties>
+  <animation>
+   <frame tileid="216" duration="500"/>
+   <frame tileid="223" duration="500"/>
+  </animation>
  </tile>
  <tile id="217">
   <properties>

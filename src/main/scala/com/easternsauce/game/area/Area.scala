@@ -40,38 +40,43 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
 
   var world: World = new World(new Vector2(0f, 0f), false)
 
-  val layer: TiledMapTileLayer = tiledMap.getLayers.get(0).asInstanceOf[TiledMapTileLayer]
+  for (i <- 0 to 1) { // two layers
+    val layer: TiledMapTileLayer = tiledMap.getLayers.get(i).asInstanceOf[TiledMapTileLayer]
 
-  for {x <- Seq.range(0, layer.getWidth)
-       y <- Seq.range(0, layer.getHeight)} {
-    val cell: TiledMapTileLayer.Cell = layer.getCell(x, y)
+    for {x <- Seq.range(0, layer.getWidth)
+         y <- Seq.range(0, layer.getHeight)} {
+      val cell: TiledMapTileLayer.Cell = layer.getCell(x, y)
 
-    val traversable: Boolean = cell.getTile.getProperties.get("traversable").asInstanceOf[Boolean]
+      if (cell != null) {
+        val traversable: Boolean = cell.getTile.getProperties.get("traversable").asInstanceOf[Boolean]
 
-    if (!traversable) {
-      val rectX = x * layer.getTileWidth * scale
-      val rectY = y * layer.getTileHeight * scale
-      val rectW = layer.getTileWidth * scale
-      val rectH = layer.getTileHeight * scale
+        if (!traversable) {
+          val rectX = x * layer.getTileWidth * scale
+          val rectY = y * layer.getTileHeight * scale
+          val rectW = layer.getTileWidth * scale
+          val rectH = layer.getTileHeight * scale
 
-      val bodyDef = new BodyDef()
-      bodyDef.`type` = BodyDef.BodyType.StaticBody
-      bodyDef.position.set((rectX + rectH / 2) / GameSystem.PixelsPerMeter, (rectY + rectH / 2) / GameSystem.PixelsPerMeter)
+          val bodyDef = new BodyDef()
+          bodyDef.`type` = BodyDef.BodyType.StaticBody
+          bodyDef.position.set((rectX + rectH / 2) / GameSystem.PixelsPerMeter, (rectY + rectH / 2) / GameSystem.PixelsPerMeter)
 
-      val body: Body = world.createBody(bodyDef)
-      body.setUserData(this)
+          val body: Body = world.createBody(bodyDef)
+          body.setUserData(this)
 
-      val shape: PolygonShape = new PolygonShape()
+          val shape: PolygonShape = new PolygonShape()
 
-      shape.setAsBox((rectW / 2) / GameSystem.PixelsPerMeter, (rectH / 2) / GameSystem.PixelsPerMeter)
+          shape.setAsBox((rectW / 2) / GameSystem.PixelsPerMeter, (rectH / 2) / GameSystem.PixelsPerMeter)
 
-      val fixtureDef: FixtureDef = new FixtureDef
+          val fixtureDef: FixtureDef = new FixtureDef
 
-      fixtureDef.shape = shape
+          fixtureDef.shape = shape
 
-      body.createFixture(fixtureDef)
+          body.createFixture(fixtureDef)
+        }
+      }
 
     }
+
 
   }
 

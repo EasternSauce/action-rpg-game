@@ -628,7 +628,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
     val fixtureDef: FixtureDef = new FixtureDef()
     val shape: CircleShape = new CircleShape()
-    shape.setRadius(spriteWidth * scale / 2 / GameSystem.PixelsPerMeter)
+    shape.setRadius(0.9f * spriteWidth * scale / 2 / GameSystem.PixelsPerMeter)
     fixtureDef.shape = shape
     fixture = body.createFixture(fixtureDef)
     body.setLinearDamping(10f)

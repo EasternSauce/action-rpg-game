@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.easternsauce.game.area.Area
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
+import com.easternsauce.game.utils.SimpleTimer
 import system.GameSystem
 
 import scala.collection.mutable
@@ -23,13 +24,16 @@ class Arrow(var startX: Float, var startY: Float, val area: Area, var dirVector:
 
   var markedForDeletion: Boolean = false
 
-  val maxSpeedRelative = 18f
+  val maxSpeedRelative = 36f
 
   var body: Body = _
 
   val damage: Float = shooter.weaponDamage
 
   var isActive: Boolean = true
+
+  var landed: Boolean = false
+  var arrowLandedTimer: SimpleTimer = SimpleTimer()
 
 
   val shooterRelatedVelocity: Vector2 = new Vector2(dirVector.x * maxSpeedRelative, dirVector.y * maxSpeedRelative).add(shooter.body.getLinearVelocity)
@@ -48,6 +52,14 @@ class Arrow(var startX: Float, var startY: Float, val area: Area, var dirVector:
 
   def update(): Unit = {
     if (isActive) {
+      if (landed) {
+        if (arrowLandedTimer.time > 0.02f) {
+          body.setLinearVelocity(new Vector2(0f, 0f))
+          isActive = false
+          arrowLandedTimer.stop()
+        }
+      }
+
       val acceleration = 3f
 
       var accX = 0f
@@ -102,8 +114,8 @@ class Arrow(var startX: Float, var startY: Float, val area: Area, var dirVector:
   }
 
   def onCollideWithTerrain(): Unit = {
-    body.setLinearVelocity(new Vector2(0f, 0f))
-    isActive = false
+    landed = true
+    arrowLandedTimer.restart()
   }
 
   def initBody(x: Float, y: Float): Unit = {

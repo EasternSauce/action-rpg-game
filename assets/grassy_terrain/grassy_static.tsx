@@ -113,7 +113,7 @@
  </tile>
  <tile id="22">
   <properties>
-   <property name="traversable" type="bool" value="true"/>
+   <property name="traversable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="23">

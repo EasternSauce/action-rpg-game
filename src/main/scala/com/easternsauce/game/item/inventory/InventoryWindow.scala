@@ -99,8 +99,6 @@ class InventoryWindow {
 
   def render(hudBatch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
     if (inventoryOpen) {
-      println("rendering inventory window")
-
       shapeDrawer.filledRectangle(background, Color.LIGHT_GRAY)
 
       renderInventory(hudBatch, shapeDrawer)

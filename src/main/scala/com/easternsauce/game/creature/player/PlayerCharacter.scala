@@ -94,7 +94,7 @@ class PlayerCharacter(id: String) extends Creature(id) {
     dashAbility = DashAbility(this)
 
     dashAbility.onPerformAction = () => {
-      Assets.flybySound.play(0.1f)
+      Assets.flybySound.play(0.05f)
     }
 
     abilityList += dashAbility
