@@ -179,15 +179,19 @@ object GameSystem {
 
     val area1SpawnPoints: SpawnLocationsContainer = new SpawnLocationsContainer("assets/areas/area1/spawns.txt")
     val area2SpawnPoints: SpawnLocationsContainer = new SpawnLocationsContainer("assets/areas/area2/spawns.txt")
+    val area3SpawnPoints: SpawnLocationsContainer = new SpawnLocationsContainer("assets/areas/area3/spawns.txt")
 
-    areas += ("area1" -> new Area("area1", Assets.grassyMap, 4.0f, area1SpawnPoints))
-    areas += ("area2" -> new Area("area2", Assets.jungleMap, 4.0f, area2SpawnPoints))
+    areas += ("area1" -> new Area("area1", Assets.area1Map, 4.0f, area1SpawnPoints))
+    areas += ("area2" -> new Area("area2", Assets.area2Map, 4.0f, area2SpawnPoints))
+    areas += ("area3" -> new Area("area3", Assets.area3Map, 4.0f, area3SpawnPoints))
 
     areas("area1").addRespawnPoint(new PlayerRespawnPoint(400, 500, areas("area1")))
     areas("area1").addRespawnPoint(new PlayerRespawnPoint(3650, 4909, areas("area1")))
 
     areas("area2").addRespawnPoint(new PlayerRespawnPoint(594, 133, areas("area2")))
-    areas("area2").addRespawnPoint(new PlayerRespawnPoint(1342, 2099, areas("area2")))
+
+    areas("area3").addRespawnPoint(new PlayerRespawnPoint(594, 133, areas("area3")))
+    areas("area3").addRespawnPoint(new PlayerRespawnPoint(1342, 2099, areas("area3")))
 
     GameSystem.playerCharacter = new PlayerCharacter("protagonist")
     areas("area1").moveInCreature(playerCharacter, 1000f, 1000f)
@@ -211,7 +215,8 @@ object GameSystem {
 
     gateList = ListBuffer()
 
-    gateList += new AreaGate(areas("area1"), 20, 3960, areas("area2"), 3690, 262)
+    gateList += new AreaGate(areas("area1"), 6366, 472, areas("area3"), 3690, 262)
+    gateList += new AreaGate(areas("area1"), 63, 2003, areas("area2"), 1870, 295)
 
     creaturesToMove = ListBuffer()
 

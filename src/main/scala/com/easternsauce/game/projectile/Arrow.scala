@@ -6,7 +6,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.{Body, BodyDef, CircleShape, FixtureDef}
 import com.badlogic.gdx.scenes.scene2d.ui.Image
-import com.easternsauce.game.area.Area
+import com.easternsauce.game.area.{Area, AreaTile}
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.utils.SimpleTimer
@@ -113,9 +113,11 @@ class Arrow(var startX: Float, var startY: Float, val area: Area, var dirVector:
     }
   }
 
-  def onCollideWithTerrain(): Unit = {
-    landed = true
-    arrowLandedTimer.restart()
+  def onCollideWithTerrain(areaTile: AreaTile): Unit = {
+    if (!areaTile.flyover) {
+      landed = true
+      arrowLandedTimer.restart()
+    }
   }
 
   def initBody(x: Float, y: Float): Unit = {
@@ -126,7 +128,7 @@ class Arrow(var startX: Float, var startY: Float, val area: Area, var dirVector:
     body = area.world.createBody(bodyDef)
     body.setUserData(this)
 
-    val radius = 25f
+    val radius = 10f
 
     val fixtureDef: FixtureDef = new FixtureDef()
     val shape: CircleShape = new CircleShape()

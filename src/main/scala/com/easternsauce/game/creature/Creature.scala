@@ -511,7 +511,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
     if (isAttacking) currentMaxVelocity = currentMaxVelocity / 2
     else if (sprinting && staminaPoints > 0) {
-      currentMaxVelocity = currentMaxVelocity * 2f
+      currentMaxVelocity = currentMaxVelocity * 1.5f
       staminaDrain += Gdx.graphics.getDeltaTime
     }
   }

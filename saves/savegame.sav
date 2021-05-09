@@ -1,3 +1,13 @@
+creature protagonist
+area area1
+pos 160.20264 4085.0442
+health 100.0
+equipment_item 0 crossbow 41 0
+equipment_item 1 leatherHelmet 0 9
+equipment_item 2 leatherArmor 0 12
+equipment_item 3 hideGloves 0 3
+equipment_item 4 lifeRing 0 0
+equipment_item 5 ringmailGreaves 0 5
 creature Johnny
 area area1
 pos 1555.6779 -12324.194
@@ -6,13 +16,3 @@ creature Rita
 area area2
 pos 290.18237 -68.151566
 health 100.0
-creature protagonist
-area area2
-pos 3510.9875 428.39987
-health 100.0
-equipment_item 0 crossbow 41 0
-equipment_item 1 leatherHelmet 0 9
-equipment_item 2 leatherArmor 0 12
-equipment_item 3 hideGloves 0 3
-equipment_item 4 lifeRing 0 0
-equipment_item 5 ringmailGreaves 0 5

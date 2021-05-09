@@ -9,8 +9,9 @@ import com.easternsauce.game.wrappers.EsSpriteSheet
 
 object Assets {
   var textureAtlas: TextureAtlas = _
-  var grassyMap: TiledMap = _
-  var jungleMap: TiledMap = _
+  var area1Map: TiledMap = _
+  var area2Map: TiledMap = _
+  var area3Map: TiledMap = _
   var male1SpriteSheet: EsSpriteSheet = _
   var skeletonSpriteSheet: EsSpriteSheet = _
   var wolfSpriteSheet: EsSpriteSheet = _
@@ -79,8 +80,9 @@ object Assets {
     explosionWindupSpriteSheet = new EsSpriteSheet("explosion_windup", 64, 64)
 
 
-    grassyMap = new TmxMapLoader().load("assets/grassy_terrain/tile_map.tmx")
-    jungleMap = new TmxMapLoader().load("assets/jungle_terrain/tile_map.tmx")
+    area1Map = new TmxMapLoader().load("assets/areas/area1/tile_map.tmx")
+    area2Map = new TmxMapLoader().load("assets/areas/area2/tile_map.tmx")
+    area3Map = new TmxMapLoader().load("assets/areas/area3/tile_map.tmx")
 
     attackSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/swoosh.wav"))
     painSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/pain.wav"))

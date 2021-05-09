@@ -38,10 +38,12 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
 
   var arrowList: mutable.ListBuffer[Arrow] = ListBuffer()
 
+  var tiles: mutable.Map[(Int, Int, Int), AreaTile] = mutable.Map()
+
   var world: World = new World(new Vector2(0f, 0f), false)
 
-  for (i <- 0 to 1) { // two layers
-    val layer: TiledMapTileLayer = tiledMap.getLayers.get(i).asInstanceOf[TiledMapTileLayer]
+  for (layerNum <- 0 to 1) { // two layers
+    val layer: TiledMapTileLayer = tiledMap.getLayers.get(layerNum).asInstanceOf[TiledMapTileLayer]
 
     for {x <- Seq.range(0, layer.getWidth)
          y <- Seq.range(0, layer.getHeight)} {
@@ -49,6 +51,7 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
 
       if (cell != null) {
         val traversable: Boolean = cell.getTile.getProperties.get("traversable").asInstanceOf[Boolean]
+        val flyover: Boolean = cell.getTile.getProperties.get("flyover").asInstanceOf[Boolean]
 
         if (!traversable) {
           val rectX = x * layer.getTileWidth * scale
@@ -56,12 +59,16 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
           val rectW = layer.getTileWidth * scale
           val rectH = layer.getTileHeight * scale
 
+
           val bodyDef = new BodyDef()
           bodyDef.`type` = BodyDef.BodyType.StaticBody
           bodyDef.position.set((rectX + rectH / 2) / GameSystem.PixelsPerMeter, (rectY + rectH / 2) / GameSystem.PixelsPerMeter)
 
           val body: Body = world.createBody(bodyDef)
-          body.setUserData(this)
+
+          val tile: AreaTile = new AreaTile((layerNum,x,y), body, traversable, flyover)
+
+          body.setUserData(tile)
 
           val shape: PolygonShape = new PolygonShape()
 
@@ -72,6 +79,10 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
           fixtureDef.shape = shape
 
           body.createFixture(fixtureDef)
+
+
+          tiles += (layerNum,x,y) -> tile
+
         }
       }
 
@@ -235,8 +246,8 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
               abilityComponent.onCollideWithCreature(creature)
             case (creature: Creature, arrow: Arrow) =>
               arrow.onCollideWithCreature(creature)
-            case (_: Area, arrow: Arrow) =>
-              arrow.onCollideWithTerrain()
+            case (areaTile: AreaTile, arrow: Arrow) =>
+              arrow.onCollideWithTerrain(areaTile)
             case _ =>
           }
         }
