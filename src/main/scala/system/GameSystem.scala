@@ -214,7 +214,7 @@ object GameSystem {
 
     gateList = ListBuffer()
 
-    gateList += new AreaGate(areas("area1"), 6366, 472, areas("area3"), 3690, 262)
+    gateList += new AreaGate(areas("area1"), 6366, 472, areas("area3"), 550, 150)
     gateList += new AreaGate(areas("area1"), 63, 2003, areas("area2"), 1870, 295)
 
     creaturesToMove = ListBuffer()
@@ -323,7 +323,7 @@ object GameSystem {
 
       val area: Area = getCurrentArea
 
-      area.tiledMapRenderer.render() // has to be outside world batch for some reason, otherwise camera issues
+      area.tiledMapRenderer.render(Array(0,1)) // has to be outside world batch for some reason, otherwise camera issues
 
       worldBatch.begin()
 
@@ -338,6 +338,9 @@ object GameSystem {
       area.arrowList.foreach((arrow: Arrow) => arrow.render(worldBatch))
 
       worldBatch.end()
+
+      area.tiledMapRenderer.render(Array(2))
+
 
       hudBatch.begin()
 
@@ -356,7 +359,7 @@ object GameSystem {
       hudBatch.end()
 
       //DEBUG
-      debugRenderer.render(currentArea.get.world, camera.combined.scale(PixelsPerMeter, PixelsPerMeter, 1))
+      //debugRenderer.render(currentArea.get.world, camera.combined.scale(PixelsPerMeter, PixelsPerMeter, 1))
 
     }
 

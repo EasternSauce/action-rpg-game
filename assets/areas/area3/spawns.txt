@@ -17,4 +17,4 @@ spawnPoint skeletonSword 2477 3000
 spawnPoint goblin 3002 2654
 spawnPoint goblin 3150 2654
 spawnPoint goblin 3100 2654
-spawnPoint fireDemon 100 100 3199 3661
+spawnPoint fireDemon 5407 2368 100 100
