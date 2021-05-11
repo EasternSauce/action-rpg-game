@@ -62,7 +62,7 @@ object Assets {
 
     male1SpriteSheet = new EsSpriteSheet("male1", 32, 32)
     skeletonSpriteSheet = new EsSpriteSheet("skeleton", 64, 64)
-    wolfSpriteSheet = new EsSpriteSheet("wolf", 50, 35)
+    wolfSpriteSheet = new EsSpriteSheet("wolf2", 32, 34)
     goblinSpriteSheet = new EsSpriteSheet("goblin", 32, 32)
     ghostSpriteSheet = new EsSpriteSheet("ghost", 32, 32)
 

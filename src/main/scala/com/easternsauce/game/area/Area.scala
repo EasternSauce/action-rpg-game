@@ -206,7 +206,7 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
     Assets.abandonedPlainsMusic.stop()
     Assets.fireDemonMusic.stop()
 
-    if (id == "area1") {
+    if (id == "area2") {
       Assets.abandonedPlainsMusic.setVolume(0.1f)
       Assets.abandonedPlainsMusic.setLooping(true)
       Assets.abandonedPlainsMusic.play()

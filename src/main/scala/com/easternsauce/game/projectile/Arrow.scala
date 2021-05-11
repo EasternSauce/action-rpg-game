@@ -106,7 +106,7 @@ class Arrow(var startX: Float, var startY: Float, val area: Area, var dirVector:
   def onCollideWithCreature(creature: Creature): Unit = {
     if (!(shooter.isMob && creature.isMob) && isActive) {
 
-      if (shooter != creature && creature.isAlive) {
+      if (shooter != creature && creature.isAlive && !creature.isImmune) {
         creature.takeDamage(damage, immunityFrames = true, 30f, startX, startY)
         markedForDeletion = true
       }

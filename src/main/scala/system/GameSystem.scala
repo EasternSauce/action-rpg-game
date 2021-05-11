@@ -194,13 +194,19 @@ object GameSystem {
     GameSystem.playerCharacter = new PlayerCharacter("protagonist")
     areas("area1").moveInCreature(playerCharacter, 2674, 6292)
 
-    lootSystem.placeTreasure(areas("area1"), 1920, 8, ItemType.getItemType("leatherArmor"))
-    lootSystem.placeTreasure(areas("area1"), 3551, 3840, ItemType.getItemType("woodenSword"))
-    lootSystem.placeTreasure(areas("area1"), 3145, 2952, ItemType.getItemType("lifeRing"))
-    lootSystem.placeTreasure(areas("area1"), 1332, 2833, ItemType.getItemType("ironSword"))
-    lootSystem.placeTreasure(areas("area2"), 3100, 2654, ItemType.getItemType("crossbow"))
-    lootSystem.placeTreasure(areas("area2"), 168, 3024, ItemType.getItemType("trident"))
-    lootSystem.placeTreasure(areas("area1"), 600, 500, ItemType.getItemType("healingPowder"))
+
+    lootSystem.placeTreasure(areas("area1"), 1594, 6044, ItemType.getItemType("healingPowder"))
+    lootSystem.placeTreasure(areas("area1"), 90, 3792, ItemType.getItemType("woodenSword"))
+    lootSystem.placeTreasure(areas("area1"), 3338, 3810, ItemType.getItemType("leatherArmor"))
+    lootSystem.placeTreasure(areas("area1"), 6238, 1951, ItemType.getItemType("crossbow"))
+    lootSystem.placeTreasure(areas("area1"), 6282, 5953, ItemType.getItemType("leatherHelmet"))
+    lootSystem.placeTreasure(areas("area1"), 4963, 94, ItemType.getItemType("steelGloves"))
+
+    lootSystem.placeTreasure(areas("area2"), 233, 1827, ItemType.getItemType("healingPowder"))
+    lootSystem.placeTreasure(areas("area2"), 3007, 545, ItemType.getItemType("ironSword"))
+    lootSystem.placeTreasure(areas("area2"), 4871, 5803, ItemType.getItemType("lifeRing"))
+    lootSystem.placeTreasure(areas("area2"), 2339, 6113, ItemType.getItemType("trident"))
+
 
     val nonPlayerCharacter = new NonPlayerCharacter("Johnny", true, Assets.male1SpriteSheet, "a1")
     areas("area2").moveInCreature(nonPlayerCharacter, 344, 1431)

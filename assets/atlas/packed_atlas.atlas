@@ -20,7 +20,7 @@ explosion_windup
   index: -1
 female1
   rotate: false
-  xy: 1318, 1136
+  xy: 1798, 1472
   size: 96, 128
   orig: 96, 128
   offset: 0, 0
@@ -41,28 +41,28 @@ fist_slam_windup
   index: -1
 ghost
   rotate: false
-  xy: 1702, 1472
+  xy: 1926, 1664
   size: 96, 128
   orig: 96, 128
   offset: 0, 0
   index: -1
 goblin
   rotate: false
-  xy: 1926, 1664
+  xy: 1318, 1006
   size: 96, 128
   orig: 96, 128
   offset: 0, 0
   index: -1
 male1
   rotate: false
-  xy: 1926, 1794
+  xy: 1318, 1136
   size: 96, 128
   orig: 96, 128
   offset: 0, 0
   index: -1
 male2
   rotate: false
-  xy: 1604, 1472
+  xy: 1926, 1794
   size: 96, 128
   orig: 96, 128
   offset: 0, 0
@@ -121,5 +121,12 @@ wolf
   xy: 1318, 1266
   size: 200, 140
   orig: 200, 140
+  offset: 0, 0
+  index: -1
+wolf2
+  rotate: false
+  xy: 1604, 1464
+  size: 192, 136
+  orig: 192, 136
   offset: 0, 0
   index: -1

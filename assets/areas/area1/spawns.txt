@@ -29,3 +29,9 @@ spawnPoint skeletonCrossbow 4250 1071
 spawnPoint skeletonCrossbow 4166 171
 spawnPoint skeletonCrossbow 4180 171
 spawnPoint skeletonCrossbow 4166 190
+spawnPoint goblin 5623 1630
+spawnPoint goblin 5623 1606
+spawnPoint goblin 5600 1606
+spawnPoint wolf 5756 2915
+spawnPoint wolf 5756 2940
+spawnPoint skeletonCrossbow 6133 4214

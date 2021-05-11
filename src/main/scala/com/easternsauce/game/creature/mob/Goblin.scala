@@ -11,7 +11,7 @@ class Goblin(override val id: String, override val mobSpawnPoint: MobSpawnPoint,
   actionTimer = SimpleTimer(true)
 
   dropTable.put("ironSword", 0.03f)
-  dropTable.put("poisonDagger", 0.005f)
+  dropTable.put("poisonDagger", 0.07f)
   dropTable.put("healingPowder", 0.3f)
   dropTable.put("steelArmor", 0.03f)
   dropTable.put("steelGreaves", 0.05f)
@@ -31,5 +31,5 @@ class Goblin(override val id: String, override val mobSpawnPoint: MobSpawnPoint,
   maxHealthPoints = 10f
   healthPoints = maxHealthPoints
 
-  //grantWeapon(weapon)
+  grantWeapon("poisonDagger")
 }
