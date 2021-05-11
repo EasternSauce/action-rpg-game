@@ -33,7 +33,7 @@
  </tile>
  <tile id="5">
   <properties>
-   <property name="flyover" type="bool" value="true"/>
+   <property name="flyover" type="bool" value="false"/>
    <property name="traversable" type="bool" value="false"/>
   </properties>
  </tile>
@@ -51,7 +51,7 @@
  </tile>
  <tile id="8">
   <properties>
-   <property name="flyover" type="bool" value="true"/>
+   <property name="flyover" type="bool" value="false"/>
    <property name="traversable" type="bool" value="false"/>
   </properties>
  </tile>
@@ -123,19 +123,19 @@
  </tile>
  <tile id="20">
   <properties>
-   <property name="flyover" type="bool" value="true"/>
+   <property name="flyover" type="bool" value="false"/>
    <property name="traversable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="21">
   <properties>
-   <property name="flyover" type="bool" value="true"/>
+   <property name="flyover" type="bool" value="false"/>
    <property name="traversable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="22">
   <properties>
-   <property name="flyover" type="bool" value="true"/>
+   <property name="flyover" type="bool" value="false"/>
    <property name="traversable" type="bool" value="false"/>
   </properties>
  </tile>
@@ -195,7 +195,7 @@
  </tile>
  <tile id="32">
   <properties>
-   <property name="flyover" type="bool" value="true"/>
+   <property name="flyover" type="bool" value="false"/>
    <property name="traversable" type="bool" value="false"/>
   </properties>
  </tile>
@@ -267,25 +267,25 @@
  </tile>
  <tile id="44">
   <properties>
-   <property name="flyover" type="bool" value="true"/>
+   <property name="flyover" type="bool" value="false"/>
    <property name="traversable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="45">
   <properties>
-   <property name="flyover" type="bool" value="true"/>
+   <property name="flyover" type="bool" value="false"/>
    <property name="traversable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="46">
   <properties>
-   <property name="flyover" type="bool" value="true"/>
+   <property name="flyover" type="bool" value="false"/>
    <property name="traversable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="47">
   <properties>
-   <property name="flyover" type="bool" value="true"/>
+   <property name="flyover" type="bool" value="false"/>
    <property name="traversable" type="bool" value="false"/>
   </properties>
  </tile>
@@ -423,13 +423,13 @@
  </tile>
  <tile id="70">
   <properties>
-   <property name="flyover" type="bool" value="true"/>
+   <property name="flyover" type="bool" value="false"/>
    <property name="traversable" type="bool" value="false"/>
   </properties>
  </tile>
  <tile id="71">
   <properties>
-   <property name="flyover" type="bool" value="true"/>
+   <property name="flyover" type="bool" value="false"/>
    <property name="traversable" type="bool" value="false"/>
   </properties>
  </tile>
