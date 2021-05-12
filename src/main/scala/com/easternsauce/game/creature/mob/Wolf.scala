@@ -15,6 +15,8 @@ class Wolf(override val id: String, override val mobSpawnPoint: MobSpawnPoint) e
 
   private var dashAbility: DashAbility = _
 
+  override val scale = 1.65f
+
   actionTimer = SimpleTimer(true)
 
   dropTable.put("ringmailGreaves", 0.1f)

@@ -15,6 +15,7 @@ class Skeleton(override val id: String, override val mobSpawnPoint: MobSpawnPoin
 
   loadSprites(Assets.skeletonSpriteSheet, Map(Left -> 2, Right -> 4, Up -> 1, Down -> 3), 0)
 
+  override val scale = 1.35f
 
   actionTimer = SimpleTimer(true)
 

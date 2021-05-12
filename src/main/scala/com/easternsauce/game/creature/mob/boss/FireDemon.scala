@@ -16,7 +16,7 @@ class FireDemon(override val id: String, override val mobSpawnPoint: MobSpawnPoi
   protected var meteorCrashAbility: MeteorCrashAbility = _
 //  protected var dashAbility: DashAbility = _
 
-  scale = 2.0f
+  override val scale = 2.0f
 
   override val hitbox = new Rectangle(0, 0, 80 * scale, 80 * scale)
 

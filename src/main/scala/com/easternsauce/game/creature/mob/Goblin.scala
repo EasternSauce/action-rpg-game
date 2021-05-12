@@ -26,6 +26,8 @@ class Goblin(override val id: String, override val mobSpawnPoint: MobSpawnPoint,
 
   override val baseSpeed = 12f
 
+  override val scale = 1.7f
+
   creatureType = "goblin"
 
   maxHealthPoints = 10f

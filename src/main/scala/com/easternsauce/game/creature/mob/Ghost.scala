@@ -32,6 +32,8 @@ class Ghost(override val id: String, override val mobSpawnPoint: MobSpawnPoint, 
 
   private var explodeAbility: ExplosionAbility = _
 
+  override val scale = 1.4f
+
 
   creatureType = "ghost"
 

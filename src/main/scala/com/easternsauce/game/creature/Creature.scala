@@ -57,7 +57,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
   protected var staminaDrain = 0.0f
 
-  var scale: Float = 1f
+  val scale: Float = 1f
 
   val spriteWidth: Float = 64
   val spriteHeight: Float = 64
