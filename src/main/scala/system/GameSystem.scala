@@ -336,9 +336,16 @@ object GameSystem {
 
       gateList.foreach(_.render(worldShapeDrawer))
 
-      area.creaturesManager.renderCreatures(worldBatch, worldShapeDrawer)
+      area.creaturesManager.renderDeadCreatures(worldBatch, worldShapeDrawer)
 
-      lootSystem.render(worldShapeDrawer)
+      lootSystem.render(worldBatch, worldShapeDrawer)
+
+      area.creaturesManager.renderAliveCreatures(worldBatch, worldShapeDrawer)
+
+      area.creaturesManager.renderHealthBars(worldBatch, worldShapeDrawer)
+
+      area.creaturesManager.renderAbilities(worldBatch, worldShapeDrawer)
+
 
       area.arrowList.foreach((arrow: Arrow) => arrow.render(worldBatch))
 

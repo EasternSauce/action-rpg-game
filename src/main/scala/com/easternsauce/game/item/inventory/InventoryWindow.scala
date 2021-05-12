@@ -7,8 +7,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.{Gdx, Input}
 import com.easternsauce.game.area.Area
+import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.item.Item
-import com.easternsauce.game.item.loot.Treasure
+import com.easternsauce.game.item.loot.{LootPile, Treasure}
 import com.easternsauce.game.item.util.ItemType
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
@@ -415,6 +416,7 @@ class InventoryWindow {
   }
 
   def pickUpItem(item: Item, itemList: ListBuffer[Item]): Boolean = {
+
     val itemType: ItemType = item.itemType
     val stackable: Boolean = itemType.stackable
     if (stackable) {
@@ -427,6 +429,10 @@ class InventoryWindow {
       if (invPos != -1) { // add quantity to existing item
         inventoryItems(invPos).quantity = inventoryItems(invPos).quantity + item.quantity
         if (item.lootPileBackref.itemList.size == 1) {
+          item.lootPileBackref match {
+            case _: Treasure => Assets.chestOpeningSound.play(0.1f)
+            case _: LootPile => Assets.coinbagSound.play(0.3f)
+          }
           item.lootPileBackref.visible = false
           val world = item.lootPileBackref.body.getWorld
           world.destroyBody(item.lootPileBackref.body)
@@ -453,6 +459,10 @@ class InventoryWindow {
           case _ =>
         }
         if (item.lootPileBackref.itemList.size == 1) {
+          item.lootPileBackref match {
+            case _: Treasure => Assets.chestOpeningSound.play(0.1f)
+            case _: LootPile => Assets.coinbagSound.play(0.3f)
+          }
           item.lootPileBackref.visible = false
           val world = item.lootPileBackref.body.getWorld
           world.destroyBody(item.lootPileBackref.body)

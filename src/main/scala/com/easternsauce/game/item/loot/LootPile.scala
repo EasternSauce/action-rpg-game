@@ -1,9 +1,12 @@
 package com.easternsauce.game.item.loot
 
-import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.{Color, Texture}
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.physics.box2d.{Body, BodyDef, FixtureDef, PolygonShape}
+import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.easternsauce.game.area.Area
+import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.item.Item
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
@@ -24,9 +27,17 @@ class LootPile(val area: Area, x: Float, y: Float) {
 
   var bodyCreated = false
 
-  def render(shapeDrawer: ShapeDrawer): Unit = {
+  val bagTexture: Texture = Assets.bagTexture
+
+  val bagImage: Image = new Image(bagTexture)
+
+  bagImage.setX(x)
+  bagImage.setY(y)
+
+
+  def render(batch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
     if (visible) {
-      shapeDrawer.filledRectangle(rect, Color.GREEN)
+      bagImage.draw(batch, 1.0f)
     }
   }
 

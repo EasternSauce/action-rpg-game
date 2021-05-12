@@ -1,14 +1,26 @@
 package com.easternsauce.game.item.loot
 
-import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.easternsauce.game.area.Area
+import com.easternsauce.game.assets.Assets
 import space.earlygrey.shapedrawer.ShapeDrawer
 
 class Treasure(override val area: Area, x: Float, y: Float) extends LootPile(area, x, y) {
 
-  override def render(shapeDrawer: ShapeDrawer): Unit = {
+  val treasureTexture: Texture = Assets.treasureTexture
+
+  val treasureImage: Image = new Image(treasureTexture)
+
+  treasureImage.setX(x)
+  treasureImage.setY(y)
+  treasureImage.setScale(2.0f)
+
+  override def render(batch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
     if (visible) {
-      shapeDrawer.filledRectangle(rect, Color.PINK)
+
+      treasureImage.draw(batch, 1.0f)
     }
   }
 }

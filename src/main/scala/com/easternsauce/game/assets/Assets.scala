@@ -50,8 +50,12 @@ object Assets {
   var runningSound: Sound = _
   var strongPunchSound: Sound = _
   var swooshSound: Sound = _
+  var chestOpeningSound: Sound = _
+  var coinbagSound: Sound = _
 
   var arrowTexture: Texture = _
+  var treasureTexture: Texture = _
+  var bagTexture: Texture = _
 
   var abandonedPlainsMusic: Music = _
   var fireDemonMusic: Music = _
@@ -106,8 +110,12 @@ object Assets {
     runningSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/running.wav"))
     strongPunchSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/strong-punch.wav"))
     swooshSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/swoosh.wav"))
+    chestOpeningSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/chest-opening.wav"))
+    coinbagSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/coinbag.wav"))
 
     arrowTexture = new Texture(Gdx.files.internal("assets/projectiles/arrow.png"))
+    treasureTexture = new Texture(Gdx.files.internal("assets/treasure/treasure.png"))
+    bagTexture = new Texture(Gdx.files.internal("assets/treasure/bag.png"))
 
     abandonedPlainsMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/music/abandoned_plains.wav"))
     fireDemonMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/music/fire_demon.wav"))

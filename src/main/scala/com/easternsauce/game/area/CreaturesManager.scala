@@ -16,7 +16,9 @@ class CreaturesManager(private val area: Area) {
 
   var creatures: mutable.Map[String, Creature] = mutable.Map()
 
-  private var renderPriorityQueue: mutable.PriorityQueue[Creature] = _
+  private var renderAlivePriorityQueue: mutable.PriorityQueue[Creature] = _
+  private var renderDeadPriorityQueue: mutable.PriorityQueue[Creature] = _
+
 
   def onAreaEntry(): Unit = {
     creatures.values.filter(creature => !creature.isPlayer && !creature.isNPC).foreach(creature => {
@@ -29,15 +31,27 @@ class CreaturesManager(private val area: Area) {
     creatures.put(creature.id, creature)
   }
 
-  def renderCreatures(batch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
-    if (renderPriorityQueue != null) while (renderPriorityQueue.nonEmpty) {
-      val creature = renderPriorityQueue.dequeue()
+  def renderAliveCreatures(batch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
+    if (renderAlivePriorityQueue != null) while (renderAlivePriorityQueue.nonEmpty) {
+      val creature = renderAlivePriorityQueue.dequeue()
       creature.render(shapeDrawer, batch)
     }
+  }
+
+  def renderDeadCreatures(batch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
+    if (renderDeadPriorityQueue != null) while (renderDeadPriorityQueue.nonEmpty) {
+      val creature = renderDeadPriorityQueue.dequeue()
+      creature.render(shapeDrawer, batch)
+    }
+
+  }
+  def renderAbilities(batch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
     for (creature <- creatures.values) {
       creature.renderAbilities(shapeDrawer, batch)
     }
+  }
 
+  def renderHealthBars(batch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
     for (creature <- creatures.values) {
       if (creature.isAlive && !creature.atFullLife) creature.renderHealthBar(shapeDrawer)
     }
@@ -45,9 +59,11 @@ class CreaturesManager(private val area: Area) {
 
   def updateRenderPriorityQueue(): Unit = {
 
-    renderPriorityQueue = new mutable.PriorityQueue[Creature]()
+    renderAlivePriorityQueue = new mutable.PriorityQueue[Creature]()
+    renderDeadPriorityQueue = new mutable.PriorityQueue[Creature]()
 
-    renderPriorityQueue.addAll(creatures.values)
+    renderAlivePriorityQueue.addAll(creatures.values.filter(_.isAlive))
+    renderDeadPriorityQueue.addAll(creatures.values.filter(!_.isAlive))
   }
 
   def getCreatureById(id: String): Option[Creature] = {
@@ -55,8 +71,6 @@ class CreaturesManager(private val area: Area) {
   }
 
   def saveToFile(writer: PrintWriter): Unit = {
-    for (creature <- creatures.values) {
-    }
     for (creature <- creatures.values) {
       if (creature.isPlayer || creature.isNPC) {
         writer.write("creature " + creature.id + "\n")
