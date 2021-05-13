@@ -27,9 +27,7 @@ class LootPile(val area: Area, x: Float, y: Float) {
 
   var bodyCreated = false
 
-  val bagTexture: Texture = Assets.bagTexture
-
-  val bagImage: Image = new Image(bagTexture)
+  val bagImage: Image = new Image(Assets.bagTexture)
 
   bagImage.setX(x)
   bagImage.setY(y)

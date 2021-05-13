@@ -1,6 +1,7 @@
 package com.easternsauce.game.area
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
 import com.badlogic.gdx.math.{Rectangle, Vector2}
@@ -167,12 +168,12 @@ class Area(val id: String, val tiledMap: TiledMap, scale: Float, val spawnLocati
     }
   }
 
-  def render(shapeDrawer: ShapeDrawer): Unit = {
+  def render(batch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
     for (blockade <- blockadeList) {
       blockade.render()
     }
 
-    respawnList.foreach(respawnPoint => respawnPoint.render(shapeDrawer))
+    respawnList.foreach(respawnPoint => respawnPoint.render(batch, shapeDrawer))
 
   }
 

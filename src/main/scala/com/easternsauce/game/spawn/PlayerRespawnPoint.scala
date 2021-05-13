@@ -1,9 +1,12 @@
 package com.easternsauce.game.spawn
 
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.physics.box2d.{Body, BodyDef, FixtureDef, PolygonShape}
+import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.easternsauce.game.area.Area
+import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.utils.SimpleTimer
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
@@ -15,9 +18,12 @@ class PlayerRespawnPoint(posX: Int, posY: Int, val area: Area) {
 
   val rect: Rectangle = new Rectangle(posX, posY, width, height)
 
-  private var respawnSetTimer = SimpleTimer()
+  val respawnSetTimer = SimpleTimer()
 
-  private val respawnSetTime: Float = 2f
+  val respawnSetTime: Float = 5f
+
+  val gobletImage = new Image(Assets.gobletTexture)
+  val gobletLitImage = new Image(Assets.gobletLitTexture)
 
   var body: Body = _
 
@@ -25,16 +31,21 @@ class PlayerRespawnPoint(posX: Int, posY: Int, val area: Area) {
 
   respawnSetTimer.time = respawnSetTime
 
-  def render(shapeDrawer: ShapeDrawer): Unit = {
-    if (respawnSetTimer.time < respawnSetTime) shapeDrawer.setColor(Color.RED)
-    else shapeDrawer.setColor(Color.ORANGE)
+  gobletImage.setX(posX)
+  gobletImage.setY(posY)
+  gobletLitImage.setX(posX)
+  gobletLitImage.setY(posY)
 
-    shapeDrawer.filledRectangle(rect.x, rect.y, width, height)
+  def render(batch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
+    if (respawnSetTimer.time < respawnSetTime) gobletLitImage.draw(batch, 1.0f)
+    else gobletImage.draw(batch, 1.0f)
+
 
   }
 
   def onRespawnSet(): Unit = {
     respawnSetTimer.restart()
+    Assets.matchIgniteSound.play(0.4f)
   }
 
   def initBody(): Unit = {

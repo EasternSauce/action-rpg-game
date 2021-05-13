@@ -37,7 +37,7 @@ class Ghost(override val id: String, override val mobSpawnPoint: MobSpawnPoint, 
 
   creatureType = "ghost"
 
-  maxHealthPoints = 300f
+  maxHealthPoints = 450f
   healthPoints = maxHealthPoints
 
   override def performAggroedBehavior(): Unit = {
@@ -46,7 +46,7 @@ class Ghost(override val id: String, override val mobSpawnPoint: MobSpawnPoint, 
     assert(aggroedCreature.nonEmpty)
 
     if (GameSystem.distance(aggroedCreature.get.body, this.body) < (if (attackDistance == null.asInstanceOf[Float]) currentAttackType.attackDistance else attackDistance)) {
-      if (healthPoints <= maxHealthPoints * 0.50) if (explodeAbility.canPerform) explodeAbility.perform()
+      if (healthPoints <= maxHealthPoints * 0.30) if (explodeAbility.canPerform) explodeAbility.perform()
     }
   }
 

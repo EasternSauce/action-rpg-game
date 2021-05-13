@@ -219,7 +219,7 @@ object GameSystem {
 
     gateList = ListBuffer()
 
-    gateList += new AreaGate(areas("area1"), 6366, 472, areas("area3"), 550, 150)
+    gateList += new AreaGate(areas("area1"), 6366, 472, areas("area3"), 550, 75)
     gateList += new AreaGate(areas("area1"), 63, 2003, areas("area2"), 1870, 295)
 
     creaturesToMove = ListBuffer()
@@ -332,7 +332,7 @@ object GameSystem {
 
       worldBatch.begin()
 
-      area.render(worldShapeDrawer)
+      area.render(worldBatch, worldShapeDrawer)
 
       gateList.foreach(_.render(worldShapeDrawer))
 

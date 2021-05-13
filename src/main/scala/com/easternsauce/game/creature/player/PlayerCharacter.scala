@@ -135,11 +135,15 @@ class PlayerCharacter(id: String) extends Creature(id) {
       for (playerRespawnPoint <- area.respawnList) {
         if (GameSystem.distance(playerRespawnPoint.body, body) < 70f) {
           currentRespawnPoint = playerRespawnPoint
-          currentRespawnPoint.onRespawnSet()
-          if (healthPoints < maxHealthPoints / 2) healthPoints = maxHealthPoints / 2
 
-          assert(GameSystem.currentArea.nonEmpty)
-          GameSystem.currentArea.get.softReset()
+          if (currentRespawnPoint.respawnSetTimer.time >= currentRespawnPoint.respawnSetTime) {
+              currentRespawnPoint.onRespawnSet()
+
+            if (healthPoints < maxHealthPoints / 2) healthPoints = maxHealthPoints / 2
+
+            assert(GameSystem.currentArea.nonEmpty)
+            GameSystem.currentArea.get.softReset()
+          }
         }
       }
     }

@@ -24,7 +24,7 @@ class ExplosionAbility(override val abilityCreature: Creature) extends Ability(a
     cooldownTime = 0.8f
     activeTime = 0.9f
     channelTime = 1.3f
-    explosionRange = 150f
+    explosionRange = 320f
 
   }
 

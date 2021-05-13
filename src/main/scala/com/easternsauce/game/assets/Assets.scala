@@ -52,10 +52,13 @@ object Assets {
   var swooshSound: Sound = _
   var chestOpeningSound: Sound = _
   var coinbagSound: Sound = _
+  var matchIgniteSound: Sound = _
 
   var arrowTexture: Texture = _
   var treasureTexture: Texture = _
   var bagTexture: Texture = _
+  var gobletTexture: Texture = _
+  var gobletLitTexture: Texture = _
 
   var abandonedPlainsMusic: Music = _
   var fireDemonMusic: Music = _
@@ -112,10 +115,14 @@ object Assets {
     swooshSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/swoosh.wav"))
     chestOpeningSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/chest-opening.wav"))
     coinbagSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/coinbag.wav"))
+    matchIgniteSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/match-ignite.wav"))
 
     arrowTexture = new Texture(Gdx.files.internal("assets/projectiles/arrow.png"))
     treasureTexture = new Texture(Gdx.files.internal("assets/treasure/treasure.png"))
     bagTexture = new Texture(Gdx.files.internal("assets/treasure/bag.png"))
+    gobletTexture = new Texture(Gdx.files.internal("assets/goblet/goblet.png"))
+    gobletLitTexture = new Texture(Gdx.files.internal("assets/goblet/goblet_lit.png"))
+
 
     abandonedPlainsMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/music/abandoned_plains.wav"))
     fireDemonMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/music/fire_demon.wav"))

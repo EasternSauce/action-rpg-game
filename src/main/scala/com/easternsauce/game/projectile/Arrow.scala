@@ -20,7 +20,7 @@ class Arrow(var startX: Float, var startY: Float, val area: Area, var dirVector:
 
   private val arrowTexture: Texture = Assets.arrowTexture
 
-  private val arrowImage: Image = new Image(arrowTexture)
+  private val arrowImage: Image = new Image(Assets.arrowTexture)
 
   var markedForDeletion: Boolean = false
 

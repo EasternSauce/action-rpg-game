@@ -9,9 +9,7 @@ import space.earlygrey.shapedrawer.ShapeDrawer
 
 class Treasure(override val area: Area, x: Float, y: Float) extends LootPile(area, x, y) {
 
-  val treasureTexture: Texture = Assets.treasureTexture
-
-  val treasureImage: Image = new Image(treasureTexture)
+  val treasureImage: Image = new Image(Assets.treasureTexture)
 
   treasureImage.setX(x)
   treasureImage.setY(y)
