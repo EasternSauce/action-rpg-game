@@ -13,8 +13,8 @@ import system.GameSystem
 
 class PlayerRespawnPoint(posX: Int, posY: Int, val area: Area) {
 
-  val width = 30f
-  val height = 30f
+  val width = 64f
+  val height = 64f
 
   val rect: Rectangle = new Rectangle(posX, posY, width, height)
 
@@ -31,10 +31,8 @@ class PlayerRespawnPoint(posX: Int, posY: Int, val area: Area) {
 
   respawnSetTimer.time = respawnSetTime
 
-  gobletImage.setX(posX)
-  gobletImage.setY(posY)
-  gobletLitImage.setX(posX)
-  gobletLitImage.setY(posY)
+  gobletImage.setPosition(posX, posY)
+  gobletLitImage.setPosition(posX, posY)
 
   def render(batch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
     if (respawnSetTimer.time < respawnSetTime) gobletLitImage.draw(batch, 1.0f)

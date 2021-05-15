@@ -13,6 +13,8 @@ class Wolf(override val id: String, override val mobSpawnPoint: MobSpawnPoint) e
 
   override val baseSpeed: Float = 10f
 
+  override val mass = 300f
+
   private var dashAbility: DashAbility = _
 
   override val scale = 1.65f

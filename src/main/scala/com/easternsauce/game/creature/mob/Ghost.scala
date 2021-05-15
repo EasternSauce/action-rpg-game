@@ -30,6 +30,8 @@ class Ghost(override val id: String, override val mobSpawnPoint: MobSpawnPoint, 
 
   override val baseSpeed = 12f
 
+  override val mass = 300f
+
   private var explodeAbility: ExplosionAbility = _
 
   override val scale = 1.4f

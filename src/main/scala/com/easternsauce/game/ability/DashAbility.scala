@@ -13,9 +13,9 @@ class DashAbility(override val abilityCreature: Creature) extends Ability(abilit
   override def init(): Unit = {
     cooldownTime = 1.0f
     channelTime = 0
-    dashAcceleration = 3f
+    dashAcceleration = abilityCreature.mass * 5f
     dashSpeed = 1000.0f
-    dashDistance = 200
+    dashDistance = 150f
     activeTime = dashDistance / dashSpeed
   }
 

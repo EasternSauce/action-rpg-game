@@ -16,7 +16,7 @@ class FireDemon(override val id: String, override val mobSpawnPoint: MobSpawnPoi
   protected var meteorCrashAbility: MeteorCrashAbility = _
 //  protected var dashAbility: DashAbility = _
 
-  override val scale = 2.0f
+  override val scale = 3.0f
 
   override val hitbox = new Rectangle(0, 0, 80 * scale, 80 * scale)
 
@@ -43,7 +43,9 @@ class FireDemon(override val id: String, override val mobSpawnPoint: MobSpawnPoi
 
   override val onGettingHitSound: Sound = Assets.roarSound
 
-  override val baseSpeed = 10f
+  override val baseSpeed = 18f
+
+  override val mass: Float = 10000f
 
   creatureType = "fireDemon"
 
@@ -53,11 +55,11 @@ class FireDemon(override val id: String, override val mobSpawnPoint: MobSpawnPoi
     super.performAggroedBehavior()
 
     if (!effectMap("immobilized").isActive && isNoAbilityActive && aggroedCreature.nonEmpty) {
-      if (meteorRainAbility.canPerform && healthPoints < maxHealthPoints * 0.99) {
+      if (meteorRainAbility.canPerform && healthPoints < maxHealthPoints * 0.65) {
         meteorRainAbility.perform()
-        Assets.monsterGrowlSound.play(0.5f)
+        Assets.monsterGrowlSound.play(0.3f)
       }
-      else if (fistSlamAbility.canPerform && GameSystem.distance(aggroedCreature.get.body, body) < 80f) fistSlamAbility.perform()
+      else if (fistSlamAbility.canPerform && GameSystem.distance(aggroedCreature.get.body, body) < 120f) fistSlamAbility.perform()
       else if (meteorCrashAbility.canPerform && GameSystem.distance(aggroedCreature.get.body, body) > 220f) meteorCrashAbility.perform()
       else if (currentAttack.canPerform && GameSystem.distance(aggroedCreature.get.body, body) < 170f) currentAttack.perform()
 //      else if (dashAbility.canPerform && GameSystem.distance(aggroedCreature.get.body, body) > 300f) if (hasDestination) {
@@ -86,6 +88,7 @@ class FireDemon(override val id: String, override val mobSpawnPoint: MobSpawnPoi
       bossBattleStarted = true
 
       bossMusic.setVolume(0.1f)
+      bossMusic.setLooping(true)
       bossMusic.play()
 
       GameSystem.hud.bossHealthBar.onBossBattleStart(this)

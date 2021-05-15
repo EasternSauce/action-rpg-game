@@ -44,7 +44,7 @@ class Boss(override val id: String, override val mobSpawnPoint: MobSpawnPoint) e
       if (healthPoints - actualDamage > 0) healthPoints -= actualDamage
       else healthPoints = 0f
       if (beforeHP != healthPoints && healthPoints == 0f) onDeath()
-      effectMap("immune").applyEffect(500)
+      effectMap("immune").applyEffect(0.5f)
 
       if (GameSystem.random.nextFloat() < 0.3) onGettingHitSound.play(0.1f)
     }

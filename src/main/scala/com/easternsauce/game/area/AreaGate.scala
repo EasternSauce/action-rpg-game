@@ -1,31 +1,42 @@
 package com.easternsauce.game.area
 
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.physics.box2d._
+import com.badlogic.gdx.scenes.scene2d.ui.Image
+import com.easternsauce.game.assets.Assets
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
 class AreaGate(val areaFrom: Area, val fromPosX: Int, val fromPosY: Int, val areaTo: Area, val toPosX: Int, val toPosY: Int) {
 
-  private val width = 50f
-  private val height = 50f
+  private val width = 48f
+  private val height = 48f
 
   private var body: Body = _
 
-  val fromRect = new Rectangle(fromPosX - width / 2, fromPosY - height / 2, width, height)
-  val toRect = new Rectangle(toPosX - width / 2, toPosY - height / 2, width, height)
+  private val downarrowImageFrom= new Image(Assets.downarrowTexture)
+  private val downarrowImageTo = new Image(Assets.downarrowTexture)
+
+  downarrowImageFrom.setPosition(fromPosX, fromPosY)
+  downarrowImageTo.setPosition(toPosX, toPosY)
+  downarrowImageFrom.setScale(1.5f)
+  downarrowImageTo.setScale(1.5f)
+
+  val fromRect = new Rectangle(fromPosX, fromPosY, width, height)
+  val toRect = new Rectangle(toPosX, toPosY, width, height)
 
   initBody(areaFrom, fromRect)
   initBody(areaTo, toRect)
 
-  def render(shapeDrawer: ShapeDrawer): Unit = {
+  def render(batch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
     val currentArea = GameSystem.currentArea.getOrElse {
       throw new RuntimeException("current area not specified")
     }
 
-    if (currentArea == areaFrom) shapeDrawer.filledRectangle(fromRect, Color.BLUE)
-    if (currentArea == areaTo) shapeDrawer.filledRectangle(toRect, Color.BLUE)
+    if (currentArea == areaFrom) downarrowImageFrom.draw(batch, 1.0f)
+    if (currentArea == areaTo) downarrowImageTo.draw(batch, 1.0f)
   }
 
   def initBody(area: Area, rect: Rectangle): Unit = {

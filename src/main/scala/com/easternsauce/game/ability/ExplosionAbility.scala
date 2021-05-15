@@ -77,7 +77,6 @@ class ExplosionAbility(override val abilityCreature: Creature) extends Ability(a
     fixtureDef.shape = shape
     fixtureDef.isSensor = true
     body.createFixture(fixtureDef)
-    //body.setLinearDamping(10f)
   }
 
   override def onStop() {

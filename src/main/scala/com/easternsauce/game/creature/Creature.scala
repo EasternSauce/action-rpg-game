@@ -149,6 +149,8 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
   var toSetBodyNonInteractive: Boolean = false
 
+  val mass: Float = 100f
+
   def isAlive: Boolean = healthPoints > 0f
 
   def atFullLife: Boolean = healthPoints >= maxHealthPoints
@@ -515,7 +517,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
     if (isAttacking) currentMaxVelocity = currentMaxVelocity / 2
     else if (sprinting && staminaPoints > 0) {
-      currentMaxVelocity = currentMaxVelocity * 1.5f
+      currentMaxVelocity = currentMaxVelocity * 1.75f
       staminaDrain += Gdx.graphics.getDeltaTime
     }
   }
@@ -528,14 +530,16 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
       if (totalDirections > 1) currentMaxVelocity = currentMaxVelocity / Math.sqrt(2).toFloat
 
+      val impulseValue = 5 * mass
+
       if (movingDir.x == -1) {
         if (body.getLinearVelocity.x >= -currentMaxVelocity) {
-          body.applyLinearImpulse(new Vector2(4f * movingDir.x, 0), body.getWorldCenter, true)
+          body.applyLinearImpulse(new Vector2(impulseValue * movingDir.x, 0), body.getWorldCenter, true)
         }
       }
       else if (movingDir.x == 1) {
         if (body.getLinearVelocity.x <= currentMaxVelocity) {
-          body.applyLinearImpulse(new Vector2(4f * movingDir.x, 0), body.getWorldCenter, true)
+          body.applyLinearImpulse(new Vector2(impulseValue * movingDir.x, 0), body.getWorldCenter, true)
         }
       }
 
@@ -543,12 +547,12 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
       if (movingDir.y == -1) {
         if (body.getLinearVelocity.y >= -currentMaxVelocity) {
-          body.applyLinearImpulse(new Vector2(0, 4f * movingDir.y), body.getWorldCenter, true)
+          body.applyLinearImpulse(new Vector2(0, impulseValue * movingDir.y), body.getWorldCenter, true)
         }
       }
       else if (movingDir.y == 1) {
         if (body.getLinearVelocity.y <= currentMaxVelocity) {
-          body.applyLinearImpulse(new Vector2(0, 4f * movingDir.y), body.getWorldCenter, true)
+          body.applyLinearImpulse(new Vector2(0, impulseValue * movingDir.y), body.getWorldCenter, true)
         }
       }
 
@@ -634,7 +638,11 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     val shape: CircleShape = new CircleShape()
     shape.setRadius(0.9f * spriteWidth * scale / 2 / GameSystem.PixelsPerMeter)
     fixtureDef.shape = shape
+
     fixture = body.createFixture(fixtureDef)
+    val massData = new MassData()
+    massData.mass = mass
+    body.setMassData(massData)
     body.setLinearDamping(10f)
   }
 

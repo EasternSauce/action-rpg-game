@@ -24,6 +24,9 @@ object Assets {
   var tridentThrustWindupSpriteSheet: EsSpriteSheet = _
   var explosionSpriteSheet: EsSpriteSheet = _
   var explosionWindupSpriteSheet: EsSpriteSheet = _
+  var fistSlamSpriteSheet: EsSpriteSheet = _
+  var fistSlamWindupSpriteSheet: EsSpriteSheet = _
+
 
   var iconsSpriteSheet: EsSpriteSheet = _
 
@@ -59,6 +62,7 @@ object Assets {
   var bagTexture: Texture = _
   var gobletTexture: Texture = _
   var gobletLitTexture: Texture = _
+  var downarrowTexture: Texture = _
 
   var abandonedPlainsMusic: Music = _
   var fireDemonMusic: Music = _
@@ -85,6 +89,9 @@ object Assets {
 
     explosionSpriteSheet = new EsSpriteSheet("explosion", 64, 64)
     explosionWindupSpriteSheet = new EsSpriteSheet("explosion_windup", 64, 64)
+
+    fistSlamSpriteSheet = new EsSpriteSheet("fist_slam", 40, 80)
+    fistSlamWindupSpriteSheet = new EsSpriteSheet("fist_slam_windup", 40, 80)
 
 
     area1Map = new TmxMapLoader().load("assets/areas/area1/tile_map.tmx")
@@ -122,7 +129,7 @@ object Assets {
     bagTexture = new Texture(Gdx.files.internal("assets/treasure/bag.png"))
     gobletTexture = new Texture(Gdx.files.internal("assets/goblet/goblet.png"))
     gobletLitTexture = new Texture(Gdx.files.internal("assets/goblet/goblet_lit.png"))
-
+    downarrowTexture = new Texture(Gdx.files.internal("assets/downarrow/downarrow.png"))
 
     abandonedPlainsMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/music/abandoned_plains.wav"))
     fireDemonMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/music/fire_demon.wav"))

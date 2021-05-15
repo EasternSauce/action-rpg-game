@@ -11,6 +11,8 @@ class Skeleton(override val id: String, override val mobSpawnPoint: MobSpawnPoin
   override val hitboxBounds = new Rectangle(18, 0, 28, 64)
   override val baseSpeed = 12f
 
+  override val mass = 300f
+
   override protected val onGettingHitSound: Sound = Assets.boneClickSound
 
   loadSprites(Assets.skeletonSpriteSheet, Map(Left -> 2, Right -> 4, Up -> 1, Down -> 3), 0)

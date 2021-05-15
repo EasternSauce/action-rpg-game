@@ -21,7 +21,7 @@ class MeteorRainAbility(override val abilityCreature: Creature) extends Ability(
     activeTime = 13f
     channelTime = 0.3f
 
-    explosionRange = 200f
+    explosionRange = 300f
   }
 
   override protected def onActiveStart(): Unit = {
@@ -41,8 +41,8 @@ class MeteorRainAbility(override val abilityCreature: Creature) extends Ability(
   override def onChannellingStart(): Unit = {
     abilityCreature.getEffect("immobilized").applyEffect(channelTime + activeTime)
     meteors = ListBuffer[Meteor]()
-    for (i <- 0 until 30) {
-      val meteor = new Meteor(this, 0.4f * i, abilityCreature.posX + GameSystem.random.between(-400, 400), abilityCreature.posY + GameSystem.random.between(-400, 400), explosionRange, 1.25f)
+    for (i <- 0 until 40) {
+      val meteor = new Meteor(this, 0.3f * i, abilityCreature.posX + GameSystem.random.between(-700, 700), abilityCreature.posY + GameSystem.random.between(-700, 700), explosionRange, 1.5f)
 
       meteors += meteor
     }
