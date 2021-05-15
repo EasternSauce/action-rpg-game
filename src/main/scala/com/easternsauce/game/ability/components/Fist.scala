@@ -1,5 +1,6 @@
 package com.easternsauce.game.ability.components
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.physics.box2d.{Body, BodyDef, CircleShape, FixtureDef}
 import com.easternsauce.game.ability.{Ability, MeteorCrashAbility}
 import com.easternsauce.game.ability.util.AbilityState
@@ -8,6 +9,7 @@ import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.utils.SimpleTimer
 import com.easternsauce.game.wrappers.EsAnimation
+import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
 class Fist(override val mainAbility: Ability, val startTime: Float, val posX: Float, val posY: Float, var radius: Float) extends AbilityComponent(mainAbility) {
@@ -52,6 +54,52 @@ class Fist(override val mainAbility: Ability, val startTime: Float, val posX: Fl
     fixtureDef.shape = shape
     fixtureDef.isSensor = true
     body.createFixture(fixtureDef)
+  }
+
+  override def onUpdateActive(): Unit = {
+    if (started) {
+      if (state == AbilityState.Channeling) {
+        if (channelTimer.time > channelTime) {
+          state = AbilityState.Active
+          Assets.glassBreakSound.play(0.1f)
+          abilityAnimation.restart()
+          activeTimer.restart()
+          initBody(posX, posY)
+        }
+      }
+      if (state == AbilityState.Active) {
+        if (activeTimer.time > activeTime) {
+          state = AbilityState.Inactive
+        }
+        if (!destroyed && activeTimer.time >= 0.2f) {
+          body.getWorld.destroyBody(body)
+          destroyed = true
+        }
+        if (activeTimer.time > activeTime) {
+          // on active stop
+          state = AbilityState.Inactive
+        }
+      }
+    }
+  }
+
+  override def render(shapeDrawer: ShapeDrawer, batch: SpriteBatch) = {
+    if (state == AbilityState.Channeling) {
+      val image = windupAnimation.currentFrame
+
+      val shift = image.getRegionWidth * scale / 2f
+      batch.draw(image, posX - shift, posY - shift, 0, 0,
+        image.getRegionWidth, image.getRegionHeight, scale, scale, 0.0f)
+    }
+    if (state == AbilityState.Active) {
+
+      val image = abilityAnimation.currentFrame
+
+      val shift = image.getRegionWidth * scale / 2f
+
+      batch.draw(image, posX - shift, posY - shift, 0, 0,
+        image.getRegionWidth, image.getRegionHeight, scale, scale, 0.0f)
+    }
   }
 
   override def onCollideWithCreature(creature: Creature): Unit = {
