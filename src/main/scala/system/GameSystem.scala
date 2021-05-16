@@ -371,7 +371,7 @@ object GameSystem {
       hudBatch.end()
 
       //DEBUG
-      debugRenderer.render(currentArea.get.world, camera.combined.scale(PixelsPerMeter, PixelsPerMeter, 1))
+      //debugRenderer.render(currentArea.get.world, camera.combined.scale(PixelsPerMeter, PixelsPerMeter, 1))
 
     }
 

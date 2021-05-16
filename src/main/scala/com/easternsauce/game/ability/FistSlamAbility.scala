@@ -16,7 +16,7 @@ class FistSlamAbility(override val abilityCreature: Creature) extends Ability(ab
 
   override def init(): Unit = {
     cooldownTime = 6.5f
-    activeTime = 4.0f
+    activeTime = 3.0f
     channelTime = 0.35f
   }
 
@@ -48,9 +48,10 @@ class FistSlamAbility(override val abilityCreature: Creature) extends Ability(ab
   override def onChannellingStart(): Unit = {
     abilityCreature.getEffect("immobilized").applyEffect(channelTime + activeTime)
     fists = new ListBuffer[Fist]
-    for (i <- 0 until 10) {
-      val range: Int = 270
-      fists += new Fist(this, 0.2f * i, abilityCreature.posX + GameSystem.random.between(-range, range), abilityCreature.posY + GameSystem.random.between(-range, range), 20)
+    for (i <- 0 until 20) {
+      val range: Int = 250
+      val aggroedCreature = abilityCreature.aggroedCreature.get
+      fists += new Fist(this, 0.1f * i, aggroedCreature.posX + GameSystem.random.between(-range, range), aggroedCreature.posY + GameSystem.random.between(-range, range), 20)
     }
   }
 

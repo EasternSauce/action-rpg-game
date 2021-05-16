@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.{Rectangle, Vector2}
 import com.badlogic.gdx.physics.box2d._
 import com.easternsauce.game.ability.Ability
 import com.easternsauce.game.ability.attack._
+import com.easternsauce.game.ability.util.AbilityState
 import com.easternsauce.game.area.Area
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up, WalkDirection}
 import com.easternsauce.game.creature.util.{AttackType, Bow, Sword, Trident, Unarmed, WalkDirection}
@@ -150,6 +151,8 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   var toSetBodyNonInteractive: Boolean = false
 
   val mass: Float = 100f
+
+  var aggroedCreature: Option[Creature] = None
 
   def isAlive: Boolean = healthPoints > 0f
 
@@ -433,7 +436,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
   def isNoAbilityActive: Boolean = {
     for (ability <- abilityList) {
-      if (ability.active) return false
+      if (ability.state != AbilityState.Inactive) return false
     }
     true
   }

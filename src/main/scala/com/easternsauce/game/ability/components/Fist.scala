@@ -18,16 +18,16 @@ class Fist(override val mainAbility: Ability, val startTime: Float, val posX: Fl
   var channelTimer: SimpleTimer = SimpleTimer()
 
   var activeTime = 0.2f
-  var channelTime = 1.6f
+  var channelTime = 0.4f
 
   var state: AbilityState = AbilityState.Inactive
 
   var started = false
 
   var abilityAnimation: EsAnimation = new EsAnimation(Assets.fistSlamSpriteSheet, 0, 0.04f)
-  var windupAnimation: EsAnimation =  new EsAnimation(Assets.fistSlamWindupSpriteSheet, 0, 0.28f)
+  var windupAnimation: EsAnimation =  new EsAnimation(Assets.fistSlamWindupSpriteSheet, 0, 0.08f)
 
-  var scale = 2.5f
+  var scale = 3f
 
   var body: Body = _
 

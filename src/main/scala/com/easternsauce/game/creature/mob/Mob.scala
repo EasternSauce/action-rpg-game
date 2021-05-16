@@ -11,7 +11,6 @@ import com.easternsauce.game.utils.SimpleTimer
 import system.GameSystem
 
 abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) extends Creature(id) {
-  protected var aggroedCreature: Option[Creature] = None
   protected var aggroDistance: Float = 600f
 
   protected var destinationX = 0f
@@ -163,7 +162,7 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
 
     if (hasDestination) walkTowards(destinationX, destinationY)
 
-    if (dist < (if (attackDistance == null.asInstanceOf[Float]) currentAttackType.attackDistance else attackDistance)) {
+    if (isNoAbilityActive && dist < (if (attackDistance == null.asInstanceOf[Float]) currentAttackType.attackDistance else attackDistance)) {
       if (currentAttack.canPerform) currentAttack.perform()
     }
 
