@@ -1,10 +1,8 @@
 package com.easternsauce.game.ability
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.math.Vector2
 import com.easternsauce.game.ability.components.Meteor
 import com.easternsauce.game.ability.util.AbilityState
-import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
@@ -12,17 +10,13 @@ import system.GameSystem
 import scala.collection.mutable.ListBuffer
 
 class MeteorRainAbility(override val abilityCreature: Creature) extends Ability(abilityCreature) {
-  protected var explosionRange: Float = 0f
+  protected var explosionRange: Float = 300f
 
   protected var meteors: ListBuffer[Meteor] = _
 
-  override def init(): Unit = {
-    cooldownTime = 35f
-    activeTime = 13f
-    channelTime = 0.3f
-
-    explosionRange = 300f
-  }
+  override protected var channelTime: Float = 0.3f
+  override protected var activeTime: Float = 13f
+  override protected var cooldownTime = 35f
 
   override protected def onActiveStart(): Unit = {
     abilityCreature.takeStaminaDamage(25f)
@@ -43,7 +37,8 @@ class MeteorRainAbility(override val abilityCreature: Creature) extends Ability(
     meteors = ListBuffer[Meteor]()
     for (i <- 0 until 60) {
       val range = 1100
-      val meteor = new Meteor(this, 0.15f * i, abilityCreature.posX + GameSystem.random.between(-range, range), abilityCreature.posY + GameSystem.random.between(-range, range), explosionRange, 1.5f)
+      val meteor = Meteor(this, 0.15f * i, abilityCreature.posX + GameSystem.random.between(-range, range),
+        abilityCreature.posY + GameSystem.random.between(-range, range), explosionRange, 1.5f)
 
       meteors += meteor
     }
@@ -58,12 +53,6 @@ class MeteorRainAbility(override val abilityCreature: Creature) extends Ability(
   }
 }
 
-
 object MeteorRainAbility {
-  def apply(creature: Creature): MeteorRainAbility = {
-    val ability = new MeteorRainAbility(creature)
-    ability.init()
-    ability
-  }
-
+  def apply(creature: Creature) = new MeteorRainAbility(creature)
 }

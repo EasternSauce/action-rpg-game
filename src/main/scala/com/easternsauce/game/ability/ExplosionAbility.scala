@@ -11,8 +11,8 @@ import system.GameSystem
 
 class ExplosionAbility(override val abilityCreature: Creature) extends Ability(abilityCreature) {
 
-  protected var explosionAnimation = new EsAnimation(Assets.explosionSpriteSheet, 0, 0.05f)
-  protected var explosionRange: Float = _
+  protected var explosionAnimation = new EsAnimation(Assets.explosionSpriteSheet, 0.05f)
+  protected var explosionRange: Float = 320f
 
   override protected val isStoppable: Boolean = false
 
@@ -20,18 +20,14 @@ class ExplosionAbility(override val abilityCreature: Creature) extends Ability(a
 
   var exploded = false
 
-  override def init(): Unit = {
-    cooldownTime = 0.8f
-    activeTime = 0.9f
-    channelTime = 1.3f
-    explosionRange = 320f
-
-  }
+  override protected var channelTime: Float = 1.3f
+  override protected var activeTime: Float = 0.9f
+  override protected var cooldownTime: Float = 0.8f
 
   override protected def onActiveStart(): Unit = {
     explosionAnimation.restart()
     abilityCreature.takeStaminaDamage(25f)
-    abilityCreature.takeDamage(700f, immunityFrames = false, 0, 0, 0)
+    abilityCreature.takeDamage(700f, immunityFrames = false)
     Assets.explosionSound.play(0.07f)
 
     initBody(abilityCreature.posX, abilityCreature.posY)
@@ -86,17 +82,12 @@ class ExplosionAbility(override val abilityCreature: Creature) extends Ability(a
 
   override def onCollideWithCreature(creature: Creature): Unit = {
     super.onCollideWithCreature(creature)
-    if (!(this.abilityCreature.isMob && creature.isMob) && creature.isAlive) { // mob can't hurt a mob?
-      if (!creature.isImmune) creature.takeDamage(700f, immunityFrames = true, 0, 0, 0)
+    if (!(this.abilityCreature.isMob && creature.isMob) && creature.isAlive) {
+      if (!creature.isImmune) creature.takeDamage(700f, immunityFrames = true)
     }
   }
 }
 
 object ExplosionAbility {
-  def apply(creature: Creature): ExplosionAbility = {
-    val ability = new ExplosionAbility(creature)
-    ability.init()
-    ability
-  }
-
+  def apply(creature: Creature) = new ExplosionAbility(creature)
 }

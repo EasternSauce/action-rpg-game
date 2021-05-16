@@ -1,14 +1,15 @@
-package com.easternsauce.game.ability.attack
+package com.easternsauce.game.ability.attack.util
 
 import com.easternsauce.game.ability.Ability
-import com.easternsauce.game.ability.components.AbilityComponent
 import com.easternsauce.game.creature.Creature
+import com.easternsauce.game.wrappers.EsAnimation
 
 abstract class Attack(override val abilityCreature: Creature) extends Ability(abilityCreature) {
 
-  isAttack = true
+  protected var abilityAnimation: EsAnimation
+  protected var abilityWindupAnimation: EsAnimation
 
-  var attackComponent: AbilityComponent = _
+  isAttack = true
 
   override def onStop() {
     super.onStop()

@@ -8,13 +8,14 @@ import com.badlogic.gdx.math.{Rectangle, Vector2}
 import com.badlogic.gdx.physics.box2d._
 import com.easternsauce.game.ability.Ability
 import com.easternsauce.game.ability.attack._
+import com.easternsauce.game.ability.attack.util.Attack
 import com.easternsauce.game.ability.util.AbilityState
 import com.easternsauce.game.area.Area
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up, WalkDirection}
-import com.easternsauce.game.creature.util.{AttackType, Bow, Sword, Trident, Unarmed, WalkDirection}
+import com.easternsauce.game.creature.util._
 import com.easternsauce.game.effect.Effect
 import com.easternsauce.game.item.Item
-import com.easternsauce.game.utils.{IntPair, SimpleTimer}
+import com.easternsauce.game.utils.{EsTimer, IntPair}
 import com.easternsauce.game.wrappers.{EsAnimation, EsSpriteSheet}
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
@@ -109,14 +110,14 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   protected var wasMoving = false
   protected var totalDirections = 0
   protected var movementIncrement: Float = 0
-  protected var runningStoppedTimer: SimpleTimer = SimpleTimer()
+  protected var runningStoppedTimer: EsTimer = EsTimer()
 
   var movementVector: Vector2 = new Vector2(0f, 0f)
 
   val baseSpeed: Float = 12f
 
   protected val walkAnimationFrameDuration = 0.1f
-  protected val walkAnimationTimer: SimpleTimer = SimpleTimer()
+  protected val walkAnimationTimer: EsTimer = EsTimer()
   protected var neutralPositionIndex: Int = _
   protected var isRunningAnimationActive = false
 
@@ -132,12 +133,12 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   var abilityList: mutable.ListBuffer[Ability] = _
   var attackList: mutable.ListBuffer[Attack] = _
 
-  protected var healthRegenTimer: SimpleTimer = SimpleTimer(true)
-  protected var staminaRegenTimer: SimpleTimer = SimpleTimer(true)
-  protected var poisonTickTimer: SimpleTimer = SimpleTimer()
-  protected var staminaOveruseTimer: SimpleTimer = SimpleTimer()
-  protected var healingTimer: SimpleTimer = SimpleTimer()
-  protected var healingTickTimer: SimpleTimer = SimpleTimer()
+  protected var healthRegenTimer: EsTimer = EsTimer(true)
+  protected var staminaRegenTimer: EsTimer = EsTimer(true)
+  protected var poisonTickTimer: EsTimer = EsTimer()
+  protected var staminaOveruseTimer: EsTimer = EsTimer()
+  protected var healingTimer: EsTimer = EsTimer()
+  protected var healingTickTimer: EsTimer = EsTimer()
 
   protected var knocbackable = true
 
@@ -168,6 +169,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
         case Sword => swordAttack
         case Bow => bowAttack
         case Trident => tridentAttack
+        case _ => ???
       }
     }
     else {
@@ -257,7 +259,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   def performActions(): Unit
 
 
-  def takeDamage(damage: Float, immunityFrames: Boolean, knockbackPower: Float, sourceX: Float, sourceY: Float): Unit = {
+  def takeDamage(damage: Float, immunityFrames: Boolean, knockbackPower: Float = 0, sourceX: Float = 0, sourceY: Float = 0): Unit = {
     if (isAlive) {
       val beforeHP = healthPoints
 
@@ -342,7 +344,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     if (staminaOveruse) if (staminaOveruseTimer.time > staminaOveruseTime) staminaOveruse = false
 
     if (getEffect("poisoned").isActive) if (poisonTickTimer.time > poisonTickTime) {
-      takeDamage(15f, immunityFrames = false, 0, 0, 0)
+      takeDamage(15f, immunityFrames = false)
       poisonTickTimer.restart()
     }
 
@@ -595,7 +597,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     this.neutralPositionIndex = neutralPositionIndex
 
     WalkDirection.values.foreach(dir => {
-      walkAnimation(dir) = new EsAnimation(spriteSheet, dirMap(dir), walkAnimationFrameDuration)
+      walkAnimation(dir) = new EsAnimation(spriteSheet, walkAnimationFrameDuration, dirMap(dir))
     })
   }
 

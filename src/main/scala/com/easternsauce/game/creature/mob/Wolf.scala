@@ -6,7 +6,7 @@ import com.easternsauce.game.ability.DashAbility
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up}
 import com.easternsauce.game.spawn.MobSpawnPoint
-import com.easternsauce.game.utils.SimpleTimer
+import com.easternsauce.game.utils.EsTimer
 import system.GameSystem
 
 class Wolf(override val id: String, override val mobSpawnPoint: MobSpawnPoint) extends Mob(id, mobSpawnPoint) {
@@ -19,7 +19,7 @@ class Wolf(override val id: String, override val mobSpawnPoint: MobSpawnPoint) e
 
   override val scale = 1.65f
 
-  actionTimer = SimpleTimer(true)
+  actionTimer = EsTimer(true)
 
   dropTable.put("ringmailGreaves", 0.1f)
   dropTable.put("leatherArmor", 0.05f)

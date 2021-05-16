@@ -5,10 +5,10 @@ import com.badlogic.gdx.math.Rectangle
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up}
 import com.easternsauce.game.spawn.MobSpawnPoint
-import com.easternsauce.game.utils.SimpleTimer
+import com.easternsauce.game.utils.EsTimer
 
 class Goblin(override val id: String, override val mobSpawnPoint: MobSpawnPoint, weaponType: String) extends Mob(id, mobSpawnPoint) {
-  actionTimer = SimpleTimer(true)
+  actionTimer = EsTimer(true)
 
   dropTable.put("ironSword", 0.03f)
   dropTable.put("poisonDagger", 0.07f)

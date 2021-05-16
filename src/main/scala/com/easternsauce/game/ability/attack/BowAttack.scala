@@ -2,20 +2,23 @@ package com.easternsauce.game.ability.attack
 
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.math.Vector2
+import com.easternsauce.game.ability.attack.util.Attack
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.projectile.Arrow
-import system.GameSystem
+import com.easternsauce.game.wrappers.EsAnimation
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 class BowAttack(override val abilityCreature: Creature) extends Attack(abilityCreature) {
-  override def init(): Unit = {
-    cooldownTime = 1.5f
-    activeTime = 0.3f
-    channelTime = 0.5f
-  }
+
+  override protected var channelTime: Float = 0.5f
+  override protected var activeTime: Float = 0.3f
+  override protected var cooldownTime = 0.8f
+
+  override protected var abilityAnimation: EsAnimation = _
+  override protected var abilityWindupAnimation: EsAnimation = _
 
   override def onChannellingStart(): Unit = {
     super.onChannellingStart()
@@ -48,9 +51,5 @@ class BowAttack(override val abilityCreature: Creature) extends Attack(abilityCr
 }
 
 object BowAttack {
-  def apply(creature: Creature): BowAttack = {
-    val attack = new BowAttack(creature)
-    attack.init()
-    attack
-  }
+  def apply(creature: Creature) = new BowAttack(creature)
 }

@@ -2,12 +2,12 @@ package com.easternsauce.game.creature.mob
 
 import com.badlogic.gdx.math.Vector2
 import com.easternsauce.game.creature.Creature
+import com.easternsauce.game.creature.util.WalkDirection
 import com.easternsauce.game.creature.util.WalkDirection.WalkDirection
-import com.easternsauce.game.creature.util.{AttackType, Unarmed, WalkDirection}
 import com.easternsauce.game.item.Item
 import com.easternsauce.game.item.util.ItemType
 import com.easternsauce.game.spawn.MobSpawnPoint
-import com.easternsauce.game.utils.SimpleTimer
+import com.easternsauce.game.utils.EsTimer
 import system.GameSystem
 
 abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) extends Creature(id) {
@@ -19,17 +19,17 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
 
   override val isMob = true
 
-  protected var attackOrHoldTimer: SimpleTimer = SimpleTimer(true)
+  protected var attackOrHoldTimer: EsTimer = EsTimer(true)
   protected var attackOrHoldTime = 0.5f
   protected var hold = false
 
-  protected var circlingDirectionTimer: SimpleTimer = SimpleTimer(true)
+  protected var circlingDirectionTimer: EsTimer = EsTimer(true)
   protected var circlingDirectionTime = 0.5f
   protected var circling = false
   protected var circlingDir = 0
-  protected var findNewDestinationTimer: SimpleTimer = SimpleTimer(true)
+  protected var findNewDestinationTimer: EsTimer = EsTimer(true)
 
-  protected var actionTimer: SimpleTimer = SimpleTimer(true)
+  protected var actionTimer: EsTimer = EsTimer(true)
 
   protected var stayInPlace = false
 

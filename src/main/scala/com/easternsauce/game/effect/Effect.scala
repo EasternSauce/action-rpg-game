@@ -1,10 +1,10 @@
 package com.easternsauce.game.effect
 
-import com.easternsauce.game.utils.SimpleTimer
+import com.easternsauce.game.utils.EsTimer
 
 class Effect {
 
-  protected var effectTimer: SimpleTimer = SimpleTimer()
+  protected var effectTimer: EsTimer = EsTimer()
 
   protected var effectEndTime = 0f
 

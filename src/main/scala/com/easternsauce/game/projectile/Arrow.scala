@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.easternsauce.game.area.{Area, AreaTile}
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
-import com.easternsauce.game.utils.SimpleTimer
+import com.easternsauce.game.utils.EsTimer
 import system.GameSystem
 
 import scala.collection.mutable
@@ -33,7 +33,7 @@ class Arrow(var startX: Float, var startY: Float, val area: Area, var dirVector:
   var isActive: Boolean = true
 
   var landed: Boolean = false
-  var arrowLandedTimer: SimpleTimer = SimpleTimer()
+  var arrowLandedTimer: EsTimer = EsTimer()
 
   val shooterRelatedMaxVelocity: Vector2 = new Vector2(dirVector.x * maxVelocityRelative, dirVector.y * maxVelocityRelative).add(shooter.body.getLinearVelocity)
 

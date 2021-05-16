@@ -1,51 +1,44 @@
 package com.easternsauce.game.ability.attack
 
+import com.easternsauce.game.ability.attack.util.MeleeAttack
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.wrappers.EsAnimation
 
 class TridentAttack(override val abilityCreature: Creature) extends MeleeAttack(abilityCreature) {
 
-  override def init(): Unit = {
-    var weaponSpeed = 1.0f
 
-    if (abilityCreature.equipmentItems.contains(0)) {
-      weaponSpeed = abilityCreature.equipmentItems(0).itemType.weaponSpeed
-    }
+  private var weaponSpeed = 1.0f
 
-    val baseChannelTime = 0.6f
-    val baseActiveTime = 0.275f
-    val numOfChannelFrames = 7
-    val numOfFrames = 11
-    val channelFrameDuration = baseChannelTime / numOfChannelFrames
-    val frameDuration = baseActiveTime / numOfFrames
-
-    channelTime = baseChannelTime / weaponSpeed
-    activeTime = baseActiveTime / weaponSpeed
-
-    cooldownTime = 0.7f
-
-    val spriteWidth = 64
-    val spriteHeight = 32
-
-    windupAnimation = new EsAnimation(Assets.tridentThrustWindupSpriteSheet, 0, channelFrameDuration)
-    activeAnimation = new EsAnimation(Assets.tridentThrustSpriteSheet, 0, frameDuration)
-
-    width = 64f
-    height = 32f
-    scale = 2f
-    attackRange = 30f
-    knockbackPower = 30f
-
-    aimed = false
+  if (abilityCreature.equipmentItems.contains(0)) {
+    weaponSpeed = abilityCreature.equipmentItems(0).itemType.weaponSpeed
   }
+
+  private val baseChannelTime: Float = 0.6f
+  private val baseActiveTime: Float = 0.275f
+  private val numOfChannelFrames: Int = 7
+  private val numOfFrames: Int = 11
+  private val channelFrameDuration: Float = baseChannelTime / numOfChannelFrames
+  private val frameDuration: Float = baseActiveTime / numOfFrames
+
+  override protected var channelTime: Float = baseChannelTime / weaponSpeed
+  override protected var activeTime: Float = baseActiveTime / weaponSpeed
+  override protected var cooldownTime = 0.7f
+
+  override protected var width: Float = 64f
+  override protected var height: Float = 32f
+
+  override protected var abilityAnimation: EsAnimation = new EsAnimation(Assets.tridentThrustSpriteSheet, frameDuration)
+  override protected var abilityWindupAnimation: EsAnimation = new EsAnimation(Assets.tridentThrustWindupSpriteSheet, channelFrameDuration)
+
+  override var scale: Float = 2f
+  override var attackRange: Float = 30f
+
+  override protected var knockbackPower: Float = 30f
+  override protected var aimed: Boolean = false
 }
 
 
 object TridentAttack {
-  def apply(creature: Creature): TridentAttack = {
-    val attack = new TridentAttack(creature)
-    attack.init()
-    attack
-  }
+  def apply(creature: Creature) = new TridentAttack(creature)
 }

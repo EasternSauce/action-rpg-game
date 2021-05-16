@@ -7,7 +7,7 @@ import com.badlogic.gdx.physics.box2d.{Body, BodyDef, FixtureDef, PolygonShape}
 import com.badlogic.gdx.scenes.scene2d.ui.Image
 import com.easternsauce.game.area.Area
 import com.easternsauce.game.assets.Assets
-import com.easternsauce.game.utils.SimpleTimer
+import com.easternsauce.game.utils.EsTimer
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
@@ -18,7 +18,7 @@ class PlayerRespawnPoint(posX: Int, posY: Int, val area: Area) {
 
   val rect: Rectangle = new Rectangle(posX, posY, width, height)
 
-  val respawnSetTimer = SimpleTimer()
+  val respawnSetTimer = EsTimer()
 
   val respawnSetTime: Float = 5f
 

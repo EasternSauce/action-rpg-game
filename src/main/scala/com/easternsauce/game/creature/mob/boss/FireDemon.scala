@@ -6,7 +6,7 @@ import com.easternsauce.game.ability.{DashAbility, FistSlamAbility, MeteorCrashA
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up}
 import com.easternsauce.game.spawn.MobSpawnPoint
-import com.easternsauce.game.utils.SimpleTimer
+import com.easternsauce.game.utils.EsTimer
 import system.GameSystem
 
 class FireDemon(override val id: String, override val mobSpawnPoint: MobSpawnPoint, val weaponType: String) extends Boss(id, mobSpawnPoint) {
@@ -20,7 +20,7 @@ class FireDemon(override val id: String, override val mobSpawnPoint: MobSpawnPoi
 
   override val hitbox = new Rectangle(0, 0, 80 * scale, 80 * scale)
 
-  actionTimer = SimpleTimer(true)
+  actionTimer = EsTimer(true)
 
   dropTable.put("ironSword", 0.3f)
   dropTable.put("poisonDagger", 0.3f)

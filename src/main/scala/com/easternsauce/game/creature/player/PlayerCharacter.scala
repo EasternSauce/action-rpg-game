@@ -5,17 +5,14 @@ import com.badlogic.gdx.Input.Keys._
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.math.{Rectangle, Vector2}
 import com.easternsauce.game.ability.DashAbility
-import com.easternsauce.game.ability.attack.{BowAttack, SwordAttack, TridentAttack, UnarmedAttack}
 import com.easternsauce.game.area.Area
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.creature.npc.NonPlayerCharacter
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up}
 import com.easternsauce.game.spawn.PlayerRespawnPoint
-import com.easternsauce.game.utils.SimpleTimer
+import com.easternsauce.game.utils.EsTimer
 import system.GameSystem
-
-import scala.collection.mutable.ListBuffer
 
 class PlayerCharacter(id: String) extends Creature(id) {
 
@@ -24,7 +21,7 @@ class PlayerCharacter(id: String) extends Creature(id) {
 
   override protected val onGettingHitSound: Sound = Assets.painSound
 
-  private var respawnTimer: SimpleTimer = SimpleTimer()
+  private var respawnTimer: EsTimer = EsTimer()
 
   var dashAbility: DashAbility = _
   var respawning: Boolean = false

@@ -6,11 +6,11 @@ import com.easternsauce.game.ability.ExplosionAbility
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up}
 import com.easternsauce.game.spawn.MobSpawnPoint
-import com.easternsauce.game.utils.SimpleTimer
+import com.easternsauce.game.utils.EsTimer
 import system.GameSystem
 
 class Ghost(override val id: String, override val mobSpawnPoint: MobSpawnPoint, weaponType: String) extends Mob(id, mobSpawnPoint) {
-  actionTimer = SimpleTimer(true)
+  actionTimer = EsTimer(true)
 
   dropTable.put("ironSword", 0.03f)
   dropTable.put("poisonDagger", 0.005f)

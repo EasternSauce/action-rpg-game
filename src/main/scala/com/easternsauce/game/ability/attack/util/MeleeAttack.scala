@@ -1,33 +1,29 @@
-package com.easternsauce.game.ability.attack
+package com.easternsauce.game.ability.attack.util
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.{Rectangle, Vector2}
 import com.badlogic.gdx.physics.box2d.{Body, BodyDef, FixtureDef, PolygonShape}
+import com.easternsauce.game.ability.attack.util
 import com.easternsauce.game.ability.util.AbilityState
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
-import com.easternsauce.game.projectile.Arrow
 import com.easternsauce.game.shapes.CustomPolygon
-import com.easternsauce.game.wrappers.EsAnimation
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
 import scala.language.implicitConversions
 
 abstract class MeleeAttack(override val abilityCreature: Creature) extends Attack(abilityCreature) {
-  protected var activeAnimation: EsAnimation = _
-  protected var windupAnimation: EsAnimation = _
   //protected val weaponSound: Sound = Assets.attackSound
-  protected var aimed = false
+  protected var aimed: Boolean
 
-  protected var width: Float = _
-  protected var height: Float = _
+  protected var width: Float
+  protected var height: Float
 
+  var scale: Float
+  var attackRange: Float
 
-  var scale = 1.0f
-  var attackRange: Float = 0.0f
-
-  var knockbackPower = 15f
+  protected var knockbackPower: Float
 
   var body: Body = _
 
@@ -42,7 +38,7 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
   override def onActiveStart(): Unit = {
     super.onActiveStart()
 
-    activeAnimation.restart()
+    abilityAnimation.restart()
 
     abilityCreature.takeStaminaDamage(15f)
 
@@ -69,7 +65,7 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
     poly.translate(0, -height / 2)
     poly.setScale(scale, scale)
 
-    hitbox = AttackHitbox(attackRectX, attackRectY, poly)
+    hitbox = util.AttackHitbox(attackRectX, attackRectY, poly)
 
     initBody(hitbox)
     bodyActive = true
@@ -87,7 +83,7 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
     super.render(shapeDrawer, batch)
 
     if (state == AbilityState.Channeling) {
-      val image = windupAnimation.currentFrame
+      val image = abilityWindupAnimation.currentFrame
 
       val attackVector = abilityCreature.attackVector
       val theta = new Vector2(attackVector.x, attackVector.y).angleDeg()
@@ -96,7 +92,7 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
         image.getRegionWidth, image.getRegionHeight, scale, scale, theta)
     }
     if (state == AbilityState.Active) {
-      val image = activeAnimation.currentFrame
+      val image = abilityAnimation.currentFrame
 
       val attackVector = abilityCreature.attackVector
       val theta = new Vector2(attackVector.x, attackVector.y).angleDeg()
@@ -108,7 +104,7 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
 
   override def onChannellingStart(): Unit = {
     abilityCreature.attackVector = abilityCreature.facingVector
-    windupAnimation.restart()
+    abilityWindupAnimation.restart()
     abilityCreature.isAttacking = true
 
     var attackVector = abilityCreature.attackVector
@@ -132,7 +128,7 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
     poly.translate(0, -height / 2)
     poly.setScale(scale, scale)
 
-    hitbox = AttackHitbox(attackRectX, attackRectY, poly)
+    hitbox = util.AttackHitbox(attackRectX, attackRectY, poly)
 
   }
 

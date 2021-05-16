@@ -1,47 +1,39 @@
 package com.easternsauce.game.ability.attack
 
+import com.easternsauce.game.ability.attack.util.MeleeAttack
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.wrappers.EsAnimation
 
 class UnarmedAttack(override val abilityCreature: Creature) extends MeleeAttack(abilityCreature) {
-  override def init(): Unit = {
-    var weaponSpeed = 1.0f
 
-    val baseChannelTime = 0.3f
-    val baseActiveTime = 0.3f
-    val numOfChannelFrames = 6
-    val numOfFrames = 6
-    val channelFrameDuration = baseChannelTime / numOfChannelFrames
-    val frameDuration = baseActiveTime / numOfFrames
+  val weaponSpeed = 1.0f
 
-    channelTime = baseChannelTime * 1f / weaponSpeed
+  val baseChannelTime = 0.3f
+  val baseActiveTime = 0.3f
+  val numOfChannelFrames = 6
+  val numOfFrames = 6
+  val channelFrameDuration: Float = baseChannelTime / numOfChannelFrames
+  val frameDuration: Float = baseActiveTime / numOfFrames
 
-    activeTime = baseActiveTime * 1f / weaponSpeed
+  override protected var cooldownTime = 0.8f
+  override protected var activeTime: Float = baseActiveTime * 1f / weaponSpeed
+  override protected var channelTime: Float = baseChannelTime * 1f / weaponSpeed
 
-    cooldownTime = 0.8f
+  override protected var width: Float = 40f
+  override protected var height: Float = 40f
 
-    val spriteWidth = 40 // TODO
-    val spriteHeight = 40
+  override protected var abilityAnimation: EsAnimation = new EsAnimation(Assets.slashSpriteSheet, frameDuration)
+  override protected var abilityWindupAnimation: EsAnimation = new EsAnimation(Assets.slashWindupSpriteSheet, channelFrameDuration)
 
-    windupAnimation = new EsAnimation(Assets.slashWindupSpriteSheet, 0, channelFrameDuration)
-    activeAnimation = new EsAnimation(Assets.slashSpriteSheet, 0, frameDuration)
+  override var scale: Float = 1f
+  override var attackRange: Float = 30f
 
-    width = 40f
-    height = 40f
-    scale = 1f
-    attackRange = 30f
-    knockbackPower = 25f
-
-    aimed = false
-  }
+  override protected var knockbackPower: Float = 25f
+  override protected var aimed: Boolean = false
 }
 
 
 object UnarmedAttack {
-  def apply(creature: Creature): UnarmedAttack = {
-    val attack = new UnarmedAttack(creature)
-    attack.init()
-    attack
-  }
+  def apply(creature: Creature) = new UnarmedAttack(creature)
 }

@@ -4,17 +4,17 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.easternsauce.game.ability.util.AbilityState
 import com.easternsauce.game.ability.util.AbilityState.{AbilityState, Inactive}
 import com.easternsauce.game.creature.Creature
-import com.easternsauce.game.utils.SimpleTimer
+import com.easternsauce.game.utils.EsTimer
 import space.earlygrey.shapedrawer.ShapeDrawer
 
 abstract class Ability(val abilityCreature: Creature) {
 
-  protected var activeTimer: SimpleTimer = SimpleTimer()
-  protected var channelTimer: SimpleTimer = SimpleTimer()
+  protected var activeTimer: EsTimer = EsTimer()
+  protected var channelTimer: EsTimer = EsTimer()
 
-  protected var cooldownTime = 0f
-  protected var activeTime = 0f
-  protected var channelTime = 0f
+  protected var cooldownTime: Float
+  protected var activeTime: Float
+  protected var channelTime: Float
 
   protected var isAttack = false
 
@@ -26,9 +26,6 @@ abstract class Ability(val abilityCreature: Creature) {
 
   var onPerformAction: () => Unit = () => {}
   var onChannelAction: () => Unit = () => {}
-
-
-  def init()
 
   def updateHitbox(): Unit = {
 
@@ -57,14 +54,12 @@ abstract class Ability(val abilityCreature: Creature) {
     else if (state == AbilityState.Active) onUpdateActive()
 
 
-
     if ((state == AbilityState.Inactive) && onCooldown) if (activeTimer.time > cooldownTime) onCooldown = false
   }
 
   protected def onActiveStart(): Unit = {
   }
 
-  // ALWAYS run before setting state to inactive, not after
   protected def onStop(): Unit = {
   }
 
@@ -77,7 +72,6 @@ abstract class Ability(val abilityCreature: Creature) {
   def render(shapeDrawer: ShapeDrawer, batch: SpriteBatch): Unit = {
 
   }
-
 
   def forceStop(): Unit = {
     if (isStoppable && state != AbilityState.Inactive) {
@@ -98,8 +92,8 @@ abstract class Ability(val abilityCreature: Creature) {
     onChannellingStart()
     onChannelAction()
 
-    if (isAttack) { // + 10 to ensure regen doesnt start if we hold attack button
-      abilityCreature.getEffect("staminaRegenStopped").applyEffect(channelTime + cooldownTime + 0.001f)
+    if (isAttack) { // + 0.01 to ensure regen doesnt start if we hold attack button
+      abilityCreature.getEffect("staminaRegenStopped").applyEffect(channelTime + cooldownTime + 0.01f)
     }
     else abilityCreature.getEffect("staminaRegenStopped").applyEffect(1f)
   }

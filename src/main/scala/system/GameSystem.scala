@@ -3,14 +3,12 @@ package system
 import java.io.{File, PrintWriter}
 
 import com.badlogic.gdx.Input.{Buttons, Keys}
-import com.badlogic.gdx.graphics.Texture.TextureFilter
 import com.badlogic.gdx.graphics._
 import com.badlogic.gdx.graphics.g2d._
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator
 import com.badlogic.gdx.maps.tiled.{TiledMap, TiledMapTileLayer}
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.physics.box2d.{Body, Box2DDebugRenderer}
-import com.badlogic.gdx.utils.viewport.{FitViewport, Viewport}
 import com.badlogic.gdx.{Gdx, Input}
 import com.easternsauce.game.area.{Area, AreaGate}
 import com.easternsauce.game.assets.Assets
@@ -27,7 +25,7 @@ import com.easternsauce.game.item.loot.LootSystem
 import com.easternsauce.game.item.util.ItemType
 import com.easternsauce.game.projectile.Arrow
 import com.easternsauce.game.spawn.{PlayerRespawnPoint, SpawnLocationsContainer}
-import com.easternsauce.game.utils.SimpleTimer
+import com.easternsauce.game.utils.EsTimer
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameState.{GameState, MainMenu}
 
@@ -38,7 +36,7 @@ import scala.util.Random
 
 object GameSystem {
   var currentArea: Option[Area] = None
-  var gameTimer: SimpleTimer = SimpleTimer(true)
+  var gameTimer: EsTimer = EsTimer(true)
 
   var camera: OrthographicCamera = _
 
@@ -248,7 +246,7 @@ object GameSystem {
       mainMenu.update()
     }
     else if (state == GameState.Gameplay) {
-      SimpleTimer.updateTimers()
+      EsTimer.updateTimers()
 
       if (Gdx.input.isButtonPressed(Buttons.LEFT)) if (playerCharacter.currentAttack.canPerform) {
         playerCharacter.currentAttack.perform()
