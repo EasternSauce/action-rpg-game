@@ -14,6 +14,7 @@ class FireDemon(override val id: String, override val mobSpawnPoint: MobSpawnPoi
   protected var meteorRainAbility: MeteorRainAbility = _
   protected var fistSlamAbility: FistSlamAbility = _
   protected var meteorCrashAbility: MeteorCrashAbility = _
+  protected var dashAbility: DashAbility = _
 
   override val scale = 3.0f
 
@@ -58,6 +59,10 @@ class FireDemon(override val id: String, override val mobSpawnPoint: MobSpawnPoi
         meteorRainAbility.perform()
         Assets.monsterGrowlSound.play(0.3f)
       }
+      else if (dashAbility.canPerform && GameSystem.distance(aggroedCreature.get.body, body) > 500f && healthPoints < maxHealthPoints * 0.9f) {
+        dashAbility.setDashVector(new Vector2(destinationX - posX, destinationY - posY).nor())
+        dashAbility.perform()
+      }
       else if (fistSlamAbility.canPerform && GameSystem.distance(aggroedCreature.get.body, body) < 120f) fistSlamAbility.perform()
       else if (meteorCrashAbility.canPerform && GameSystem.distance(aggroedCreature.get.body, body) > 220f) meteorCrashAbility.perform()
 
@@ -71,9 +76,11 @@ class FireDemon(override val id: String, override val mobSpawnPoint: MobSpawnPoi
     meteorRainAbility = MeteorRainAbility(this)
     fistSlamAbility = FistSlamAbility(this)
     meteorCrashAbility = MeteorCrashAbility(this)
+    dashAbility = DashAbility(this, 400f)
     abilityList += meteorRainAbility
     abilityList += fistSlamAbility
     abilityList += meteorCrashAbility
+    abilityList += dashAbility
   }
 
   override def onAggroed(): Unit = {
