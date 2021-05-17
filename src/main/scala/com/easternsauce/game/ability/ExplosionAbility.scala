@@ -9,8 +9,7 @@ import com.easternsauce.game.wrappers.EsAnimation
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
-class ExplosionAbility private (override val abilityCreature: Creature)
-    extends Ability(abilityCreature) {
+class ExplosionAbility private (override val abilityCreature: Creature) extends Ability(abilityCreature) {
 
   override protected val isStoppable: Boolean = false
   override protected var channelTime: Float = 1.3f

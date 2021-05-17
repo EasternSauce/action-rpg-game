@@ -45,7 +45,6 @@ object GameSystem {
   var originalWidth: Float = DesktopApplication.windowWidth
   var originalHeight: Float = DesktopApplication.windowHeight
 
-
   var cameraFocussedCreature: Option[Creature] = None
 
   var inventoryWindow = new InventoryWindow()
@@ -58,7 +57,6 @@ object GameSystem {
 
   var areas: mutable.Map[String, Area] = mutable.Map()
 
-
   var gateList: ListBuffer[AreaGate] = ListBuffer()
 
   var creaturesToMove: ListBuffer[Creature] = ListBuffer()
@@ -67,24 +65,26 @@ object GameSystem {
 
   var playerCharacter: PlayerCharacter = _
 
-
   val random: Random = new Random()
 
   val textureRegionPrefix = "Tile_"
   val textureRegionName: String = textureRegionPrefix + "1"
 
-  val generator = new FreeTypeFontGenerator(Gdx.files.internal("assets/font/YoungSerif-Regular.ttf"))
+  val generator = new FreeTypeFontGenerator(
+    Gdx.files.internal("assets/font/YoungSerif-Regular.ttf")
+  )
   val parameter = new FreeTypeFontGenerator.FreeTypeFontParameter
   parameter.size = 16
   val font: BitmapFont = generator.generateFont(parameter)
   generator.dispose()
 
-  val generator2 = new FreeTypeFontGenerator(Gdx.files.internal("assets/font/YoungSerif-Regular.ttf"))
+  val generator2 = new FreeTypeFontGenerator(
+    Gdx.files.internal("assets/font/YoungSerif-Regular.ttf")
+  )
   val parameter2 = new FreeTypeFontGenerator.FreeTypeFontParameter
   parameter2.size = 64
   val hugeFont: BitmapFont = generator2.generateFont(parameter2)
   generator2.dispose()
-
 
   val dirKeysMap: mutable.Map[Int, Boolean] = mutable.Map(
     Input.Keys.A -> false,
@@ -119,7 +119,6 @@ object GameSystem {
 
   var PixelsPerMeter: Float = 32f
 
-
   def getTiledMapRealWidth(tiledMap: TiledMap): Int = {
     val layer = tiledMap.getLayers.get(0).asInstanceOf[TiledMapTileLayer]
     layer.getWidth * TiledMapCellSize
@@ -130,10 +129,11 @@ object GameSystem {
     layer.getHeight * TiledMapCellSize
   }
 
-  def areaCreatures: Iterable[Creature] = currentArea match {
-    case Some(value) => value.creatures.values
-    case None => throw new RuntimeException("currentArea is not set")
-  }
+  def areaCreatures: Iterable[Creature] =
+    currentArea match {
+      case Some(value) => value.creatures.values
+      case None        => throw new RuntimeException("currentArea is not set")
+    }
 
   def adjustCamera(creature: Creature): Unit = {
 
@@ -175,40 +175,117 @@ object GameSystem {
 
   def init(): Unit = {
 
-    val area1SpawnPoints: SpawnLocationsContainer = new SpawnLocationsContainer("assets/areas/area1/spawns.txt")
-    val area2SpawnPoints: SpawnLocationsContainer = new SpawnLocationsContainer("assets/areas/area2/spawns.txt")
-    val area3SpawnPoints: SpawnLocationsContainer = new SpawnLocationsContainer("assets/areas/area3/spawns.txt")
+    val area1SpawnPoints: SpawnLocationsContainer = new SpawnLocationsContainer(
+      "assets/areas/area1/spawns.txt"
+    )
+    val area2SpawnPoints: SpawnLocationsContainer = new SpawnLocationsContainer(
+      "assets/areas/area2/spawns.txt"
+    )
+    val area3SpawnPoints: SpawnLocationsContainer = new SpawnLocationsContainer(
+      "assets/areas/area3/spawns.txt"
+    )
 
-    areas += ("area1" -> new Area("area1", Assets.area1Map, 4.0f, area1SpawnPoints))
-    areas += ("area2" -> new Area("area2", Assets.area2Map, 4.0f, area2SpawnPoints))
-    areas += ("area3" -> new Area("area3", Assets.area3Map, 4.0f, area3SpawnPoints))
+    areas += ("area1" -> Area(
+      "area1",
+      Assets.area1Map,
+      4.0f,
+      area1SpawnPoints
+    ))
+    areas += ("area2" -> Area(
+      "area2",
+      Assets.area2Map,
+      4.0f,
+      area2SpawnPoints
+    ))
+    areas += ("area3" -> Area(
+      "area3",
+      Assets.area3Map,
+      4.0f,
+      area3SpawnPoints
+    ))
 
-    areas("area1").addRespawnPoint(new PlayerRespawnPoint(2650, 6270, areas("area1")))
+    areas("area1").addRespawnPoint(
+      new PlayerRespawnPoint(2650, 6270, areas("area1"))
+    )
 
-    areas("area2").addRespawnPoint(new PlayerRespawnPoint(657, 1517, areas("area2")))
+    areas("area2").addRespawnPoint(
+      new PlayerRespawnPoint(657, 1517, areas("area2"))
+    )
 
-    areas("area3").addRespawnPoint(new PlayerRespawnPoint(349, 349, areas("area3")))
+    areas("area3").addRespawnPoint(
+      new PlayerRespawnPoint(349, 349, areas("area3"))
+    )
 
     GameSystem.playerCharacter = new PlayerCharacter("protagonist")
     areas("area1").moveInCreature(playerCharacter, 2674, 6292)
 
+    lootSystem.placeTreasure(
+      areas("area1"),
+      1594,
+      6044,
+      ItemType.getItemType("healingPowder")
+    )
+    lootSystem.placeTreasure(
+      areas("area1"),
+      90,
+      3792,
+      ItemType.getItemType("woodenSword")
+    )
+    lootSystem.placeTreasure(
+      areas("area1"),
+      3338,
+      3810,
+      ItemType.getItemType("leatherArmor")
+    )
+    lootSystem.placeTreasure(
+      areas("area1"),
+      6238,
+      1951,
+      ItemType.getItemType("crossbow")
+    )
+    lootSystem.placeTreasure(
+      areas("area1"),
+      6282,
+      5953,
+      ItemType.getItemType("leatherHelmet")
+    )
+    lootSystem.placeTreasure(
+      areas("area1"),
+      4963,
+      94,
+      ItemType.getItemType("steelGloves")
+    )
 
-    lootSystem.placeTreasure(areas("area1"), 1594, 6044, ItemType.getItemType("healingPowder"))
-    lootSystem.placeTreasure(areas("area1"), 90, 3792, ItemType.getItemType("woodenSword"))
-    lootSystem.placeTreasure(areas("area1"), 3338, 3810, ItemType.getItemType("leatherArmor"))
-    lootSystem.placeTreasure(areas("area1"), 6238, 1951, ItemType.getItemType("crossbow"))
-    lootSystem.placeTreasure(areas("area1"), 6282, 5953, ItemType.getItemType("leatherHelmet"))
-    lootSystem.placeTreasure(areas("area1"), 4963, 94, ItemType.getItemType("steelGloves"))
+    lootSystem.placeTreasure(
+      areas("area2"),
+      233,
+      1827,
+      ItemType.getItemType("healingPowder")
+    )
+    lootSystem.placeTreasure(
+      areas("area2"),
+      3007,
+      545,
+      ItemType.getItemType("ironSword")
+    )
+    lootSystem.placeTreasure(
+      areas("area2"),
+      4871,
+      5803,
+      ItemType.getItemType("lifeRing")
+    )
+    lootSystem.placeTreasure(
+      areas("area2"),
+      2339,
+      6113,
+      ItemType.getItemType("trident")
+    )
 
-    lootSystem.placeTreasure(areas("area2"), 233, 1827, ItemType.getItemType("healingPowder"))
-    lootSystem.placeTreasure(areas("area2"), 3007, 545, ItemType.getItemType("ironSword"))
-    lootSystem.placeTreasure(areas("area2"), 4871, 5803, ItemType.getItemType("lifeRing"))
-    lootSystem.placeTreasure(areas("area2"), 2339, 6113, ItemType.getItemType("trident"))
-
-
-    val nonPlayerCharacter = new NonPlayerCharacter("Johnny", true, Assets.male1SpriteSheet, "a1")
+    val nonPlayerCharacter =
+      new NonPlayerCharacter("Johnny", true, Assets.male1SpriteSheet, "a1")
     areas("area2").moveInCreature(nonPlayerCharacter, 344, 1431)
-    val nonPlayerCharacter2 = new NonPlayerCharacter("Rita", true, Assets.male1SpriteSheet, "a1")
+    val nonPlayerCharacter2 =
+      new NonPlayerCharacter("Rita", true, Assets.male1SpriteSheet, "a1")
     areas("area2").moveInCreature(nonPlayerCharacter2, 1279, 1383)
 
     hud = new Hud()
@@ -218,7 +295,14 @@ object GameSystem {
     gateList = ListBuffer()
 
     gateList += new AreaGate(areas("area1"), 6330, 472, areas("area3"), 550, 75)
-    gateList += new AreaGate(areas("area1"), 63, 2003, areas("area2"), 1870, 295)
+    gateList += new AreaGate(
+      areas("area1"),
+      63,
+      2003,
+      areas("area2"),
+      1870,
+      295
+    )
 
     creaturesToMove = ListBuffer()
 
@@ -244,13 +328,13 @@ object GameSystem {
 
     if (state == GameState.MainMenu) {
       mainMenu.update()
-    }
-    else if (state == GameState.Gameplay) {
+    } else if (state == GameState.Gameplay) {
       EsTimer.updateTimers()
 
-      if (Gdx.input.isButtonPressed(Buttons.LEFT)) if (playerCharacter.currentAttack.canPerform) {
-        playerCharacter.currentAttack.perform()
-      }
+      if (Gdx.input.isButtonPressed(Buttons.LEFT))
+        if (playerCharacter.currentAttack.canPerform) {
+          playerCharacter.currentAttack.perform()
+        }
 
       if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
         playerCharacter.interact()
@@ -263,7 +347,6 @@ object GameSystem {
       area.update()
 
       GameSystem.currentArea.get.tiledMapRenderer.setView(camera)
-
 
       creaturesToMove.clear()
 
@@ -299,10 +382,12 @@ object GameSystem {
 
       hud.update()
 
-      if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) if (!escRecently) if (!inventoryWindow.inventoryOpen && !lootOptionWindow.activated) {
-        escRecently = true
-        state = GameState.MainMenu
-      }
+      if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
+        if (!escRecently)
+          if (!inventoryWindow.inventoryOpen && !lootOptionWindow.activated) {
+            escRecently = true
+            state = GameState.MainMenu
+          }
     }
   }
 
@@ -311,9 +396,12 @@ object GameSystem {
 
     Gdx.gl.glClearColor(0, 0, 0, 1)
 
-    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT
-      | (if (Gdx.graphics.getBufferFormat.coverageSampling) GL20.GL_COVERAGE_BUFFER_BIT_NV else 0))
-
+    Gdx.gl.glClear(
+      GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT
+        | (if (Gdx.graphics.getBufferFormat.coverageSampling)
+             GL20.GL_COVERAGE_BUFFER_BIT_NV
+           else 0)
+    )
 
     if (state == GameState.MainMenu) {
       hudBatch.begin()
@@ -321,12 +409,13 @@ object GameSystem {
       mainMenu.render(hudBatch)
 
       hudBatch.end()
-    }
-    else if (state == GameState.Gameplay) {
+    } else if (state == GameState.Gameplay) {
 
       val area: Area = getCurrentArea
 
-      area.tiledMapRenderer.render(Array(0,1)) // has to be outside world batch for some reason, otherwise camera issues
+      area.tiledMapRenderer.render(
+        Array(0, 1)
+      ) // has to be outside world batch for some reason, otherwise camera issues
 
       worldBatch.begin()
 
@@ -344,13 +433,11 @@ object GameSystem {
 
       area.creaturesManager.renderAbilities(worldBatch, worldShapeDrawer)
 
-
       area.arrowList.foreach((arrow: Arrow) => arrow.render(worldBatch))
 
       worldBatch.end()
 
       area.tiledMapRenderer.render(Array(2))
-
 
       hudBatch.begin()
 
@@ -378,7 +465,7 @@ object GameSystem {
   private def getCurrentArea = {
     val area: Area = currentArea match {
       case Some(value) => value
-      case None => throw new RuntimeException("currentArea is not set")
+      case None        => throw new RuntimeException("currentArea is not set")
     }
     area
   }
@@ -386,15 +473,24 @@ object GameSystem {
   private def renderDeathScreen(hudBatch: SpriteBatch) = {
     if (playerCharacter.respawning) {
       GameSystem.hugeFont.setColor(Color.RED)
-      GameSystem.hugeFont.draw(hudBatch, "YOU DIED", GameSystem.originalWidth / 2f - 170,
-        GameSystem.originalHeight - GameSystem.originalHeight * GameSystem.ScreenProportion / 2f + 100)
+      GameSystem.hugeFont.draw(
+        hudBatch,
+        "YOU DIED",
+        GameSystem.originalWidth / 2f - 170,
+        GameSystem.originalHeight - GameSystem.originalHeight * GameSystem.ScreenProportion / 2f + 100
+      )
     }
   }
 
   def renderLoadingScreen(hudShapeDrawer: ShapeDrawer): Unit = {
     if (loadingScreenVisible) {
       hudShapeDrawer.setColor(Color.BLACK)
-      hudShapeDrawer.filledRectangle(0, 0, GameSystem.originalWidth, GameSystem.originalHeight)
+      hudShapeDrawer.filledRectangle(
+        0,
+        0,
+        GameSystem.originalWidth,
+        GameSystem.originalHeight
+      )
     }
   }
 
@@ -426,7 +522,6 @@ object GameSystem {
 
         }
 
-
         if (s(0) == "area") if (creature != null) {
 
           if (areas(s(1)) != creature.area) {
@@ -444,7 +539,10 @@ object GameSystem {
 
         if (s(0).equals("pos")) {
           if (creature != null) {
-            if (creature.area == null) throw new RuntimeException("position cannot be set before creature is spawned in area")
+            if (creature.area == null)
+              throw new RuntimeException(
+                "position cannot be set before creature is spawned in area"
+              )
           }
 
           creature.setPos(s(1).toFloat, s(2).toFloat)
@@ -459,9 +557,15 @@ object GameSystem {
         if (s(0).equals("equipment_item")) {
           if (creature != null) {
             val equipmentItems: mutable.Map[Int, Item] = creature.equipmentItems
-            val item: Item = new Item(itemType = ItemType.getItemType(s(2)),
-              damage = if (s(3).equals("0")) null.asInstanceOf[Float] else s(3).toInt.toFloat,
-              armor = if (s(4).equals("0")) null.asInstanceOf[Float] else s(4).toInt.toFloat)
+            val item: Item = new Item(
+              itemType = ItemType.getItemType(s(2)),
+              damage =
+                if (s(3).equals("0")) null.asInstanceOf[Float]
+                else s(3).toInt.toFloat,
+              armor =
+                if (s(4).equals("0")) null.asInstanceOf[Float]
+                else s(4).toInt.toFloat
+            )
             equipmentItems += (s(1).toInt -> item)
           }
         }
@@ -472,8 +576,7 @@ object GameSystem {
           }
         }
       }
-    }
-    finally fileContents.close()
+    } finally fileContents.close()
 
     val invFileContents = Source.fromFile("saves/inventory.sav")
     try {
@@ -482,23 +585,30 @@ object GameSystem {
 
         if (s(0).equals("inventory_item")) {
           if (creature != null) {
-            val inventoryItems: mutable.Map[Int, Item] = inventoryWindow.inventoryItems
-            inventoryItems.put(s(1).toInt, new Item(ItemType.getItemType(s(2)), lootPileBackref = null,
-              damage = if (s(3) == "0") {
-                null.asInstanceOf[Float]
-              } else {
-                s(3).toInt.toFloat
-              },
-              armor = if (s(4) == "0") {
-                null.asInstanceOf[Float]
-              } else {
-                s(4).toInt.toFloat
-              },
-              quantity = if (s(5) == "0") {
-                null.asInstanceOf[Int]
-              } else {
-                s(5).toInt
-              }))
+            val inventoryItems: mutable.Map[Int, Item] =
+              inventoryWindow.inventoryItems
+            inventoryItems.put(
+              s(1).toInt,
+              new Item(
+                ItemType.getItemType(s(2)),
+                lootPileBackref = null,
+                damage = if (s(3) == "0") {
+                  null.asInstanceOf[Float]
+                } else {
+                  s(3).toInt.toFloat
+                },
+                armor = if (s(4) == "0") {
+                  null.asInstanceOf[Float]
+                } else {
+                  s(4).toInt.toFloat
+                },
+                quantity = if (s(5) == "0") {
+                  null.asInstanceOf[Int]
+                } else {
+                  s(5).toInt
+                }
+              )
+            )
           }
         }
 
@@ -506,8 +616,7 @@ object GameSystem {
           inventoryWindow.gold = s(1).toInt
         }
       }
-    }
-    finally invFileContents.close()
+    } finally invFileContents.close()
 
     val respawnFileContents = Source.fromFile("saves/respawn_points.sav")
     try {
@@ -521,9 +630,7 @@ object GameSystem {
         }
 
       }
-    }
-    finally respawnFileContents.close()
-
+    } finally respawnFileContents.close()
 
     val treasureFileContents = Source.fromFile("saves/treasure_collected.sav")
     try {
@@ -535,14 +642,13 @@ object GameSystem {
         }
 
       }
-    }
-    finally treasureFileContents.close()
+    } finally treasureFileContents.close()
 
     if (currentArea.isEmpty) currentArea = areas.get("area1")
 
     currentArea match {
       case Some(area) => area.onEntry()
-      case _ => throw new RuntimeException("current area is not set")
+      case _          => throw new RuntimeException("current area is not set")
     }
 
   }
@@ -561,19 +667,23 @@ object GameSystem {
     for ((key, value) <- inventoryWindow.inventoryItems) {
       if (value != null.asInstanceOf[Item]) {
         val slotId = key
-        val damage = if (value.damage == null.asInstanceOf[Float]) "0"
-        else "" + value.damage.intValue
-        val armor = if (value.armor == null.asInstanceOf[Float]) "0"
-        else "" + value.armor.intValue
-        val quantity = if (value.quantity == null.asInstanceOf[Float]) "0"
-        else "" + value.quantity
-        inventoryWriter.write("inventory_item " + slotId + " " + value.itemType.id + " " + damage + " " + armor + " " + quantity + "\n")
+        val damage =
+          if (value.damage == null.asInstanceOf[Float]) "0"
+          else "" + value.damage.intValue
+        val armor =
+          if (value.armor == null.asInstanceOf[Float]) "0"
+          else "" + value.armor.intValue
+        val quantity =
+          if (value.quantity == null.asInstanceOf[Float]) "0"
+          else "" + value.quantity
+        inventoryWriter.write(
+          "inventory_item " + slotId + " " + value.itemType.id + " " + damage + " " + armor + " " + quantity + "\n"
+        )
       }
     }
 
     inventoryWriter.write("gold " + inventoryWindow.gold + "\n")
     inventoryWriter.close()
-
 
     val respawnWriter = new PrintWriter(new File("saves/respawn_points.sav"))
 
@@ -581,9 +691,7 @@ object GameSystem {
 
     respawnWriter.close()
 
-
   }
-
 
   def resetArea(): Unit = {
     markRespawnAreaForReset = true
@@ -608,7 +716,5 @@ object GameSystem {
     vector.dst(body.getPosition) * GameSystem.PixelsPerMeter
   }
 
-  def drawText(): Unit = {
-
-  }
+  def drawText(): Unit = {}
 }

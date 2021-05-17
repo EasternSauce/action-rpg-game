@@ -35,10 +35,8 @@ class LootPile(val area: Area, x: Float, y: Float) {
 
   def initBody(): Unit = {
     val bodyDef = new BodyDef()
-    bodyDef.position.set(
-      (rect.x + width / 2) / GameSystem.PixelsPerMeter,
-      (rect.y + height / 2) / GameSystem.PixelsPerMeter
-    )
+    bodyDef.position
+      .set((rect.x + width / 2) / GameSystem.PixelsPerMeter, (rect.y + height / 2) / GameSystem.PixelsPerMeter)
     bodyDef.`type` = BodyDef.BodyType.StaticBody
     body = area.world.createBody(bodyDef)
     body.setUserData(this)
@@ -48,10 +46,7 @@ class LootPile(val area: Area, x: Float, y: Float) {
     fixtureDef.isSensor = true
     val shape: PolygonShape = new PolygonShape()
 
-    shape.setAsBox(
-      (rect.width / 2) / GameSystem.PixelsPerMeter,
-      (rect.height / 2) / GameSystem.PixelsPerMeter
-    )
+    shape.setAsBox((rect.width / 2) / GameSystem.PixelsPerMeter, (rect.height / 2) / GameSystem.PixelsPerMeter)
 
     fixtureDef.shape = shape
     body.createFixture(fixtureDef)

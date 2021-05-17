@@ -23,19 +23,14 @@ class CreaturesManager(private val area: Area) {
       .foreach(creature => {
         creature.area.world.destroyBody(creature.body)
       })
-    creatures.filterInPlace((_, creature) =>
-      creature.isPlayer || creature.isNPC
-    )
+    creatures.filterInPlace((_, creature) => creature.isPlayer || creature.isNPC)
   }
 
   def addCreature(creature: Creature): Unit = {
     creatures.put(creature.id, creature)
   }
 
-  def renderAliveCreatures(
-      batch: SpriteBatch,
-      shapeDrawer: ShapeDrawer
-  ): Unit = {
+  def renderAliveCreatures(batch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
     if (renderAlivePriorityQueue != null)
       while (renderAlivePriorityQueue.nonEmpty) {
         val creature = renderAlivePriorityQueue.dequeue()
@@ -43,10 +38,7 @@ class CreaturesManager(private val area: Area) {
       }
   }
 
-  def renderDeadCreatures(
-      batch: SpriteBatch,
-      shapeDrawer: ShapeDrawer
-  ): Unit = {
+  def renderDeadCreatures(batch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
     if (renderDeadPriorityQueue != null)
       while (renderDeadPriorityQueue.nonEmpty) {
         val creature = renderDeadPriorityQueue.dequeue()

@@ -5,8 +5,7 @@ import com.easternsauce.game.creature.mob.Mob
 import com.easternsauce.game.spawn.MobSpawnPoint
 import system.GameSystem
 
-class Boss(override val id: String, override val mobSpawnPoint: MobSpawnPoint)
-    extends Mob(id, mobSpawnPoint) {
+abstract class Boss(override val id: String, override val mobSpawnPoint: MobSpawnPoint) extends Mob(id, mobSpawnPoint) {
   var bossMusic: Music = _
   protected var bossBattleStarted = false
 
@@ -30,11 +29,11 @@ class Boss(override val id: String, override val mobSpawnPoint: MobSpawnPoint)
   }
 
   override def takeDamage(
-      damage: Float,
-      immunityFrames: Boolean,
-      knockbackPower: Float,
-      sourceX: Float,
-      sourceY: Float
+    damage: Float,
+    immunityFrames: Boolean,
+    knockbackPower: Float,
+    sourceX: Float,
+    sourceY: Float
   ): Unit = {
     if (isAlive) {
       val beforeHP = healthPoints

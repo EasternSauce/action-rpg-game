@@ -7,11 +7,8 @@ import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up}
 import com.easternsauce.game.spawn.MobSpawnPoint
 import com.easternsauce.game.utils.EsTimer
 
-class Skeleton(
-    override val id: String,
-    override val mobSpawnPoint: MobSpawnPoint,
-    val weaponType: String
-) extends Mob(id, mobSpawnPoint) {
+class Skeleton(override val id: String, override val mobSpawnPoint: MobSpawnPoint, val weaponType: String)
+    extends Mob(id, mobSpawnPoint) {
   override val hitboxBounds = new Rectangle(18, 0, 28, 64)
   override val baseSpeed = 12f
 
@@ -19,11 +16,7 @@ class Skeleton(
 
   override protected val onGettingHitSound: Sound = Assets.boneClickSound
 
-  loadSprites(
-    Assets.skeletonSpriteSheet,
-    Map(Left -> 2, Right -> 4, Up -> 1, Down -> 3),
-    0
-  )
+  loadSprites(Assets.skeletonSpriteSheet, Map(Left -> 2, Right -> 4, Up -> 1, Down -> 3), 0)
 
   override val scale = 1.35f
 
@@ -36,11 +29,7 @@ class Skeleton(
   dropTable.put("woodenSword", 0.1f)
   dropTable.put("healingPowder", 0.5f)
 
-  loadSprites(
-    Assets.skeletonSpriteSheet,
-    Map(Left -> 2, Right -> 4, Up -> 1, Down -> 3),
-    0
-  )
+  loadSprites(Assets.skeletonSpriteSheet, Map(Left -> 2, Right -> 4, Up -> 1, Down -> 3), 0)
 
   override def hitbox: Rectangle = new Rectangle(17, 15, 30, 46)
 

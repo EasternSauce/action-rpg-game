@@ -5,8 +5,7 @@ import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.wrappers.EsAnimation
 
-class TridentAttack private (override val abilityCreature: Creature)
-    extends MeleeAttack(abilityCreature) {
+class TridentAttack private (override val abilityCreature: Creature) extends MeleeAttack(abilityCreature) {
 
   private val baseChannelTime: Float = 0.6f
 

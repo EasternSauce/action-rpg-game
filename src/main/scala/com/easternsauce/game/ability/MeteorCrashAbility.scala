@@ -9,8 +9,7 @@ import space.earlygrey.shapedrawer.ShapeDrawer
 
 import scala.collection.mutable.ListBuffer
 
-class MeteorCrashAbility private (override val abilityCreature: Creature)
-    extends Ability(abilityCreature) {
+class MeteorCrashAbility private (override val abilityCreature: Creature) extends Ability(abilityCreature) {
   override protected var channelTime: Float = 1.25f
   override protected var activeTime: Float = 2f
   override protected var cooldownTime: Float = 6.5f

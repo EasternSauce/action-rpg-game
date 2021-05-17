@@ -13,8 +13,7 @@ import system.GameSystem
 
 import scala.language.implicitConversions
 
-abstract class MeleeAttack(override val abilityCreature: Creature)
-    extends Attack(abilityCreature) {
+abstract class MeleeAttack(override val abilityCreature: Creature) extends Attack(abilityCreature) {
 
   var scale: Float
   var attackRange: Float
@@ -46,10 +45,7 @@ abstract class MeleeAttack(override val abilityCreature: Creature)
     val theta = new Vector2(attackVector.x, attackVector.y).angleDeg()
 
     if (attackVector.len() > 0f) {
-      attackVector = new Vector2(
-        attackVector.x / attackVector.len(),
-        attackVector.y / attackVector.len()
-      )
+      attackVector = new Vector2(attackVector.x / attackVector.len(), attackVector.y / attackVector.len())
     }
 
     val attackShiftX = attackVector.x * attackRange
@@ -76,18 +72,13 @@ abstract class MeleeAttack(override val abilityCreature: Creature)
 
   def initBody(hitbox: AttackHitbox): Unit = {
     val bodyDef = new BodyDef()
-    bodyDef.position.set(
-      hitbox.x / GameSystem.PixelsPerMeter,
-      hitbox.y / GameSystem.PixelsPerMeter
-    )
+    bodyDef.position.set(hitbox.x / GameSystem.PixelsPerMeter, hitbox.y / GameSystem.PixelsPerMeter)
 
     bodyDef.`type` = BodyDef.BodyType.KinematicBody
     body = abilityCreature.area.world.createBody(bodyDef)
     body.setUserData(this)
 
-    val converted = hitbox.polygon.getTransformedVertices.map(a =>
-      a / GameSystem.PixelsPerMeter
-    )
+    val converted = hitbox.polygon.getTransformedVertices.map(a => a / GameSystem.PixelsPerMeter)
 
     val fixtureDef: FixtureDef = new FixtureDef()
     val shape: PolygonShape = new PolygonShape()
@@ -154,10 +145,7 @@ abstract class MeleeAttack(override val abilityCreature: Creature)
     val theta = new Vector2(attackVector.x, attackVector.y).angleDeg()
 
     if (attackVector.len() > 0f) {
-      attackVector = new Vector2(
-        attackVector.x / attackVector.len(),
-        attackVector.y / attackVector.len()
-      )
+      attackVector = new Vector2(attackVector.x / attackVector.len(), attackVector.y / attackVector.len())
     }
 
     val attackShiftX = attackVector.x * attackRange
@@ -195,10 +183,7 @@ abstract class MeleeAttack(override val abilityCreature: Creature)
       var attackVector = abilityCreature.attackVector
 
       if (attackVector.len() > 0f) {
-        attackVector = new Vector2(
-          attackVector.x / attackVector.len(),
-          attackVector.y / attackVector.len()
-        )
+        attackVector = new Vector2(attackVector.x / attackVector.len(), attackVector.y / attackVector.len())
       }
 
       val attackShiftX = attackVector.x * attackRange
@@ -208,11 +193,7 @@ abstract class MeleeAttack(override val abilityCreature: Creature)
       hitbox.y = attackShiftY + abilityCreature.posY
 
       if (bodyActive) {
-        body.setTransform(
-          hitbox.x / GameSystem.PixelsPerMeter,
-          hitbox.y / GameSystem.PixelsPerMeter,
-          0f
-        )
+        body.setTransform(hitbox.x / GameSystem.PixelsPerMeter, hitbox.y / GameSystem.PixelsPerMeter, 0f)
       }
     }
 
@@ -230,14 +211,8 @@ abstract class MeleeAttack(override val abilityCreature: Creature)
   override def onCollideWithCreature(creature: Creature): Unit = {
     super.onCollideWithCreature(creature)
     if (!(abilityCreature.isMob && creature.isMob)) {
-      if (
-        abilityCreature != creature && state == AbilityState.Active && !creature.isImmune
-      ) {
-        creature.takeDamage(
-          abilityCreature.weaponDamage,
-          immunityFrames = true,
-          30f
-        )
+      if (abilityCreature != creature && state == AbilityState.Active && !creature.isImmune) {
+        creature.takeDamage(abilityCreature.weaponDamage, immunityFrames = true, 30f)
       }
     }
   }

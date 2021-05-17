@@ -17,7 +17,6 @@ import com.easternsauce.game.effect.Effect
 import com.easternsauce.game.item.Item
 import com.easternsauce.game.utils.{EsTimer, IntPair}
 import com.easternsauce.game.wrappers.{EsAnimation, EsSpriteSheet}
-import jdk.jshell.spi.ExecutionControl.NotImplementedException
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
@@ -207,11 +206,11 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   }
 
   def takeDamage(
-      damage: Float,
-      immunityFrames: Boolean,
-      knockbackPower: Float = 0,
-      sourceX: Float = 0,
-      sourceY: Float = 0
+    damage: Float,
+    immunityFrames: Boolean,
+    knockbackPower: Float = 0,
+    sourceX: Float = 0,
+    sourceY: Float = 0
   ): Unit = {
     if (isAlive) {
       val beforeHP = healthPoints
@@ -233,10 +232,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
         knockbackVector = new Vector2(posX - sourceX, posY - sourceY).nor()
 
         body.applyLinearImpulse(
-          new Vector2(
-            knockbackVector.x * knockbackPower,
-            knockbackVector.y * knockbackPower
-          ),
+          new Vector2(knockbackVector.x * knockbackPower, knockbackVector.y * knockbackPower),
           body.getWorldCenter,
           true
         )
@@ -313,19 +309,11 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
       if (movingDir.x == -1) {
         if (body.getLinearVelocity.x >= -currentMaxVelocity) {
-          body.applyLinearImpulse(
-            new Vector2(impulseValue * movingDir.x, 0),
-            body.getWorldCenter,
-            true
-          )
+          body.applyLinearImpulse(new Vector2(impulseValue * movingDir.x, 0), body.getWorldCenter, true)
         }
       } else if (movingDir.x == 1) {
         if (body.getLinearVelocity.x <= currentMaxVelocity) {
-          body.applyLinearImpulse(
-            new Vector2(impulseValue * movingDir.x, 0),
-            body.getWorldCenter,
-            true
-          )
+          body.applyLinearImpulse(new Vector2(impulseValue * movingDir.x, 0), body.getWorldCenter, true)
         }
       }
 
@@ -333,19 +321,11 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
       if (movingDir.y == -1) {
         if (body.getLinearVelocity.y >= -currentMaxVelocity) {
-          body.applyLinearImpulse(
-            new Vector2(0, impulseValue * movingDir.y),
-            body.getWorldCenter,
-            true
-          )
+          body.applyLinearImpulse(new Vector2(0, impulseValue * movingDir.y), body.getWorldCenter, true)
         }
       } else if (movingDir.y == 1) {
         if (body.getLinearVelocity.y <= currentMaxVelocity) {
-          body.applyLinearImpulse(
-            new Vector2(0, impulseValue * movingDir.y),
-            body.getWorldCenter,
-            true
-          )
+          body.applyLinearImpulse(new Vector2(0, impulseValue * movingDir.y), body.getWorldCenter, true)
         }
       }
 
@@ -361,9 +341,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
     if (!isMoving && wasMoving) runningStoppedTimer.restart()
 
-    if (
-      !isMoving && isRunningAnimationActive && runningStoppedTimer.time > 0.25f
-    ) {
+    if (!isMoving && isRunningAnimationActive && runningStoppedTimer.time > 0.25f) {
       isRunningAnimationActive = false
       runningStoppedTimer.stop()
       walkAnimationTimer.stop()
@@ -438,14 +416,8 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     val currentHealthBarWidth = healthBarWidth * healthPoints / maxHealthPoints
     val barPosX = posX - healthBarWidth / 2
     val barPosY = posY + spriteHeight / 2 + 10
-    shapeDrawer.filledRectangle(
-      new Rectangle(barPosX, barPosY, healthBarWidth, healthBarHeight),
-      Color.ORANGE
-    )
-    shapeDrawer.filledRectangle(
-      new Rectangle(barPosX, barPosY, currentHealthBarWidth, healthBarHeight),
-      Color.RED
-    )
+    shapeDrawer.filledRectangle(new Rectangle(barPosX, barPosY, healthBarWidth, healthBarHeight), Color.ORANGE)
+    shapeDrawer.filledRectangle(new Rectangle(barPosX, barPosY, currentHealthBarWidth, healthBarHeight), Color.RED)
 
   }
 
@@ -517,9 +489,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     effectMap.get(effectName) match {
       case Some(effect) => effect
       case _ =>
-        throw new RuntimeException(
-          "tried to access non-existing effect: " + effectName
-        )
+        throw new RuntimeException("tried to access non-existing effect: " + effectName)
     }
   }
 
@@ -551,19 +521,12 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   }
 
   def setPos(x: Float, y: Float): Unit = {
-    body.setTransform(
-      x / GameSystem.PixelsPerMeter,
-      y / GameSystem.PixelsPerMeter,
-      0
-    )
+    body.setTransform(x / GameSystem.PixelsPerMeter, y / GameSystem.PixelsPerMeter, 0)
   }
 
   def onAttack(): Unit = {
-    if (
-      equipmentItems.contains(4) && equipmentItems(4) != null && equipmentItems(
-        4
-      ).itemType.id == "thiefRing"
-    ) heal(7f)
+    if (equipmentItems.contains(4) && equipmentItems(4) != null && equipmentItems(4).itemType.id == "thiefRing")
+      heal(7f)
   }
 
   def heal(healValue: Float): Unit = {
@@ -589,9 +552,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
     effectMap.get(effectName) match {
       case Some(effect) => effect.isActive
       case _ =>
-        throw new RuntimeException(
-          "tried to access non-existing effect: " + effectName
-        )
+        throw new RuntimeException("tried to access non-existing effect: " + effectName)
     }
   }
 
@@ -610,12 +571,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   }
 
   def hitbox: Rectangle =
-    new Rectangle(
-      posX + hitboxBounds.x,
-      posY + hitboxBounds.y,
-      hitboxBounds.width,
-      hitboxBounds.height
-    )
+    new Rectangle(posX + hitboxBounds.x, posY + hitboxBounds.y, hitboxBounds.width, hitboxBounds.height)
 
   def moveInDirection(dir: WalkDirection): Unit = {
     import com.easternsauce.game.creature.util.WalkDirection._
@@ -645,16 +601,15 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   }
 
   def loadSprites(
-      spriteSheet: EsSpriteSheet,
-      directionalMapping: Map[WalkDirection, Int],
-      neutralPositionIndex: Int
+    spriteSheet: EsSpriteSheet,
+    directionalMapping: Map[WalkDirection, Int],
+    neutralPositionIndex: Int
   ): Unit = {
 
     this.neutralPositionIndex = neutralPositionIndex
 
     WalkDirection.values.foreach(dir => {
-      walkAnimation(dir) =
-        new EsAnimation(spriteSheet, walkAnimationFrameDuration, dirMap(dir))
+      walkAnimation(dir) = new EsAnimation(spriteSheet, walkAnimationFrameDuration, dirMap(dir))
     })
   }
 

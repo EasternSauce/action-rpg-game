@@ -124,10 +124,7 @@ class DialogueWindow {
     if (currentDialogue.action == DialogueAction.Choice) {
       currentDialogueChoices = ListBuffer()
       val dialogueIndex = dialogueList.indexOf(currentDialogue)
-      for (
-        i <-
-          dialogueIndex + 1 until dialogueIndex + 1 + currentDialogue.actionArgument.toInt
-      ) {
+      for (i <- dialogueIndex + 1 until dialogueIndex + 1 + currentDialogue.actionArgument.toInt) {
         currentDialogueChoices += dialogueList(i)
       }
     } else currentDialogueChoices = null

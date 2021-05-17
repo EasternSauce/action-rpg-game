@@ -33,11 +33,7 @@ class PlayerCharacter(id: String) extends Creature(id) {
 
   }
 
-  loadSprites(
-    Assets.male1SpriteSheet,
-    Map(Left -> 2, Right -> 3, Up -> 4, Down -> 1),
-    1
-  )
+  loadSprites(Assets.male1SpriteSheet, Map(Left -> 2, Right -> 3, Up -> 4, Down -> 1), 1)
 
   override def controlMovement(): Unit = {
 
@@ -66,10 +62,9 @@ class PlayerCharacter(id: String) extends Creature(id) {
     val centerY =
       (1f - GameSystem.ScreenProportion) * Gdx.graphics.getHeight + GameSystem.ScreenProportion * Gdx.graphics.getHeight / 2f
 
-    facingVector = new Vector2(
-      mouseX - centerX,
-      (Gdx.graphics.getHeight - mouseY) - centerY
-    ).nor() // we need to reverse y due to mouse coordinates being in different system
+    facingVector =
+      new Vector2(mouseX - centerX, (Gdx.graphics.getHeight - mouseY) - centerY)
+        .nor() // we need to reverse y due to mouse coordinates being in different system
   }
 
   override def onDeath(): Unit = {
@@ -112,12 +107,7 @@ class PlayerCharacter(id: String) extends Creature(id) {
     if (GameSystem.lootSystem.getVisibleItemsCount == 0) {
       for (creature <- area.creatures.values) {
         if (creature != this) {
-          if (
-            GameSystem.distance(
-              creature.body,
-              body
-            ) < 70f && creature.isNPC && creature.healthPoints > 0
-          ) {
+          if (GameSystem.distance(creature.body, body) < 70f && creature.isNPC && creature.healthPoints > 0) {
             creature.asInstanceOf[NonPlayerCharacter].triggerDialogue()
           }
         }
@@ -127,9 +117,7 @@ class PlayerCharacter(id: String) extends Creature(id) {
         if (GameSystem.distance(playerRespawnPoint.body, body) < 70f) {
           currentRespawnPoint = playerRespawnPoint
 
-          if (
-            currentRespawnPoint.respawnSetTimer.time >= currentRespawnPoint.respawnSetTime
-          ) {
+          if (currentRespawnPoint.respawnSetTimer.time >= currentRespawnPoint.respawnSetTime) {
             currentRespawnPoint.onRespawnSet()
 
             if (healthPoints < maxHealthPoints / 2)

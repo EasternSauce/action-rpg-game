@@ -5,8 +5,7 @@ import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.wrappers.EsAnimation
 
-class UnarmedAttack private (override val abilityCreature: Creature)
-    extends MeleeAttack(abilityCreature) {
+class UnarmedAttack private (override val abilityCreature: Creature) extends MeleeAttack(abilityCreature) {
 
   val weaponSpeed = 1.0f
 

@@ -9,8 +9,7 @@ import system.GameSystem
 
 import scala.collection.mutable.ListBuffer
 
-class MeteorRainAbility private (override val abilityCreature: Creature)
-    extends Ability(abilityCreature) {
+class MeteorRainAbility private (override val abilityCreature: Creature) extends Ability(abilityCreature) {
   override protected var channelTime: Float = 0.3f
   override protected var activeTime: Float = 13f
   override protected var cooldownTime = 35f

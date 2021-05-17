@@ -5,11 +5,11 @@ import com.easternsauce.game.item.util.ItemType
 import system.GameSystem
 
 class Item(
-    val itemType: ItemType,
-    var lootPileBackref: LootPile = null,
-    var damage: Float = null.asInstanceOf[Float],
-    var armor: Float = null.asInstanceOf[Float],
-    var quantity: Int = 1
+  val itemType: ItemType,
+  var lootPileBackref: LootPile = null,
+  var damage: Float = null.asInstanceOf[Float],
+  var armor: Float = null.asInstanceOf[Float],
+  var quantity: Int = 1
 ) {
 
   val name: String =
@@ -21,9 +21,7 @@ class Item(
   if (damage == null.asInstanceOf[Float] && armor == null.asInstanceOf[Float]) {
     if (itemType.maxDamage != null.asInstanceOf[Float]) {
       this.damage = Math
-        .ceil(
-          itemType.maxDamage * (0.5f + 0.5f * GameSystem.random.nextFloat())
-        )
+        .ceil(itemType.maxDamage * (0.5f + 0.5f * GameSystem.random.nextFloat()))
         .toFloat
     }
     if (itemType.maxArmor != null.asInstanceOf[Float]) {

@@ -9,5 +9,4 @@ class EsSpriteSheet(regionName: String, tileWidth: Int, tileHeight: Int) {
   val spriteTextures: Array[Array[TextureRegion]] =
     animationTexture.split(tileWidth, tileHeight)
 
-
 }

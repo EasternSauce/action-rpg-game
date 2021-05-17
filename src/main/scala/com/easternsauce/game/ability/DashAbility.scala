@@ -5,10 +5,8 @@ import com.easternsauce.game.ability.util.AbilityState
 import com.easternsauce.game.creature.Creature
 import system.GameSystem
 
-class DashAbility private (
-    override val abilityCreature: Creature,
-    val dashDistance: Float
-) extends Ability(abilityCreature) {
+class DashAbility private (override val abilityCreature: Creature, val dashDistance: Float)
+    extends Ability(abilityCreature) {
   protected var dashSpeed: Float = 30.0f
   override protected var cooldownTime: Float = 1.0f
   override protected var channelTime: Float = 0f
@@ -75,10 +73,7 @@ class DashAbility private (
 }
 
 object DashAbility {
-  def apply(
-      abilityCreature: Creature,
-      dashDistance: Float = 140f
-  ): DashAbility = {
+  def apply(abilityCreature: Creature, dashDistance: Float = 140f): DashAbility = {
     new DashAbility(abilityCreature, dashDistance)
   }
 }

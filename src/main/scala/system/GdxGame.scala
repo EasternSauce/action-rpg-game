@@ -32,35 +32,50 @@ class GdxGame extends ApplicationAdapter with InputProcessor {
     import Input.Keys._
     keycode match {
       case W | A | S | D => dirKeysMap(keycode) = true
-      case SHIFT_LEFT => playerCharacter.sprinting = true
-      case SPACE => if (playerCharacter.dashAbility.canPerform && !playerCharacter.inMenus) {
-        playerCharacter.dashAbility.setDashVector(playerCharacter.movementVector.cpy().nor())
-        playerCharacter.dashAbility.perform()
+      case SHIFT_LEFT    => playerCharacter.sprinting = true
+      case SPACE =>
+        if (
+          playerCharacter.dashAbility.canPerform && !playerCharacter.inMenus
+        ) {
+          playerCharacter.dashAbility.setDashVector(
+            playerCharacter.movementVector.cpy().nor()
+          )
+          playerCharacter.dashAbility.perform()
 
-      }
+        }
       case _ =>
     }
     false
   }
 
-
   override def keyUp(keycode: Int): Boolean = {
     import Input.Keys._
     keycode match {
       case W | A | S | D => dirKeysMap(keycode) = false
-      case SHIFT_LEFT => playerCharacter.sprinting = false
-      case _ =>
+      case SHIFT_LEFT    => playerCharacter.sprinting = false
+      case _             =>
     }
     false
   }
 
   override def keyTyped(character: Char): Boolean = false
 
-  override def touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean = false
+  override def touchDown(
+      screenX: Int,
+      screenY: Int,
+      pointer: Int,
+      button: Int
+  ): Boolean = false
 
-  override def touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean = false
+  override def touchUp(
+      screenX: Int,
+      screenY: Int,
+      pointer: Int,
+      button: Int
+  ): Boolean = false
 
-  override def touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean = false
+  override def touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean =
+    false
 
   override def mouseMoved(screenX: Int, screenY: Int): Boolean = false
 

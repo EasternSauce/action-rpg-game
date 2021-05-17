@@ -10,8 +10,7 @@ import com.easternsauce.game.spawn.MobSpawnPoint
 import com.easternsauce.game.utils.EsTimer
 import system.GameSystem
 
-abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint)
-    extends Creature(id) {
+abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) extends Creature(id) {
   override val isMob: Boolean = true
   protected var aggroDistance: Float = 600f
   protected var destinationX: Float = 0f
@@ -99,10 +98,7 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint)
             if (circlingDir == 0) {
               destinationX = aggroedCenterX
               destinationY = aggroedCenterY
-              val destinationVector = new Vector2(
-                destinationX - creatureCenterX,
-                destinationY - creatureCenterY
-              )
+              val destinationVector = new Vector2(destinationX - creatureCenterX, destinationY - creatureCenterY)
               val perpendicular =
                 GameSystem.getVectorPerpendicular(destinationVector)
               destinationX = aggroedCenterX + perpendicular.x
@@ -111,10 +107,7 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint)
             } else {
               destinationX = aggroedCenterX
               destinationY = aggroedCenterY
-              val destinationVector = new Vector2(
-                destinationX - creatureCenterX,
-                destinationY - creatureCenterY
-              )
+              val destinationVector = new Vector2(destinationX - creatureCenterX, destinationY - creatureCenterY)
               val perpendicular =
                 GameSystem.getVectorPerpendicular(destinationVector)
               val negated = new Vector2(-perpendicular.x, -perpendicular.y)
@@ -149,9 +142,7 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint)
     if (hasDestination) walkTowards(destinationX, destinationY)
 
     if (
-      isNoAbilityActive && dist < (if (
-                                     attackDistance == null.asInstanceOf[Float]
-                                   ) currentAttackType.attackDistance
+      isNoAbilityActive && dist < (if (attackDistance == null.asInstanceOf[Float]) currentAttackType.attackDistance
                                    else attackDistance)
     ) {
       if (currentAttack.canPerform) currentAttack.perform()

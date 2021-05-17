@@ -16,12 +16,7 @@ class BossHealthBar {
   def render(shapeDrawer: ShapeDrawer, spriteBatch: SpriteBatch): Unit = {
     if (visible && boss != null) {
       GameSystem.font.setColor(Color.WHITE)
-      GameSystem.font.draw(
-        spriteBatch,
-        boss.name,
-        GameSystem.originalWidth / 2f - 60,
-        GameSystem.originalHeight - 10
-      )
+      GameSystem.font.draw(spriteBatch, boss.name, GameSystem.originalWidth / 2f - 60, GameSystem.originalHeight - 10)
       shapeDrawer.setColor(Color.ORANGE)
       shapeDrawer.filledRectangle(maxHealthRect)
       shapeDrawer.setColor(Color.RED)
@@ -40,12 +35,7 @@ class BossHealthBar {
 
   def update(): Unit = {
     if (visible && boss != null) {
-      maxHealthRect = new Rectangle(
-        GameSystem.originalWidth / 2f - 250,
-        GameSystem.originalHeight - 35,
-        500,
-        10
-      )
+      maxHealthRect = new Rectangle(GameSystem.originalWidth / 2f - 250, GameSystem.originalHeight - 35, 500, 10)
       healthRect = new Rectangle(
         GameSystem.originalWidth / 2f - 250,
         GameSystem.originalHeight - 35,

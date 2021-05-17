@@ -9,8 +9,7 @@ import com.easternsauce.game.spawn.MobSpawnPoint
 import com.easternsauce.game.utils.EsTimer
 import system.GameSystem
 
-class Wolf(override val id: String, override val mobSpawnPoint: MobSpawnPoint)
-    extends Mob(id, mobSpawnPoint) {
+class Wolf(override val id: String, override val mobSpawnPoint: MobSpawnPoint) extends Mob(id, mobSpawnPoint) {
 
   override val baseSpeed: Float = 10f
 
@@ -26,11 +25,7 @@ class Wolf(override val id: String, override val mobSpawnPoint: MobSpawnPoint)
   dropTable.put("leatherHelmet", 0.1f)
   dropTable.put("healingPowder", 0.5f)
 
-  loadSprites(
-    Assets.wolfSpriteSheet,
-    Map(Left -> 2, Right -> 3, Up -> 4, Down -> 1),
-    0
-  )
+  loadSprites(Assets.wolfSpriteSheet, Map(Left -> 2, Right -> 3, Up -> 4, Down -> 1), 0)
   private var dashAbility: DashAbility = _
 
   override def hitbox: Rectangle = new Rectangle(17, 15, 30, 46)
@@ -63,15 +58,8 @@ class Wolf(override val id: String, override val mobSpawnPoint: MobSpawnPoint)
     assert(aggroedCreature.nonEmpty)
 
     if (hasDestination)
-      if (
-        dashAbility.canPerform && GameSystem.distance(
-          aggroedCreature.get.body,
-          body
-        ) < dashDistance
-      ) {
-        dashAbility.setDashVector(
-          new Vector2(destinationX - posX, destinationY - posY).nor()
-        )
+      if (dashAbility.canPerform && GameSystem.distance(aggroedCreature.get.body, body) < dashDistance) {
+        dashAbility.setDashVector(new Vector2(destinationX - posX, destinationY - posY).nor())
         dashAbility.perform()
       }
   }

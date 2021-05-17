@@ -1,9 +1,6 @@
 package com.easternsauce.game.desktop
 
-import com.badlogic.gdx.backends.lwjgl3.{
-  Lwjgl3Application,
-  Lwjgl3ApplicationConfiguration
-}
+import com.badlogic.gdx.backends.lwjgl3.{Lwjgl3Application, Lwjgl3ApplicationConfiguration}
 import system.GdxGame
 
 object DesktopApplication {

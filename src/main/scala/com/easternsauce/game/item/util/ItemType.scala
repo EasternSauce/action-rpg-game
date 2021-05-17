@@ -7,16 +7,16 @@ import com.easternsauce.game.creature.util.{AttackType, Bow, Sword, Trident}
 import scala.collection.mutable
 
 class ItemType(
-    val id: String,
-    val name: String,
-    val description: String,
-    val textureRegion: TextureRegion,
-    val equipmentType: String,
-    val worth: Int,
-    val maxDamage: Float,
-    val maxArmor: Float,
-    val stackable: Boolean,
-    val consumable: Boolean
+  val id: String,
+  val name: String,
+  val description: String,
+  val textureRegion: TextureRegion,
+  val equipmentType: String,
+  val worth: Int,
+  val maxDamage: Float,
+  val maxArmor: Float,
+  val stackable: Boolean,
+  val consumable: Boolean
 ) {
 
   val weaponSpeed = 1.0f

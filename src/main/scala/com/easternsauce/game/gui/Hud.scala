@@ -15,19 +15,9 @@ class Hud {
   var bossHealthBar = new BossHealthBar
   private var bottomRect = new Rectangle(0, 0, w, h * proportion)
   private var maxHealthRect = new Rectangle(10, h * proportion + 40, 100, 10)
-  private var healthRect = new Rectangle(
-    10,
-    h * proportion + 40,
-    100 * pc.healthPoints / pc.maxHealthPoints,
-    10
-  )
+  private var healthRect = new Rectangle(10, h * proportion + 40, 100 * pc.healthPoints / pc.maxHealthPoints, 10)
   private var maxStaminaRect = new Rectangle(10, h * proportion + 25, 100, 10)
-  private var staminaRect = new Rectangle(
-    10,
-    h * proportion + 25,
-    100 * pc.staminaPoints / pc.maxStaminaPoints,
-    10
-  )
+  private var staminaRect = new Rectangle(10, h * proportion + 25, 100 * pc.staminaPoints / pc.maxStaminaPoints, 10)
 
   def render(hudBatch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
     shapeDrawer.filledRectangle(bottomRect, Color.DARK_GRAY)
@@ -45,10 +35,7 @@ class Hud {
           if (creature != GameSystem.playerCharacter) {
 
             if (
-              GameSystem.distance(
-                GameSystem.playerCharacter.body,
-                creature.body
-              ) < 70f && creature
+              GameSystem.distance(GameSystem.playerCharacter.body, creature.body) < 70f && creature
                 .isInstanceOf[NonPlayerCharacter] && creature.healthPoints > 0
             ) {
               triggerMessage = "> Talk"
@@ -57,12 +44,8 @@ class Hud {
         }
 
         for (playerRespawnPoint <- GameSystem.currentArea.get.respawnList) {
-          if (
-            GameSystem.distance(
-              GameSystem.playerCharacter.body,
-              playerRespawnPoint.body
-            ) < 70f
-          ) triggerMessage = "> Set respawn"
+          if (GameSystem.distance(GameSystem.playerCharacter.body, playerRespawnPoint.body) < 70f)
+            triggerMessage = "> Set respawn"
         }
         GameSystem.font.draw(
           hudBatch,
@@ -77,19 +60,9 @@ class Hud {
 
   def update(): Unit = {
     maxHealthRect = new Rectangle(10, bottomRect.height + 40, 100, 10)
-    healthRect = new Rectangle(
-      10,
-      bottomRect.height + 40,
-      100 * pc.healthPoints / pc.maxHealthPoints,
-      10
-    )
+    healthRect = new Rectangle(10, bottomRect.height + 40, 100 * pc.healthPoints / pc.maxHealthPoints, 10)
     maxStaminaRect = new Rectangle(10, bottomRect.height + 25, 100, 10)
-    staminaRect = new Rectangle(
-      10,
-      bottomRect.height + 25,
-      100 * pc.staminaPoints / pc.maxStaminaPoints,
-      10
-    )
+    staminaRect = new Rectangle(10, bottomRect.height + 25, 100 * pc.staminaPoints / pc.maxStaminaPoints, 10)
 
     bossHealthBar.update()
   }

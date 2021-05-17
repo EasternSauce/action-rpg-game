@@ -12,12 +12,12 @@ import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
 class Meteor private (
-    override val mainAbility: Ability,
-    val startTime: Float,
-    val posX: Float,
-    val posY: Float,
-    val radius: Float,
-    speed: Float
+  override val mainAbility: Ability,
+  val startTime: Float,
+  val posX: Float,
+  val posY: Float,
+  val radius: Float,
+  speed: Float
 ) extends AbilityComponent(mainAbility) {
 
   override protected val activeTime: Float = 1.8f / speed
@@ -122,9 +122,7 @@ class Meteor private (
   }
 
   override def onCollideWithCreature(creature: Creature): Unit = {
-    if (
-      !(mainAbility.abilityCreature.isMob && creature.isMob) && creature.isAlive
-    ) {
+    if (!(mainAbility.abilityCreature.isMob && creature.isMob) && creature.isAlive) {
       if (!creature.isImmune) creature.takeDamage(40f, immunityFrames = true)
     }
   }
@@ -132,14 +130,7 @@ class Meteor private (
 }
 
 object Meteor {
-  def apply(
-      mainAbility: Ability,
-      startTime: Float,
-      posX: Float,
-      posY: Float,
-      radius: Float,
-      speed: Float
-  ): Meteor = {
+  def apply(mainAbility: Ability, startTime: Float, posX: Float, posY: Float, radius: Float, speed: Float): Meteor = {
     new Meteor(mainAbility, startTime, posX, posY, radius, speed)
   }
 }

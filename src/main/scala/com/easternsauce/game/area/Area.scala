@@ -21,10 +21,10 @@ import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 class Area private (
-    val id: String,
-    val tiledMap: TiledMap,
-    scale: Float,
-    val spawnLocationsContainer: SpawnLocationsContainer
+  val id: String,
+  val tiledMap: TiledMap,
+  scale: Float,
+  val spawnLocationsContainer: SpawnLocationsContainer
 ) {
 
   val tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, scale)
@@ -66,24 +66,19 @@ class Area private (
 
           val bodyDef = new BodyDef()
           bodyDef.`type` = BodyDef.BodyType.StaticBody
-          bodyDef.position.set(
-            (rectX + rectH / 2) / GameSystem.PixelsPerMeter,
-            (rectY + rectH / 2) / GameSystem.PixelsPerMeter
-          )
+          bodyDef.position
+            .set((rectX + rectH / 2) / GameSystem.PixelsPerMeter, (rectY + rectH / 2) / GameSystem.PixelsPerMeter)
 
           val body: Body = world.createBody(bodyDef)
 
           val tile: AreaTile =
-            new AreaTile((layerNum, x, y), body, traversable, flyover)
+            AreaTile((layerNum, x, y), body, traversable, flyover)
 
           body.setUserData(tile)
 
           val shape: PolygonShape = new PolygonShape()
 
-          shape.setAsBox(
-            (rectW / 2) / GameSystem.PixelsPerMeter,
-            (rectH / 2) / GameSystem.PixelsPerMeter
-          )
+          shape.setAsBox((rectW / 2) / GameSystem.PixelsPerMeter, (rectH / 2) / GameSystem.PixelsPerMeter)
 
           val fixtureDef: FixtureDef = new FixtureDef
 
@@ -260,10 +255,7 @@ class Area private (
 
       override def preSolve(contact: Contact, oldManifold: Manifold): Unit = {}
 
-      override def postSolve(
-          contact: Contact,
-          impulse: ContactImpulse
-      ): Unit = {}
+      override def postSolve(contact: Contact, impulse: ContactImpulse): Unit = {}
     }
 
     world.setContactListener(contactListener)
@@ -342,18 +334,11 @@ class Area private (
     creaturesManager.initializeCreatures()
   }
 
-  private def createBorderTile(
-      rectX: Float,
-      rectY: Float,
-      rectW: Float,
-      rectH: Float
-  ) = {
+  private def createBorderTile(rectX: Float, rectY: Float, rectW: Float, rectH: Float) = {
     val bodyDef = new BodyDef()
     bodyDef.`type` = BodyDef.BodyType.StaticBody
-    bodyDef.position.set(
-      (rectX + rectH / 2) / GameSystem.PixelsPerMeter,
-      (rectY + rectH / 2) / GameSystem.PixelsPerMeter
-    )
+    bodyDef.position
+      .set((rectX + rectH / 2) / GameSystem.PixelsPerMeter, (rectY + rectH / 2) / GameSystem.PixelsPerMeter)
 
     val body: Body = world.createBody(bodyDef)
 
@@ -361,10 +346,7 @@ class Area private (
 
     val shape: PolygonShape = new PolygonShape()
 
-    shape.setAsBox(
-      (rectW / 2) / GameSystem.PixelsPerMeter,
-      (rectH / 2) / GameSystem.PixelsPerMeter
-    )
+    shape.setAsBox((rectW / 2) / GameSystem.PixelsPerMeter, (rectH / 2) / GameSystem.PixelsPerMeter)
 
     val fixtureDef: FixtureDef = new FixtureDef
 
@@ -378,32 +360,18 @@ class Area private (
       val posX = spawnLocation.posX
       val posY = spawnLocation.posY
       if (spawnLocation.spawnType == "respawnArea")
-        enemyRespawnAreaList += new EnemyRespawnArea(
-          posX,
-          posY,
-          3,
-          this,
-          spawnLocation.creatureType
-        )
+        enemyRespawnAreaList += new EnemyRespawnArea(posX, posY, 3, this, spawnLocation.creatureType)
       else if (spawnLocation.spawnType == "spawnPoint") {
         val mobSpawnPoint =
           new MobSpawnPoint(posX, posY, this, spawnLocation.creatureType)
         mobSpawnPointList += mobSpawnPoint
         if (spawnLocation.hasBlockade)
-          addBlockade(
-            mobSpawnPoint,
-            spawnLocation.blockadePosX,
-            spawnLocation.blockadePosY
-          )
+          addBlockade(mobSpawnPoint, spawnLocation.blockadePosX, spawnLocation.blockadePosY)
       }
     }
   }
 
-  def addBlockade(
-      mobSpawnPoint: MobSpawnPoint,
-      blockadePosX: Int,
-      blockadePosY: Int
-  ): Unit = {
+  def addBlockade(mobSpawnPoint: MobSpawnPoint, blockadePosX: Int, blockadePosY: Int): Unit = {
     val blockade = new Blockade(mobSpawnPoint, blockadePosX, blockadePosY)
     blockadeList += blockade
     mobSpawnPoint.blockade = blockade
@@ -412,11 +380,6 @@ class Area private (
 }
 
 object Area {
-  def apply(
-      id: String,
-      tiledMap: TiledMap,
-      scale: Float,
-      spawnLocationsContainer: SpawnLocationsContainer
-  ) =
+  def apply(id: String, tiledMap: TiledMap, scale: Float, spawnLocationsContainer: SpawnLocationsContainer) =
     new Area(id, tiledMap, scale, spawnLocationsContainer)
 }

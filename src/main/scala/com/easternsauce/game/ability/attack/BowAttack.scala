@@ -11,8 +11,7 @@ import com.easternsauce.game.wrappers.EsAnimation
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
-class BowAttack private (override val abilityCreature: Creature)
-    extends Attack(abilityCreature) {
+class BowAttack private (override val abilityCreature: Creature) extends Attack(abilityCreature) {
 
   override protected var channelTime: Float = 0.5f
   override protected var activeTime: Float = 0.3f

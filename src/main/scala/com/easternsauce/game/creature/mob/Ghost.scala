@@ -9,11 +9,8 @@ import com.easternsauce.game.spawn.MobSpawnPoint
 import com.easternsauce.game.utils.EsTimer
 import system.GameSystem
 
-class Ghost(
-    override val id: String,
-    override val mobSpawnPoint: MobSpawnPoint,
-    weaponType: String
-) extends Mob(id, mobSpawnPoint) {
+class Ghost(override val id: String, override val mobSpawnPoint: MobSpawnPoint, weaponType: String)
+    extends Mob(id, mobSpawnPoint) {
   actionTimer = EsTimer(true)
 
   dropTable.put("ironSword", 0.03f)
@@ -24,11 +21,7 @@ class Ghost(
   dropTable.put("steelGloves", 0.05f)
   dropTable.put("steelHelmet", 0.05f)
 
-  loadSprites(
-    Assets.ghostSpriteSheet,
-    Map(Left -> 2, Right -> 3, Up -> 4, Down -> 1),
-    0
-  )
+  loadSprites(Assets.ghostSpriteSheet, Map(Left -> 2, Right -> 3, Up -> 4, Down -> 1), 0)
 
   override val hitbox = new Rectangle(17, 15, 30, 46)
 
@@ -54,9 +47,7 @@ class Ghost(
       GameSystem
         .distance(aggroedCreature.get.body, this.body) < (if (
                                                             attackDistance == null
-                                                              .asInstanceOf[
-                                                                Float
-                                                              ]
+                                                              .asInstanceOf[Float]
                                                           ) currentAttackType.attackDistance
                                                           else attackDistance)
     ) {

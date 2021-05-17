@@ -16,22 +16,21 @@ import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 class Arrow(
-    var startX: Float,
-    var startY: Float,
-    val area: Area,
-    var dirVector: Vector2,
-    var arrowList: ListBuffer[Arrow],
-    val tiledMap: TiledMap,
-    val creatures: mutable.Map[String, Creature],
-    val shooter: Creature
+  var startX: Float,
+  var startY: Float,
+  val area: Area,
+  var dirVector: Vector2,
+  var arrowList: ListBuffer[Arrow],
+  val tiledMap: TiledMap,
+  val creatures: mutable.Map[String, Creature],
+  val shooter: Creature
 ) {
 
   val maxVelocityRelative = 36f
   val damage: Float = shooter.weaponDamage
-  val shooterRelatedMaxVelocity: Vector2 = new Vector2(
-    dirVector.x * maxVelocityRelative,
-    dirVector.y * maxVelocityRelative
-  ).add(shooter.body.getLinearVelocity)
+  val shooterRelatedMaxVelocity: Vector2 =
+    new Vector2(dirVector.x * maxVelocityRelative, dirVector.y * maxVelocityRelative)
+      .add(shooter.body.getLinearVelocity)
   private val arrowTexture: Texture = Assets.arrowTexture
   private val arrowImage: Image = new Image(Assets.arrowTexture)
   var markedForDeletion: Boolean = false
@@ -90,18 +89,10 @@ class Arrow(
         }
       }
 
-      body.applyLinearImpulse(
-        new Vector2(accX, accY),
-        body.getWorldCenter,
-        true
-      )
+      body.applyLinearImpulse(new Vector2(accX, accY), body.getWorldCenter, true)
 
-      arrowImage.setX(
-        body.getPosition.x * GameSystem.PixelsPerMeter - arrowImage.getImageWidth / 2f
-      )
-      arrowImage.setY(
-        body.getPosition.y * GameSystem.PixelsPerMeter - arrowImage.getImageHeight / 2f
-      )
+      arrowImage.setX(body.getPosition.x * GameSystem.PixelsPerMeter - arrowImage.getImageWidth / 2f)
+      arrowImage.setY(body.getPosition.y * GameSystem.PixelsPerMeter - arrowImage.getImageHeight / 2f)
 
       val margin = 50
       if (

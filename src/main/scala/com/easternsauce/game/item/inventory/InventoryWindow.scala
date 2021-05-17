@@ -108,10 +108,7 @@ class InventoryWindow {
     }
   }
 
-  private def renderTraderInventory(
-      hudBatch: SpriteBatch,
-      shapeDrawer: ShapeDrawer
-  ): Unit = {
+  private def renderTraderInventory(hudBatch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
     if (trading) {
       for (i <- 0 until tradeInventorySlots) {
         var color = Color.BLACK
@@ -138,12 +135,7 @@ class InventoryWindow {
         }
       }
       GameSystem.font.setColor(Color.WHITE)
-      GameSystem.font.draw(
-        hudBatch,
-        "Trader:",
-        traderInventorySlotList.head.getX + 5f,
-        background.getY + 15f
-      )
+      GameSystem.font.draw(hudBatch, "Trader:", traderInventorySlotList.head.getX + 5f, background.getY + 15f)
     }
   }
 
@@ -167,22 +159,12 @@ class InventoryWindow {
         )
         if (inventoryItems(i).quantity > 1) {
           GameSystem.font.setColor(Color.CYAN)
-          GameSystem.font.draw(
-            hudBatch,
-            "" + inventoryItems(i).quantity,
-            slotList(i).getX,
-            slotList(i).getY + 15
-          )
+          GameSystem.font.draw(hudBatch, "" + inventoryItems(i).quantity, slotList(i).getX, slotList(i).getY + 15)
         }
       }
     }
     GameSystem.font.setColor(Color.YELLOW)
-    GameSystem.font.draw(
-      hudBatch,
-      "Gold: " + gold,
-      background.getX + 5,
-      background.getY + 20f
-    )
+    GameSystem.font.draw(hudBatch, "Gold: " + gold, background.getX + 5, background.getY + 20f)
   }
 
   def renderItemDescription(hudBatch: SpriteBatch): Unit = {
@@ -316,18 +298,14 @@ class InventoryWindow {
       }
       if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
         if (inEquipment) {
-          if (
-            currentSelected * inventoryColumns + (inventoryColumns - 1) < inventorySlots
-          ) {
+          if (currentSelected * inventoryColumns + (inventoryColumns - 1) < inventorySlots) {
             inEquipment = false
             currentSelected =
               currentSelected * inventoryColumns + (inventoryColumns - 1)
           }
         } else if (inTraderInventory) {
           if (currentSelected % tradeInventoryColumns == 0) {
-            if (
-              currentSelected / tradeInventoryColumns < inventoryColumns - 1
-            ) {
+            if (currentSelected / tradeInventoryColumns < inventoryColumns - 1) {
               inTraderInventory = false
               currentSelected =
                 currentSelected / tradeInventoryColumns * inventoryColumns + (inventoryColumns - 1)
@@ -342,9 +320,8 @@ class InventoryWindow {
         if (inEquipment) {
           if (currentSelected < equipmentSlots - 1) currentSelected += 1
         } else if (inTraderInventory) {
-          if (
-            currentSelected <= tradeInventorySlots - tradeInventoryColumns - 1
-          ) currentSelected = currentSelected + tradeInventoryColumns
+          if (currentSelected <= tradeInventorySlots - tradeInventoryColumns - 1)
+            currentSelected = currentSelected + tradeInventoryColumns
         } else if (currentSelected <= inventorySlots - inventoryColumns - 1)
           currentSelected = currentSelected + inventoryColumns
       }
@@ -382,9 +359,7 @@ class InventoryWindow {
             val from = equipmentItems.getOrElse(currentMoved, null)
             val to = equipmentItems.getOrElse(currentSelected, null)
             val currentEquipmentType = getEquipmentSlotName(currentSelected)
-            if (
-              from == null || from.itemType.equipmentType == currentEquipmentType
-            ) {
+            if (from == null || from.itemType.equipmentType == currentEquipmentType) {
               equipmentItems.remove(currentMoved)
               equipmentItems.remove(currentSelected)
               equipmentItems.putNonNull(currentMoved, to)
@@ -395,9 +370,7 @@ class InventoryWindow {
             val from = equipmentItems.getOrElse(currentMoved, null)
             val to = inventoryItems.getOrElse(currentSelected, null)
             val currentEquipmentType = getEquipmentSlotName(currentMoved)
-            if (
-              to == null || to.itemType.equipmentType == currentEquipmentType
-            ) {
+            if (to == null || to.itemType.equipmentType == currentEquipmentType) {
               equipmentItems.remove(currentMoved)
               inventoryItems.remove(currentSelected)
               equipmentItems.putNonNull(currentMoved, to)
@@ -409,9 +382,7 @@ class InventoryWindow {
             val from = inventoryItems.getOrElse(currentMoved, null)
             val to = equipmentItems.getOrElse(currentSelected, null)
             val currentEquipmentType = getEquipmentSlotName(currentSelected)
-            if (
-              from == null || from.itemType.equipmentType == currentEquipmentType
-            ) {
+            if (from == null || from.itemType.equipmentType == currentEquipmentType) {
               inventoryItems.remove(currentMoved)
               equipmentItems.remove(currentSelected)
               inventoryItems.putNonNull(currentMoved, to)
@@ -439,11 +410,7 @@ class InventoryWindow {
               if (inventoryItems(currentSelected) != null) sellSelectedItem()
             } else {
               if (traderInventoryItems(currentSelected) != null)
-                if (
-                  gold - traderInventoryItems(
-                    currentSelected
-                  ).itemType.worth >= 0
-                ) {
+                if (gold - traderInventoryItems(currentSelected).itemType.worth >= 0) {
                   takeItem(traderInventoryItems(currentSelected))
                   gold -= traderInventoryItems(currentSelected).itemType.worth
                   traderInventoryItems.remove(currentSelected)
@@ -465,12 +432,7 @@ class InventoryWindow {
             val item = inventoryItems(currentSelected)
 
             assert(GameSystem.currentArea.nonEmpty)
-            GameSystem.lootSystem.spawnLootPile(
-              GameSystem.currentArea.get,
-              player.posX,
-              player.posY,
-              item
-            )
+            GameSystem.lootSystem.spawnLootPile(GameSystem.currentArea.get, player.posX, player.posY, item)
             inventoryItems.remove(currentSelected)
           }
         }

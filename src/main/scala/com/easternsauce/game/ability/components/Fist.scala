@@ -12,11 +12,11 @@ import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
 class Fist private (
-    override val mainAbility: Ability,
-    val startTime: Float,
-    val posX: Float,
-    val posY: Float,
-    var radius: Float
+  override val mainAbility: Ability,
+  val startTime: Float,
+  val posX: Float,
+  val posY: Float,
+  var radius: Float
 ) extends AbilityComponent(mainAbility) {
 
   override protected val activeTime: Float = 0.2f
@@ -122,22 +122,14 @@ class Fist private (
   }
 
   override def onCollideWithCreature(creature: Creature): Unit = {
-    if (
-      !(mainAbility.abilityCreature.isMob && creature.isMob) && creature.isAlive && activeTimer.time < 0.15f
-    ) {
+    if (!(mainAbility.abilityCreature.isMob && creature.isMob) && creature.isAlive && activeTimer.time < 0.15f) {
       if (!creature.isImmune) creature.takeDamage(50f, immunityFrames = true)
     }
   }
 }
 
 object Fist {
-  def apply(
-      mainAbility: Ability,
-      startTime: Float,
-      posX: Float,
-      posY: Float,
-      radius: Float
-  ): Fist = {
+  def apply(mainAbility: Ability, startTime: Float, posX: Float, posY: Float, radius: Float): Fist = {
     new Fist(mainAbility, startTime, posX, posY, radius)
   }
 }

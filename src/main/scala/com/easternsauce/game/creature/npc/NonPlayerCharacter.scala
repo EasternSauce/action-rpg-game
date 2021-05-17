@@ -13,12 +13,8 @@ import system.GameSystem
 
 import scala.collection.mutable.ListBuffer
 
-class NonPlayerCharacter(
-    id: String,
-    trader: Boolean,
-    spriteSheet: EsSpriteSheet,
-    val dialogueStartId: String
-) extends Creature(id) {
+class NonPlayerCharacter(id: String, trader: Boolean, spriteSheet: EsSpriteSheet, val dialogueStartId: String)
+    extends Creature(id) {
   override protected val onGettingHitSound: Sound = Assets.painSound
   override val isNPC = true
   var random: scala.util.Random = GameSystem.random

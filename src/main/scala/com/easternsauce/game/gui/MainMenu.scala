@@ -37,12 +37,7 @@ class MainMenu {
     }
     else {
       GameSystem.font.setColor(Color.WHITE)
-      GameSystem.font.draw(
-        batch,
-        promptText,
-        100,
-        GameSystem.originalHeight - 100
-      )
+      GameSystem.font.draw(batch, promptText, 100, GameSystem.originalHeight - 100)
       for (i <- 0 until Math.min(4, optionList.size)) {
         GameSystem.font.setColor(Color.WHITE)
         GameSystem.font.draw(
@@ -120,13 +115,10 @@ class MainMenu {
               writer = Files.newBufferedWriter(Paths.get("saves/inventory.sav"))
               writer.write("")
               writer.flush()
-              writer =
-                Files.newBufferedWriter(Paths.get("saves/respawn_points.sav"))
+              writer = Files.newBufferedWriter(Paths.get("saves/respawn_points.sav"))
               writer.write("")
               writer.flush()
-              writer = Files.newBufferedWriter(
-                Paths.get("saves/treasure_collected.sav")
-              )
+              writer = Files.newBufferedWriter(Paths.get("saves/treasure_collected.sav"))
               writer.write("")
               writer.flush()
             } catch {
@@ -160,9 +152,7 @@ class MainMenu {
       if (currentSelected < optionList.size - 1) currentSelected += 1
     if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
       if (!GameSystem.escRecently)
-        if (
-          !GameSystem.inventoryWindow.inventoryOpen && !GameSystem.lootOptionWindow.activated
-        ) {
+        if (!GameSystem.inventoryWindow.inventoryOpen && !GameSystem.lootOptionWindow.activated) {
 
           if (!startMenu) GameSystem.state = GameState.Gameplay
           GameSystem.escRecently = true

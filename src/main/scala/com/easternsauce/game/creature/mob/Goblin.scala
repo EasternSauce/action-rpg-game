@@ -7,11 +7,8 @@ import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up}
 import com.easternsauce.game.spawn.MobSpawnPoint
 import com.easternsauce.game.utils.EsTimer
 
-class Goblin(
-    override val id: String,
-    override val mobSpawnPoint: MobSpawnPoint,
-    weaponType: String
-) extends Mob(id, mobSpawnPoint) {
+class Goblin(override val id: String, override val mobSpawnPoint: MobSpawnPoint, weaponType: String)
+    extends Mob(id, mobSpawnPoint) {
   actionTimer = EsTimer(true)
 
   dropTable.put("ironSword", 0.03f)
@@ -22,11 +19,7 @@ class Goblin(
   dropTable.put("steelGloves", 0.05f)
   dropTable.put("steelHelmet", 0.05f)
 
-  loadSprites(
-    Assets.goblinSpriteSheet,
-    Map(Left -> 1, Right -> 3, Up -> 2, Down -> 4),
-    0
-  )
+  loadSprites(Assets.goblinSpriteSheet, Map(Left -> 1, Right -> 3, Up -> 2, Down -> 4), 0)
 
   override val hitbox = new Rectangle(17, 15, 30, 46)
 

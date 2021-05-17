@@ -20,21 +20,9 @@ class SpawnLocationsContainer(enemyFileLocation: String) {
         if (s.length > 4) {
           val blockadePosX = s(4).toInt
           val blockadePosY = s(5).toInt
-          spawnLocationList += new SpawnLocation(
-            spawnType,
-            enemyType,
-            posX,
-            posY,
-            blockadePosX,
-            blockadePosY
-          )
+          spawnLocationList += new SpawnLocation(spawnType, enemyType, posX, posY, blockadePosX, blockadePosY)
         } else
-          spawnLocationList += new SpawnLocation(
-            spawnType,
-            enemyType,
-            posX,
-            posY
-          )
+          spawnLocationList += new SpawnLocation(spawnType, enemyType, posX, posY)
 
       }
 
