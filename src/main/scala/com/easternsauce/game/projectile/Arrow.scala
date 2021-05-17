@@ -15,7 +15,7 @@ import system.GameSystem
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
-class Arrow(
+class Arrow private (
   var startX: Float,
   var startY: Float,
   val area: Area,
@@ -26,7 +26,7 @@ class Arrow(
   val shooter: Creature
 ) {
 
-  val maxVelocityRelative = 36f
+  val maxVelocityRelative: Float = 36f
   val damage: Float = shooter.weaponDamage
   val shooterRelatedMaxVelocity: Vector2 =
     new Vector2(dirVector.x * maxVelocityRelative, dirVector.y * maxVelocityRelative)
@@ -37,7 +37,7 @@ class Arrow(
   var body: Body = _
   var isActive: Boolean = true
   var landed: Boolean = false
-  var arrowLandedTimer: EsTimer = EsTimer()
+  val arrowLandedTimer: EsTimer = EsTimer()
 
   dirVector = shooterRelatedMaxVelocity.cpy().nor()
 
@@ -142,4 +142,17 @@ class Arrow(
     fixtureDef.isSensor = true
     body.createFixture(fixtureDef)
   }
+}
+
+object Arrow {
+  def apply(
+    startX: Float,
+    startY: Float,
+    area: Area,
+    dirVector: Vector2,
+    arrowList: ListBuffer[Arrow],
+    tiledMap: TiledMap,
+    creatures: mutable.Map[String, Creature],
+    shooter: Creature
+  ) = new Arrow(startX, startY, area, dirVector, arrowList, tiledMap, creatures, shooter)
 }

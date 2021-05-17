@@ -3,7 +3,7 @@ package com.easternsauce.game.spawn
 import scala.collection.mutable.ListBuffer
 import scala.io.Source
 
-class SpawnLocationsContainer(enemyFileLocation: String) {
+class SpawnLocationsContainer private (enemyFileLocation: String) {
   private val fileContents = Source.fromFile(enemyFileLocation)
   var spawnLocationList: ListBuffer[SpawnLocation] = ListBuffer()
   try {
@@ -20,12 +20,16 @@ class SpawnLocationsContainer(enemyFileLocation: String) {
         if (s.length > 4) {
           val blockadePosX = s(4).toInt
           val blockadePosY = s(5).toInt
-          spawnLocationList += new SpawnLocation(spawnType, enemyType, posX, posY, blockadePosX, blockadePosY)
+          spawnLocationList += SpawnLocation(spawnType, enemyType, posX, posY, blockadePosX, blockadePosY)
         } else
-          spawnLocationList += new SpawnLocation(spawnType, enemyType, posX, posY)
+          spawnLocationList += SpawnLocation(spawnType, enemyType, posX, posY)
 
       }
 
     }
   } finally fileContents.close()
+}
+
+object SpawnLocationsContainer {
+  def apply(enemyFileLocation: String) = new SpawnLocationsContainer(enemyFileLocation)
 }

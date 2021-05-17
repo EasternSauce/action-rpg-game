@@ -10,7 +10,7 @@ import system.GameSystem
 import scala.collection.mutable.ListBuffer
 import scala.io.Source
 
-class DialogueWindow {
+class DialogueWindow private {
   var activated: Boolean = false
   var dialogueNPC: NonPlayerCharacter = _
   private var dialogueList: ListBuffer[Dialogue] = ListBuffer()
@@ -130,4 +130,8 @@ class DialogueWindow {
     } else currentDialogueChoices = null
   }
 
+}
+
+object DialogueWindow {
+  def apply() = new DialogueWindow()
 }

@@ -9,7 +9,7 @@ import com.easternsauce.game.spawn.MobSpawnPoint
 import com.easternsauce.game.utils.EsTimer
 import system.GameSystem
 
-class Ghost(override val id: String, override val mobSpawnPoint: MobSpawnPoint, weaponType: String)
+class Ghost private (override val id: String, override val mobSpawnPoint: MobSpawnPoint, weaponType: String)
     extends Mob(id, mobSpawnPoint) {
   actionTimer = EsTimer(true)
 
@@ -69,4 +69,9 @@ class Ghost(override val id: String, override val mobSpawnPoint: MobSpawnPoint, 
   override def onDeath(): Unit = {
     super.onDeath()
   }
+}
+
+object Ghost {
+  def apply(id: String, mobSpawnPoint: MobSpawnPoint, weaponType: String) =
+    new Ghost(id, mobSpawnPoint, weaponType)
 }

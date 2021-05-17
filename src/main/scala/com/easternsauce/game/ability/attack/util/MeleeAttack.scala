@@ -7,13 +7,13 @@ import com.easternsauce.game.ability.attack.util
 import com.easternsauce.game.ability.util.AbilityState
 import com.easternsauce.game.assets.Assets
 import com.easternsauce.game.creature.Creature
-import com.easternsauce.game.shapes.CustomPolygon
+import com.easternsauce.game.wrappers.EsPolygon
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
 import scala.language.implicitConversions
 
-abstract class MeleeAttack(override val abilityCreature: Creature) extends Attack(abilityCreature) {
+abstract class MeleeAttack protected (override val abilityCreature: Creature) extends Attack(abilityCreature) {
 
   var scale: Float
   var attackRange: Float
@@ -54,7 +54,7 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
     val attackRectX = attackShiftX + abilityCreature.posX
     val attackRectY = attackShiftY + abilityCreature.posY
 
-    val poly = new CustomPolygon(new Rectangle(0, 0, width, height))
+    val poly = new EsPolygon(new Rectangle(0, 0, width, height))
 
     poly.setOrigin(0, height / 2)
     poly.setRotation(theta)
@@ -154,7 +154,7 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
     val attackRectX = attackShiftX + abilityCreature.posX
     val attackRectY = attackShiftY + abilityCreature.posY
 
-    val poly = new CustomPolygon(new Rectangle(0, 0, width, height))
+    val poly = new EsPolygon(new Rectangle(0, 0, width, height))
 
     poly.setOrigin(0, height / 2)
     poly.setRotation(theta)

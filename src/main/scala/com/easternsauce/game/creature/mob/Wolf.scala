@@ -9,7 +9,7 @@ import com.easternsauce.game.spawn.MobSpawnPoint
 import com.easternsauce.game.utils.EsTimer
 import system.GameSystem
 
-class Wolf(override val id: String, override val mobSpawnPoint: MobSpawnPoint) extends Mob(id, mobSpawnPoint) {
+class Wolf private (override val id: String, override val mobSpawnPoint: MobSpawnPoint) extends Mob(id, mobSpawnPoint) {
 
   override val baseSpeed: Float = 10f
 
@@ -63,4 +63,9 @@ class Wolf(override val id: String, override val mobSpawnPoint: MobSpawnPoint) e
         dashAbility.perform()
       }
   }
+}
+
+object Wolf {
+  def apply(id: String, mobSpawnPoint: MobSpawnPoint) =
+    new Wolf(id, mobSpawnPoint)
 }

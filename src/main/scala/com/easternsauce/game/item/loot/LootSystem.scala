@@ -10,7 +10,7 @@ import system.GameSystem
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
-class LootSystem {
+class LootSystem private {
   private var visibleItems: ListBuffer[Item] = ListBuffer()
 
   def render(batch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
@@ -64,10 +64,10 @@ class LootSystem {
   }
 
   def spawnLootPile(area: Area, x: Float, y: Float, dropTable: mutable.Map[String, Float]): Unit = {
-    val newLootPile = new LootPile(area, x, y)
+    val newLootPile = LootPile(area, x, y)
     for ((key, value) <- dropTable) {
       if (GameSystem.random.nextFloat < value) {
-        val item = new Item(ItemType.getItemType(key), newLootPile)
+        val item = Item(ItemType.getItemType(key), newLootPile)
         newLootPile.itemList += item
       }
     }
@@ -75,7 +75,7 @@ class LootSystem {
   }
 
   def spawnLootPile(area: Area, x: Float, y: Float, item: Item): Unit = {
-    val newLootPile = new LootPile(area, x, y)
+    val newLootPile = LootPile(area, x, y)
     newLootPile.itemList += item
     if (newLootPile.itemList.nonEmpty) {
       item.lootPileBackref = newLootPile
@@ -84,11 +84,15 @@ class LootSystem {
   }
 
   def placeTreasure(area: Area, x: Float, y: Float, itemType: ItemType): Unit = {
-    val treasure = new Treasure(area, x, y)
-    treasure.itemList += new Item(itemType, treasure)
+    val treasure = Treasure(area, x, y)
+    treasure.itemList += Item(itemType, treasure)
     area.treasureList += treasure
     area.remainingTreasureList += treasure
   }
 
   def getVisibleItemsCount: Int = visibleItems.size
+}
+
+object LootSystem {
+  def apply() = new LootSystem()
 }

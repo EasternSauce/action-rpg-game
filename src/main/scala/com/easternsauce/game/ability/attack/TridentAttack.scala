@@ -20,15 +20,15 @@ class TridentAttack private (override val abilityCreature: Creature) extends Mel
   private val frameDuration: Float = baseActiveTime / numOfFrames
   override var scale: Float = 2f
   override var attackRange: Float = 30f
-  override protected var channelTime: Float = baseChannelTime / weaponSpeed
-  override protected var activeTime: Float = baseActiveTime / weaponSpeed
-  override protected var cooldownTime = 0.7f
+  override protected val channelTime: Float = baseChannelTime / weaponSpeed
+  override protected val activeTime: Float = baseActiveTime / weaponSpeed
+  override protected val cooldownTime = 0.7f
   override protected var width: Float = 64f
   override protected var height: Float = 32f
   override protected var abilityAnimation: EsAnimation =
-    new EsAnimation(Assets.tridentThrustSpriteSheet, frameDuration)
+    EsAnimation(Assets.tridentThrustSpriteSheet, frameDuration)
   override protected var abilityWindupAnimation: EsAnimation =
-    new EsAnimation(Assets.tridentThrustWindupSpriteSheet, channelFrameDuration)
+    EsAnimation(Assets.tridentThrustWindupSpriteSheet, channelFrameDuration)
   override protected var knockbackPower: Float = 30f
   override protected var aimed: Boolean = false
 }

@@ -7,7 +7,7 @@ import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up}
 import com.easternsauce.game.spawn.MobSpawnPoint
 import com.easternsauce.game.utils.EsTimer
 
-class Goblin(override val id: String, override val mobSpawnPoint: MobSpawnPoint, weaponType: String)
+class Goblin private (override val id: String, override val mobSpawnPoint: MobSpawnPoint, weaponType: String)
     extends Mob(id, mobSpawnPoint) {
   actionTimer = EsTimer(true)
 
@@ -37,4 +37,9 @@ class Goblin(override val id: String, override val mobSpawnPoint: MobSpawnPoint,
   healthPoints = maxHealthPoints
 
   grantWeapon("poisonDagger")
+}
+
+object Goblin {
+  def apply(id: String, mobSpawnPoint: MobSpawnPoint, weaponType: String) =
+    new Goblin(id, mobSpawnPoint, weaponType)
 }

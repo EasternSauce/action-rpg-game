@@ -17,7 +17,7 @@ import system.GameSystem
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
-class InventoryWindow {
+class InventoryWindow private {
   private val background: Rectangle = new Rectangle(
     (GameSystem.originalWidth * 0.2).toInt,
     (GameSystem.originalHeight * 0.3).toInt,
@@ -36,7 +36,7 @@ class InventoryWindow {
   private val tradeInventoryColumns: Int = 2
   private val tradeInventorySlots: Int =
     tradeInventoryRows * tradeInventoryColumns
-  var inventoryItems: mutable.Map[Int, Item] = mutable.Map()
+  val inventoryItems: mutable.Map[Int, Item] = mutable.Map()
   var inventoryOpen: Boolean = false
   var gold: Int = 0
   var trading: Boolean = false
@@ -48,7 +48,7 @@ class InventoryWindow {
   private var currentMoved: Int = 0
   private var movingInEquipment: Boolean = false
   private var traderInventoryItems: mutable.Map[Int, Item] = mutable.Map()
-  private var equipmentSlotNameList: ListBuffer[String] =
+  private val equipmentSlotNameList: ListBuffer[String] =
     ListBuffer("Weapon", "Helmet", "Body", "Gloves", "Ring", "Boots")
   private var inEquipment: Boolean = false
   private var inTraderInventory: Boolean = false
@@ -520,7 +520,7 @@ class InventoryWindow {
         if (item.lootPileBackref.itemList.size == 1) {
           item.lootPileBackref match {
             case _: Treasure => Assets.chestOpeningSound.play(0.1f)
-            case _: LootPile => Assets.coinbagSound.play(0.3f)
+            case _: LootPile => Assets.coinBagSound.play(0.3f)
           }
           item.lootPileBackref.visible = false
           val world = item.lootPileBackref.body.getWorld
@@ -554,7 +554,7 @@ class InventoryWindow {
         if (item.lootPileBackref.itemList.size == 1) {
           item.lootPileBackref match {
             case _: Treasure => Assets.chestOpeningSound.play(0.1f)
-            case _: LootPile => Assets.coinbagSound.play(0.3f)
+            case _: LootPile => Assets.coinBagSound.play(0.3f)
           }
           item.lootPileBackref.visible = false
           val world = item.lootPileBackref.body.getWorld
@@ -582,4 +582,8 @@ class InventoryWindow {
     }
   }
 
+}
+
+object InventoryWindow {
+  def apply() = new InventoryWindow()
 }

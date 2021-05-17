@@ -13,9 +13,9 @@ import scala.collection.mutable.ListBuffer
 
 class BowAttack private (override val abilityCreature: Creature) extends Attack(abilityCreature) {
 
-  override protected var channelTime: Float = 0.5f
-  override protected var activeTime: Float = 0.3f
-  override protected var cooldownTime = 0.8f
+  override protected val channelTime: Float = 0.5f
+  override protected val activeTime: Float = 0.3f
+  override protected val cooldownTime = 0.8f
 
   override protected var abilityAnimation: EsAnimation = _
   override protected var abilityWindupAnimation: EsAnimation = _
@@ -43,7 +43,7 @@ class BowAttack private (override val abilityCreature: Creature) extends Attack(
     if (!abilityCreature.facingVector.equals(new Vector2(0.0f, 0.0f))) {
       val arrowStartX = abilityCreature.posX
       val arrowStartY = abilityCreature.posY
-      val arrow: Arrow = new Arrow(
+      val arrow: Arrow = Arrow(
         arrowStartX,
         arrowStartY,
         abilityCreature.area,

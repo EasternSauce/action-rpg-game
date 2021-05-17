@@ -10,7 +10,7 @@ import system.{GameState, GameSystem}
 
 import scala.collection.mutable.ListBuffer
 
-class MainMenu {
+class MainMenu private {
   private var currentSelected: Int = 0
 
   private var optionList: ListBuffer[String] = ListBuffer()
@@ -163,4 +163,8 @@ class MainMenu {
     val file = new File("saves/savegame.sav")
     file.exists && file.length != 0
   }
+}
+
+object MainMenu {
+  def apply() = new MainMenu()
 }

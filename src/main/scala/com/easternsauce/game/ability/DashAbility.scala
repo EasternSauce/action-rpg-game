@@ -7,12 +7,12 @@ import system.GameSystem
 
 class DashAbility private (override val abilityCreature: Creature, val dashDistance: Float)
     extends Ability(abilityCreature) {
-  protected var dashSpeed: Float = 30.0f
-  override protected var cooldownTime: Float = 1.0f
-  override protected var channelTime: Float = 0f
-  override protected var activeTime: Float =
+  protected val dashSpeed: Float = 30.0f
+  override protected val cooldownTime: Float = 1.0f
+  override protected val channelTime: Float = 0f
+  override protected val activeTime: Float =
     dashDistance / (dashSpeed * GameSystem.PixelsPerMeter)
-  protected var dashAcceleration: Float = abilityCreature.mass * 20f
+  protected val dashAcceleration: Float = abilityCreature.mass * 20f
   protected var dashVector: Vector2 = new Vector2(0f, 0f)
 
   override def performMovement(): Unit = {

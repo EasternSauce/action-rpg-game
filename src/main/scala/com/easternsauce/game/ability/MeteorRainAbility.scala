@@ -10,10 +10,10 @@ import system.GameSystem
 import scala.collection.mutable.ListBuffer
 
 class MeteorRainAbility private (override val abilityCreature: Creature) extends Ability(abilityCreature) {
-  override protected var channelTime: Float = 0.3f
-  override protected var activeTime: Float = 13f
-  override protected var cooldownTime = 35f
-  protected var explosionRange: Float = 300f
+  override protected val channelTime: Float = 0.05f
+  override protected val activeTime: Float = 11f
+  override protected val cooldownTime = 35f
+  protected val explosionRange: Float = 300f
   protected var meteors: ListBuffer[Meteor] = _
 
   override def onChannellingStart(): Unit = {

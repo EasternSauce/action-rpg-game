@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.{ApplicationAdapter, Gdx, Input, InputProcessor}
 import system.GameSystem._
 
-class GdxGame extends ApplicationAdapter with InputProcessor {
+class GdxGame private extends ApplicationAdapter with InputProcessor {
 
   private var spriteBatch: SpriteBatch = _
   private var hudBatch: SpriteBatch = _
@@ -34,12 +34,8 @@ class GdxGame extends ApplicationAdapter with InputProcessor {
       case W | A | S | D => dirKeysMap(keycode) = true
       case SHIFT_LEFT    => playerCharacter.sprinting = true
       case SPACE =>
-        if (
-          playerCharacter.dashAbility.canPerform && !playerCharacter.inMenus
-        ) {
-          playerCharacter.dashAbility.setDashVector(
-            playerCharacter.movementVector.cpy().nor()
-          )
+        if (playerCharacter.dashAbility.canPerform && !playerCharacter.inMenus) {
+          playerCharacter.dashAbility.setDashVector(playerCharacter.movementVector.cpy().nor())
           playerCharacter.dashAbility.perform()
 
         }
@@ -60,19 +56,9 @@ class GdxGame extends ApplicationAdapter with InputProcessor {
 
   override def keyTyped(character: Char): Boolean = false
 
-  override def touchDown(
-      screenX: Int,
-      screenY: Int,
-      pointer: Int,
-      button: Int
-  ): Boolean = false
+  override def touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean = false
 
-  override def touchUp(
-      screenX: Int,
-      screenY: Int,
-      pointer: Int,
-      button: Int
-  ): Boolean = false
+  override def touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean = false
 
   override def touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean =
     false
@@ -87,4 +73,8 @@ class GdxGame extends ApplicationAdapter with InputProcessor {
     camera.viewportWidth = width
     camera.viewportHeight = height
   }
+}
+
+object GdxGame {
+  def apply() = new GdxGame()
 }

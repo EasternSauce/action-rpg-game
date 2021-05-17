@@ -14,7 +14,7 @@ import com.easternsauce.game.spawn.PlayerRespawnPoint
 import com.easternsauce.game.utils.EsTimer
 import system.GameSystem
 
-class PlayerCharacter(id: String) extends Creature(id) {
+class PlayerCharacter private (id: String) extends Creature(id) {
 
   override val hitboxBounds = new Rectangle(18, 0, 28, 64)
   override val isPlayer = true
@@ -23,7 +23,7 @@ class PlayerCharacter(id: String) extends Creature(id) {
   var dashAbility: DashAbility = _
   var respawning: Boolean = false
   var currentRespawnPoint: PlayerRespawnPoint = _
-  private var respawnTimer: EsTimer = EsTimer()
+  private val respawnTimer: EsTimer = EsTimer()
 
   override def onInit(): Unit = {
     super.onInit()
@@ -62,9 +62,8 @@ class PlayerCharacter(id: String) extends Creature(id) {
     val centerY =
       (1f - GameSystem.ScreenProportion) * Gdx.graphics.getHeight + GameSystem.ScreenProportion * Gdx.graphics.getHeight / 2f
 
-    facingVector =
-      new Vector2(mouseX - centerX, (Gdx.graphics.getHeight - mouseY) - centerY)
-        .nor() // we need to reverse y due to mouse coordinates being in different system
+    facingVector = new Vector2(mouseX - centerX, (Gdx.graphics.getHeight - mouseY) - centerY)
+      .nor() // we need to reverse y due to mouse coordinates being in different system
   }
 
   override def onDeath(): Unit = {
@@ -162,8 +161,9 @@ class PlayerCharacter(id: String) extends Creature(id) {
     }
 
     abilityList += dashAbility
-    //        swordAttackAbility.setAimed(true);
-    //        unarmedAttackAbility.setAimed(true);
-    //        tridentAttackAbility.setAimed(true);
   }
+}
+
+object PlayerCharacter {
+  def apply(id: String) = new PlayerCharacter(id)
 }

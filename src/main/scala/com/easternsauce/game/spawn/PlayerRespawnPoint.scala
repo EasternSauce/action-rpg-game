@@ -10,7 +10,7 @@ import com.easternsauce.game.utils.EsTimer
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
-class PlayerRespawnPoint(posX: Int, posY: Int, val area: Area) {
+class PlayerRespawnPoint private (posX: Int, posY: Int, val area: Area) {
 
   val width: Float = 64f
   val height: Float = 64f
@@ -64,4 +64,8 @@ class PlayerRespawnPoint(posX: Int, posY: Int, val area: Area) {
 
   }
 
+}
+
+object PlayerRespawnPoint {
+  def apply(posX: Int, posY: Int, area: Area) = new PlayerRespawnPoint(posX, posY, area)
 }

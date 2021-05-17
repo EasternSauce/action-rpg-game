@@ -20,13 +20,13 @@ class SwordAttack private (override val abilityCreature: Creature) extends Melee
   private val frameDuration: Float = baseActiveTime / numOfFrames
   override var scale: Float = 2f
   override var attackRange: Float = 30f
-  override protected var cooldownTime: Float = 0.8f
-  override protected var channelTime: Float = baseChannelTime * 1f / weaponSpeed
-  override protected var activeTime: Float = baseActiveTime * 1f / weaponSpeed
+  override protected val cooldownTime: Float = 0.8f
+  override protected val channelTime: Float = baseChannelTime * 1f / weaponSpeed
+  override protected val activeTime: Float = baseActiveTime * 1f / weaponSpeed
   override protected var abilityAnimation: EsAnimation =
-    new EsAnimation(Assets.slashSpriteSheet, frameDuration)
+    EsAnimation(Assets.slashSpriteSheet, frameDuration)
   override protected var abilityWindupAnimation: EsAnimation =
-    new EsAnimation(Assets.slashWindupSpriteSheet, channelFrameDuration)
+    EsAnimation(Assets.slashWindupSpriteSheet, channelFrameDuration)
   override protected var width: Float = 40f
   override protected var height: Float = 40f
   override protected var knockbackPower: Float = 1f

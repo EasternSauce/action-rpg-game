@@ -4,12 +4,12 @@ import com.badlogic.gdx.graphics.g2d.{Animation, TextureRegion}
 import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up}
 import com.easternsauce.game.utils.EsTimer
 
-class EsAnimation(spriteSheet: EsSpriteSheet, frameDuration: Float, val row: Int = 0) {
+class EsAnimation private (spriteSheet: EsSpriteSheet, frameDuration: Float, val row: Int) {
   val dirMap = Map(Left -> 1, Right -> 2, Up -> 3, Down -> 0)
 
   val animationTimer: EsTimer = EsTimer(true)
 
-  var animation: com.badlogic.gdx.graphics.g2d.Animation[TextureRegion] =
+  val animation: com.badlogic.gdx.graphics.g2d.Animation[TextureRegion] =
     new Animation[TextureRegion](frameDuration, spriteSheet.spriteTextures(row): _*)
 
   def currentFrame: TextureRegion = {
@@ -20,4 +20,9 @@ class EsAnimation(spriteSheet: EsSpriteSheet, frameDuration: Float, val row: Int
 
   def restart(): Unit = animationTimer.restart()
 
+}
+
+object EsAnimation {
+  def apply(spriteSheet: EsSpriteSheet, frameDuration: Float, row: Int = 0) =
+    new EsAnimation(spriteSheet, frameDuration, row)
 }

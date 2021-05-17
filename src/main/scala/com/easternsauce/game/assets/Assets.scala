@@ -53,7 +53,7 @@ object Assets {
   var strongPunchSound: Sound = _
   var swooshSound: Sound = _
   var chestOpeningSound: Sound = _
-  var coinbagSound: Sound = _
+  var coinBagSound: Sound = _
   var matchIgniteSound: Sound = _
 
   var arrowTexture: Texture = _
@@ -61,7 +61,7 @@ object Assets {
   var bagTexture: Texture = _
   var gobletTexture: Texture = _
   var gobletLitTexture: Texture = _
-  var downarrowTexture: Texture = _
+  var downArrowTexture: Texture = _
 
   var abandonedPlainsMusic: Music = _
   var fireDemonMusic: Music = _
@@ -74,27 +74,27 @@ object Assets {
           .setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest)
     )
 
-    male1SpriteSheet = new EsSpriteSheet("male1", 32, 32)
-    skeletonSpriteSheet = new EsSpriteSheet("skeleton", 64, 64)
-    wolfSpriteSheet = new EsSpriteSheet("wolf2", 32, 34)
-    goblinSpriteSheet = new EsSpriteSheet("goblin", 32, 32)
-    ghostSpriteSheet = new EsSpriteSheet("ghost", 32, 32)
+    male1SpriteSheet = EsSpriteSheet("male1", 32, 32)
+    skeletonSpriteSheet = EsSpriteSheet("skeleton", 64, 64)
+    wolfSpriteSheet = EsSpriteSheet("wolf2", 32, 34)
+    goblinSpriteSheet = EsSpriteSheet("goblin", 32, 32)
+    ghostSpriteSheet = EsSpriteSheet("ghost", 32, 32)
 
-    fireDemonSpriteSheet = new EsSpriteSheet("taurus", 80, 80)
+    fireDemonSpriteSheet = EsSpriteSheet("taurus", 80, 80)
 
-    iconsSpriteSheet = new EsSpriteSheet("nice_icons", 32, 32)
+    iconsSpriteSheet = EsSpriteSheet("nice_icons", 32, 32)
 
-    slashSpriteSheet = new EsSpriteSheet("slash", 40, 40)
-    slashWindupSpriteSheet = new EsSpriteSheet("slash_windup", 40, 40)
+    slashSpriteSheet = EsSpriteSheet("slash", 40, 40)
+    slashWindupSpriteSheet = EsSpriteSheet("slash_windup", 40, 40)
 
-    tridentThrustSpriteSheet = new EsSpriteSheet("trident_thrust", 64, 32)
-    tridentThrustWindupSpriteSheet = new EsSpriteSheet("trident_thrust_windup", 64, 32)
+    tridentThrustSpriteSheet = EsSpriteSheet("trident_thrust", 64, 32)
+    tridentThrustWindupSpriteSheet = EsSpriteSheet("trident_thrust_windup", 64, 32)
 
-    explosionSpriteSheet = new EsSpriteSheet("explosion", 64, 64)
-    explosionWindupSpriteSheet = new EsSpriteSheet("explosion_windup", 64, 64)
+    explosionSpriteSheet = EsSpriteSheet("explosion", 64, 64)
+    explosionWindupSpriteSheet = EsSpriteSheet("explosion_windup", 64, 64)
 
-    fistSlamSpriteSheet = new EsSpriteSheet("fist_slam", 40, 80)
-    fistSlamWindupSpriteSheet = new EsSpriteSheet("fist_slam_windup", 40, 80)
+    fistSlamSpriteSheet = EsSpriteSheet("fist_slam", 40, 80)
+    fistSlamWindupSpriteSheet = EsSpriteSheet("fist_slam_windup", 40, 80)
 
     area1Map = new TmxMapLoader().load("assets/areas/area1/tile_map.tmx")
     area2Map = new TmxMapLoader().load("assets/areas/area2/tile_map.tmx")
@@ -123,7 +123,7 @@ object Assets {
     strongPunchSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/strong-punch.wav"))
     swooshSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/swoosh.wav"))
     chestOpeningSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/chest-opening.wav"))
-    coinbagSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/coinbag.wav"))
+    coinBagSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/coinbag.wav"))
     matchIgniteSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/match-ignite.wav"))
 
     arrowTexture = new Texture(Gdx.files.internal("assets/projectiles/arrow.png"))
@@ -131,7 +131,7 @@ object Assets {
     bagTexture = new Texture(Gdx.files.internal("assets/treasure/bag.png"))
     gobletTexture = new Texture(Gdx.files.internal("assets/goblet/goblet.png"))
     gobletLitTexture = new Texture(Gdx.files.internal("assets/goblet/goblet_lit.png"))
-    downarrowTexture = new Texture(Gdx.files.internal("assets/downarrow/downarrow.png"))
+    downArrowTexture = new Texture(Gdx.files.internal("assets/downarrow/downarrow.png"))
 
     abandonedPlainsMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/music/abandoned_plains.wav"))
     fireDemonMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/music/fire_demon.wav"))

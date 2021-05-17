@@ -4,16 +4,17 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Rectangle
 import com.easternsauce.game.creature.npc.NonPlayerCharacter
+import com.easternsauce.game.creature.player.PlayerCharacter
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
-class Hud {
-  private val w = GameSystem.originalWidth
-  private val h = GameSystem.originalHeight
-  private val proportion = 1 - GameSystem.ScreenProportion
-  private val pc = GameSystem.playerCharacter
-  var bossHealthBar = new BossHealthBar
-  private var bottomRect = new Rectangle(0, 0, w, h * proportion)
+class Hud private {
+  private val w: Float = GameSystem.originalWidth
+  private val h: Float = GameSystem.originalHeight
+  private val proportion: Float = 1 - GameSystem.ScreenProportion
+  private val pc: PlayerCharacter = GameSystem.playerCharacter
+  val bossHealthBar: BossHealthBar = BossHealthBar()
+  private val bottomRect = new Rectangle(0, 0, w, h * proportion)
   private var maxHealthRect = new Rectangle(10, h * proportion + 40, 100, 10)
   private var healthRect = new Rectangle(10, h * proportion + 40, 100 * pc.healthPoints / pc.maxHealthPoints, 10)
   private var maxStaminaRect = new Rectangle(10, h * proportion + 25, 100, 10)
@@ -67,4 +68,8 @@ class Hud {
     bossHealthBar.update()
   }
 
+}
+
+object Hud {
+  def apply() = new Hud()
 }

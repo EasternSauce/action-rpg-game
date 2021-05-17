@@ -7,7 +7,7 @@ import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up}
 import com.easternsauce.game.spawn.MobSpawnPoint
 import com.easternsauce.game.utils.EsTimer
 
-class Skeleton(override val id: String, override val mobSpawnPoint: MobSpawnPoint, val weaponType: String)
+class Skeleton private (override val id: String, override val mobSpawnPoint: MobSpawnPoint, val weaponType: String)
     extends Mob(id, mobSpawnPoint) {
   override val hitboxBounds = new Rectangle(18, 0, 28, 64)
   override val baseSpeed = 12f
@@ -40,4 +40,9 @@ class Skeleton(override val id: String, override val mobSpawnPoint: MobSpawnPoin
 
   grantWeapon(weaponType)
 
+}
+
+object Skeleton {
+  def apply(id: String, mobSpawnPoint: MobSpawnPoint, weaponType: String) =
+    new Skeleton(id, mobSpawnPoint, weaponType)
 }

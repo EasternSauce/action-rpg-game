@@ -6,7 +6,7 @@ import com.easternsauce.game.creature.util.{AttackType, Bow, Sword, Trident}
 
 import scala.collection.mutable
 
-class ItemType(
+class ItemType private (
   val id: String,
   val name: String,
   val description: String,
@@ -19,8 +19,8 @@ class ItemType(
   val consumable: Boolean
 ) {
 
-  val weaponSpeed = 1.0f
-  var poisonChance = 0.0f
+  val weaponSpeed: Float = 1.0f
+  var poisonChance: Float = 0.0f
 
   var attackType: AttackType = null.asInstanceOf[AttackType]
 
@@ -29,6 +29,20 @@ class ItemType(
 object ItemType {
 
   private val itemTypes: mutable.Map[String, ItemType] = mutable.Map()
+
+  def apply(
+    id: String,
+    name: String,
+    description: String,
+    textureRegion: TextureRegion,
+    equipmentType: String,
+    worth: Int,
+    maxDamage: Float,
+    maxArmor: Float,
+    stackable: Boolean,
+    consumable: Boolean
+  ) =
+    new ItemType(id, name, description, textureRegion, equipmentType, worth, maxDamage, maxArmor, stackable, consumable)
 
   def loadItemTypes(): Unit = {
     val itemType1 = new ItemType(
@@ -277,4 +291,5 @@ object ItemType {
       throw new RuntimeException("item type doesn't exist: " + itemTypeId)
     }
   }
+
 }

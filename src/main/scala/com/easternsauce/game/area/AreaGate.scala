@@ -23,13 +23,13 @@ class AreaGate(
   val fromRect = new Rectangle(fromPosX, fromPosY, width, height)
   val toRect = new Rectangle(toPosX, toPosY, width, height)
 
-  private val downarrowImageFrom = new Image(Assets.downarrowTexture)
-  private val downarrowImageTo = new Image(Assets.downarrowTexture)
+  private val downArrowImageFrom = new Image(Assets.downArrowTexture)
+  private val downArrowImageTo = new Image(Assets.downArrowTexture)
 
-  downarrowImageFrom.setPosition(fromPosX, fromPosY)
-  downarrowImageTo.setPosition(toPosX, toPosY)
-  downarrowImageFrom.setScale(1.5f)
-  downarrowImageTo.setScale(1.5f)
+  downArrowImageFrom.setPosition(fromPosX, fromPosY)
+  downArrowImageTo.setPosition(toPosX, toPosY)
+  downArrowImageFrom.setScale(1.5f)
+  downArrowImageTo.setScale(1.5f)
 
   private var body: Body = _
 
@@ -41,8 +41,8 @@ class AreaGate(
       throw new RuntimeException("current area not specified")
     }
 
-    if (currentArea == areaFrom) downarrowImageFrom.draw(batch, 1.0f)
-    if (currentArea == areaTo) downarrowImageTo.draw(batch, 1.0f)
+    if (currentArea == areaFrom) downArrowImageFrom.draw(batch, 1.0f)
+    if (currentArea == areaTo) downArrowImageTo.draw(batch, 1.0f)
   }
 
   def initBody(area: Area, rect: Rectangle): Unit = {

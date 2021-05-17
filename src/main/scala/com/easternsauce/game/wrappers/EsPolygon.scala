@@ -1,10 +1,10 @@
-package com.easternsauce.game.shapes
+package com.easternsauce.game.wrappers
 
 import com.badlogic.gdx.math.Rectangle
 
 import scala.collection.mutable
 
-class CustomPolygon extends com.badlogic.gdx.math.Polygon {
+class EsPolygon private extends com.badlogic.gdx.math.Polygon {
 
   def this(vertices: Array[Float]) {
     this()
@@ -25,4 +25,9 @@ class CustomPolygon extends com.badlogic.gdx.math.Polygon {
     setVertices(vertices.toArray)
   }
 
+}
+
+object EsPolygon {
+  def apply(vertices: Array[Float]) = new EsPolygon(vertices)
+  def apply(rect: Rectangle) = new EsPolygon(rect)
 }

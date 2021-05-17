@@ -15,7 +15,7 @@ class FireDemon(override val id: String, override val mobSpawnPoint: MobSpawnPoi
   override val scale: Float = 3.0f
   override val hitbox = new Rectangle(0, 0, 80 * scale, 80 * scale)
   override val onGettingHitSound: Sound = Assets.roarSound
-  override val baseSpeed: Float = 25f
+  override val baseSpeed: Float = 16f
   override val mass: Float = 10000f
   protected var meteorRainAbility: MeteorRainAbility = _
 

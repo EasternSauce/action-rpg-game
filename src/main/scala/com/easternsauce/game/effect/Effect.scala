@@ -2,13 +2,13 @@ package com.easternsauce.game.effect
 
 import com.easternsauce.game.utils.EsTimer
 
-class Effect {
+class Effect private {
 
-  protected var effectTimer: EsTimer = EsTimer()
+  protected val effectTimer: EsTimer = EsTimer()
 
-  protected var effectEndTime = 0f
+  protected var effectEndTime: Float = 0f
 
-  protected var effectActive = false
+  protected var effectActive: Boolean = false
 
   def applyEffect(effectTime: Float): Unit = {
     if (effectActive) {
@@ -38,4 +38,8 @@ class Effect {
     effectTimer.stop()
     effectTimer.restart()
   }
+}
+
+object Effect {
+  def apply() = new Effect()
 }

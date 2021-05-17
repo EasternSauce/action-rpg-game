@@ -12,14 +12,14 @@ import system.GameSystem
 class ExplosionAbility private (override val abilityCreature: Creature) extends Ability(abilityCreature) {
 
   override protected val isStoppable: Boolean = false
-  override protected var channelTime: Float = 1.3f
-  override protected var activeTime: Float = 0.9f
-  override protected var cooldownTime: Float = 0.8f
+  override protected val channelTime: Float = 1.3f
+  override protected val activeTime: Float = 0.9f
+  override protected val cooldownTime: Float = 0.8f
   var body: Body = _
   var exploded = false
-  protected var explosionAnimation =
-    new EsAnimation(Assets.explosionSpriteSheet, 0.05f)
-  protected var explosionRange: Float = 320f
+  protected val explosionAnimation: EsAnimation =
+    EsAnimation(Assets.explosionSpriteSheet, 0.05f)
+  protected val explosionRange: Float = 320f
 
   override def onChannellingStart(): Unit = {
     abilityCreature

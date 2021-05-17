@@ -12,9 +12,9 @@ import system.GameSystem
 
 import scala.collection.mutable.ListBuffer
 
-class LootPile(val area: Area, x: Float, y: Float) {
-  private val width = 10
-  private val height = 10
+class LootPile protected (val area: Area, x: Float, y: Float) {
+  private val width: Int = 10
+  private val height: Int = 10
 
   val rect: Rectangle = new Rectangle(x, y, width, height)
   val itemList: ListBuffer[Item] = ListBuffer()
@@ -53,4 +53,8 @@ class LootPile(val area: Area, x: Float, y: Float) {
 
   }
 
+}
+
+object LootPile {
+  def apply(area: Area, x: Float, y: Float) = new LootPile(area, x, y)
 }

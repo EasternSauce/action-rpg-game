@@ -7,9 +7,9 @@ import com.easternsauce.game.creature.Creature
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
 
-class BossHealthBar {
+class BossHealthBar private {
   var boss: Creature = _
-  private var visible = false
+  private var visible: Boolean = false
   private var maxHealthRect: Rectangle = _
   private var healthRect: Rectangle = _
 
@@ -44,4 +44,8 @@ class BossHealthBar {
       )
     }
   }
+}
+
+object BossHealthBar {
+  def apply() = new BossHealthBar()
 }

@@ -10,9 +10,9 @@ import system.GameSystem
 import scala.collection.mutable.ListBuffer
 
 class FistSlamAbility private (override val abilityCreature: Creature) extends Ability(abilityCreature) {
-  override protected var cooldownTime: Float = 6.5f
-  override protected var activeTime: Float = 3.0f
-  override protected var channelTime: Float = 0.35f
+  override protected val cooldownTime: Float = 6.5f
+  override protected val activeTime: Float = 3.0f
+  override protected val channelTime: Float = 0.35f
   protected var fists: ListBuffer[Fist] = ListBuffer()
 
   override def render(shapeDrawer: ShapeDrawer, batch: SpriteBatch): Unit = {

@@ -5,7 +5,8 @@ import com.easternsauce.game.creature.mob.Mob
 import com.easternsauce.game.spawn.MobSpawnPoint
 import system.GameSystem
 
-abstract class Boss(override val id: String, override val mobSpawnPoint: MobSpawnPoint) extends Mob(id, mobSpawnPoint) {
+abstract class Boss protected (override val id: String, override val mobSpawnPoint: MobSpawnPoint)
+    extends Mob(id, mobSpawnPoint) {
   var bossMusic: Music = _
   protected var bossBattleStarted = false
 

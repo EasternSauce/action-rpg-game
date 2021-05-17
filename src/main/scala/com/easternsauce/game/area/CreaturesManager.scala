@@ -12,7 +12,7 @@ import scala.collection.mutable.ListBuffer
 
 class CreaturesManager(private val area: Area) {
 
-  var creatures: mutable.Map[String, Creature] = mutable.Map()
+  val creatures: mutable.Map[String, Creature] = mutable.Map()
 
   private var renderAlivePriorityQueue: mutable.PriorityQueue[Creature] = _
   private var renderDeadPriorityQueue: mutable.PriorityQueue[Creature] = _

@@ -7,18 +7,18 @@ import com.easternsauce.game.creature.Creature
 import com.easternsauce.game.utils.EsTimer
 import space.earlygrey.shapedrawer.ShapeDrawer
 
-abstract class Ability(val abilityCreature: Creature) {
+abstract class Ability protected (val abilityCreature: Creature) {
 
   protected val isStoppable: Boolean = true
   var state: AbilityState = Inactive
   var onCooldown = false
   var onPerformAction: () => Unit = () => {}
   var onChannelAction: () => Unit = () => {}
-  protected var activeTimer: EsTimer = EsTimer()
-  protected var channelTimer: EsTimer = EsTimer()
-  protected var cooldownTime: Float
-  protected var activeTime: Float
-  protected var channelTime: Float
+  protected val activeTimer: EsTimer = EsTimer()
+  protected val channelTimer: EsTimer = EsTimer()
+  protected val cooldownTime: Float
+  protected val activeTime: Float
+  protected val channelTime: Float
   protected var isAttack = false
 
   def update(): Unit = {
@@ -75,7 +75,7 @@ abstract class Ability(val abilityCreature: Creature) {
     onChannellingStart()
     onChannelAction()
 
-    if (isAttack) { // + 0.01 to ensure regen doesnt start if we hold attack button
+    if (isAttack) { // + 0.01 to ensure regen doesn't start if we hold attack button
       abilityCreature
         .getEffect("staminaRegenStopped")
         .applyEffect(channelTime + cooldownTime + 0.01f)

@@ -10,21 +10,21 @@ import com.easternsauce.game.spawn.MobSpawnPoint
 import com.easternsauce.game.utils.EsTimer
 import system.GameSystem
 
-abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) extends Creature(id) {
+abstract class Mob protected (override val id: String, val mobSpawnPoint: MobSpawnPoint) extends Creature(id) {
   override val isMob: Boolean = true
   protected var aggroDistance: Float = 600f
   protected var destinationX: Float = 0f
   protected var destinationY: Float = 0f
   protected var hasDestination: Boolean = false
-  protected var attackOrHoldTimer: EsTimer = EsTimer(true)
-  protected var attackOrHoldTime: Float = 0.5f
+  protected val attackOrHoldTimer: EsTimer = EsTimer(true)
+  protected val attackOrHoldTime: Float = 0.5f
   protected var hold: Boolean = false
 
-  protected var circlingDirectionTimer: EsTimer = EsTimer(true)
-  protected var circlingDirectionTime: Float = 0.5f
+  protected val circlingDirectionTimer: EsTimer = EsTimer(true)
+  protected val circlingDirectionTime: Float = 0.5f
   protected var circling: Boolean = false
   protected var circlingDir: Int = 0
-  protected var findNewDestinationTimer: EsTimer = EsTimer(true)
+  protected val findNewDestinationTimer: EsTimer = EsTimer(true)
 
   protected var actionTimer: EsTimer = EsTimer(true)
 
@@ -197,7 +197,7 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
 
   def grantWeapon(weaponName: String) {
     val weaponItemType = ItemType.getItemType(weaponName)
-    equipmentItems.put(0, new Item(weaponItemType, null))
+    equipmentItems.put(0, Item(weaponItemType, null))
 
   }
 

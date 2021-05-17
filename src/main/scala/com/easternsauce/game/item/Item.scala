@@ -4,12 +4,12 @@ import com.easternsauce.game.item.loot.LootPile
 import com.easternsauce.game.item.util.ItemType
 import system.GameSystem
 
-class Item(
+class Item private (
   val itemType: ItemType,
   var lootPileBackref: LootPile = null,
   var damage: Float = null.asInstanceOf[Float],
   var armor: Float = null.asInstanceOf[Float],
-  var quantity: Int = 1
+  var quantity: Int
 ) {
 
   val name: String =
@@ -55,4 +55,14 @@ class Item(
          else "") +
         this.description +
         "\n" + "Worth " + (this.itemType.worth * 0.3).toInt + " Gold" + "\n"
+}
+
+object Item {
+  def apply(
+    itemType: ItemType,
+    lootPileBackref: LootPile = null,
+    damage: Float = null.asInstanceOf[Float],
+    armor: Float = null.asInstanceOf[Float],
+    quantity: Int = 1
+  ) = new Item(itemType, lootPileBackref, damage, armor, quantity)
 }

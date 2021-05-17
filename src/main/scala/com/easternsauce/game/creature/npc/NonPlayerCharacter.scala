@@ -13,12 +13,12 @@ import system.GameSystem
 
 import scala.collection.mutable.ListBuffer
 
-class NonPlayerCharacter(id: String, trader: Boolean, spriteSheet: EsSpriteSheet, val dialogueStartId: String)
+class NonPlayerCharacter private (id: String, trader: Boolean, spriteSheet: EsSpriteSheet, val dialogueStartId: String)
     extends Creature(id) {
   override protected val onGettingHitSound: Sound = Assets.painSound
   override val isNPC = true
-  var random: scala.util.Random = GameSystem.random
-  private var actionTimer: EsTimer = EsTimer(isStarted = true)
+  val random: scala.util.Random = GameSystem.random
+  private val actionTimer: EsTimer = EsTimer(isStarted = true)
   private var traderInventory: ListBuffer[Item] = ListBuffer()
 
   loadSprites(spriteSheet, Map(Left -> 2, Right -> 3, Up -> 4, Down -> 1), 1)
@@ -33,9 +33,9 @@ class NonPlayerCharacter(id: String, trader: Boolean, spriteSheet: EsSpriteSheet
 
   if (trader) {
     for ((key, value) <- dropTable) {
-      for (i <- 0 until 12) {
+      for (_ <- 0 until 12) {
         if (GameSystem.random.nextFloat < value) {
-          val item = new Item(ItemType.getItemType(key), null)
+          val item = Item(ItemType.getItemType(key), null)
           traderInventory += item
         }
       }
@@ -70,4 +70,9 @@ class NonPlayerCharacter(id: String, trader: Boolean, spriteSheet: EsSpriteSheet
       GameSystem.inventoryWindow.setTraderInventory(traderInventory)
     }
   }
+}
+
+object NonPlayerCharacter {
+  def apply(id: String, trader: Boolean, spriteSheet: EsSpriteSheet, dialogueStartId: String) =
+    new NonPlayerCharacter(id, trader, spriteSheet, dialogueStartId)
 }

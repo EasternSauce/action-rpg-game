@@ -23,9 +23,9 @@ class Meteor private (
   override protected val activeTime: Float = 1.8f / speed
   override protected val channelTime: Float = 1.2f / speed
   override protected val abilityAnimation: EsAnimation =
-    new EsAnimation(Assets.explosionSpriteSheet, 0.092f / speed)
+    EsAnimation(Assets.explosionSpriteSheet, 0.092f / speed)
   override protected val abilityWindupAnimation: EsAnimation =
-    new EsAnimation(Assets.explosionWindupSpriteSheet, 0.2f / speed)
+    EsAnimation(Assets.explosionWindupSpriteSheet, 0.2f / speed)
 
   override var state: AbilityState = AbilityState.Inactive
   override var started = false

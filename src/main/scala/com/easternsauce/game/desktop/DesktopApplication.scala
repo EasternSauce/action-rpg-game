@@ -5,13 +5,13 @@ import system.GdxGame
 
 object DesktopApplication {
 
-  var windowWidth: Float = 1280f
-  var windowHeight: Float = 720f
+  val windowWidth: Float = 1280f
+  val windowHeight: Float = 720f
 
   def main(arg: Array[String]): Unit = {
 
     val config = new Lwjgl3ApplicationConfiguration
     config.setWindowedMode(windowWidth.toInt, windowHeight.toInt)
-    new Lwjgl3Application(new GdxGame, config)
+    new Lwjgl3Application(GdxGame(), config)
   }
 }

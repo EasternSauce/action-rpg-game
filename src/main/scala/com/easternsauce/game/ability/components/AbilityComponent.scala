@@ -9,7 +9,7 @@ import com.easternsauce.game.utils.EsTimer
 import com.easternsauce.game.wrappers.EsAnimation
 import space.earlygrey.shapedrawer.ShapeDrawer
 
-abstract class AbilityComponent(val mainAbility: Ability) {
+abstract class AbilityComponent protected (val mainAbility: Ability) {
 
   protected val activeTimer: EsTimer = EsTimer()
   protected val channelTimer: EsTimer = EsTimer()

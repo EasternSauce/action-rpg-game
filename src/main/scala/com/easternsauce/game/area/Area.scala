@@ -30,17 +30,15 @@ class Area private (
   val tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, scale)
   val firstLayer: TiledMapTileLayer =
     tiledMap.getLayers.get(0).asInstanceOf[TiledMapTileLayer]
-  var creaturesManager: CreaturesManager = CreaturesManager(this)
+  val creaturesManager: CreaturesManager = CreaturesManager(this)
   var respawnList: mutable.ListBuffer[PlayerRespawnPoint] = ListBuffer()
   var blockadeList: mutable.ListBuffer[Blockade] = ListBuffer()
   var lootPileList: ListBuffer[LootPile] = ListBuffer()
   var remainingTreasureList: ListBuffer[Treasure] = ListBuffer()
   var treasureList: ListBuffer[Treasure] = ListBuffer()
-  var arrowList: mutable.ListBuffer[Arrow] = ListBuffer()
+  val arrowList: mutable.ListBuffer[Arrow] = ListBuffer()
   var tiles: mutable.Map[(Int, Int, Int), AreaTile] = mutable.Map()
-  var world: World = new World(new Vector2(0f, 0f), false)
-  private var enemyRespawnAreaList: mutable.ListBuffer[EnemyRespawnArea] =
-    ListBuffer()
+  val world: World = new World(new Vector2(0f, 0f), false)
 
   for (layerNum <- 0 to 1) { // two layers
     val layer: TiledMapTileLayer =
@@ -147,10 +145,6 @@ class Area private (
   loadSpawns()
 
   def updateSpawns(): Unit = {
-    for (enemyRespawnArea <- enemyRespawnAreaList) {
-      enemyRespawnArea.update()
-    }
-
     for (mobSpawnPoint <- mobSpawnPointList) {
       mobSpawnPoint.update()
     }
@@ -243,7 +237,7 @@ class Area private (
 
         def onContactEnd(pair: (AnyRef, AnyRef)): Unit = {
           pair match { // will run onContact twice for same type objects!
-            case (creature: Creature, areaGate: AreaGate) =>
+            case (creature: Creature, _: AreaGate) =>
               creature.passedGateRecently = false
             case _ =>
           }
@@ -302,7 +296,7 @@ class Area private (
   }
 
   def onEntry(): Unit = {
-    //TODO: add music manager or smth
+    //TODO: add music manager or something
     Assets.abandonedPlainsMusic.stop()
     Assets.fireDemonMusic.stop()
 
@@ -359,11 +353,10 @@ class Area private (
     for (spawnLocation <- spawnLocationsContainer.spawnLocationList) {
       val posX = spawnLocation.posX
       val posY = spawnLocation.posY
-      if (spawnLocation.spawnType == "respawnArea")
-        enemyRespawnAreaList += new EnemyRespawnArea(posX, posY, 3, this, spawnLocation.creatureType)
-      else if (spawnLocation.spawnType == "spawnPoint") {
+
+      if (spawnLocation.spawnType == "spawnPoint") {
         val mobSpawnPoint =
-          new MobSpawnPoint(posX, posY, this, spawnLocation.creatureType)
+          MobSpawnPoint(posX, posY, this, spawnLocation.creatureType)
         mobSpawnPointList += mobSpawnPoint
         if (spawnLocation.hasBlockade)
           addBlockade(mobSpawnPoint, spawnLocation.blockadePosX, spawnLocation.blockadePosY)
@@ -372,7 +365,7 @@ class Area private (
   }
 
   def addBlockade(mobSpawnPoint: MobSpawnPoint, blockadePosX: Int, blockadePosY: Int): Unit = {
-    val blockade = new Blockade(mobSpawnPoint, blockadePosX, blockadePosY)
+    val blockade = Blockade(mobSpawnPoint, blockadePosX, blockadePosY)
     blockadeList += blockade
     mobSpawnPoint.blockade = blockade
   }

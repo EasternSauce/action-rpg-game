@@ -15,7 +15,7 @@ import com.easternsauce.game.creature.util.WalkDirection.{Down, Left, Right, Up,
 import com.easternsauce.game.creature.util._
 import com.easternsauce.game.effect.Effect
 import com.easternsauce.game.item.Item
-import com.easternsauce.game.utils.{EsTimer, IntPair}
+import com.easternsauce.game.utils.{EsIntPair, EsTimer}
 import com.easternsauce.game.wrappers.{EsAnimation, EsSpriteSheet}
 import space.earlygrey.shapedrawer.ShapeDrawer
 import system.GameSystem
@@ -23,7 +23,7 @@ import system.GameSystem
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
-abstract class Creature(val id: String) extends Ordered[Creature] {
+abstract class Creature protected (val id: String) extends Ordered[Creature] {
 
   val scale: Float = 1f
   val spriteWidth: Float = 64
@@ -44,7 +44,7 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   var facingVector: Vector2 = new Vector2(0f, 0f)
   var maxHealthPoints = 100f
   var healthPoints: Float = maxHealthPoints
-  var maxStaminaPoints = 100f
+  val maxStaminaPoints = 100f
   var staminaPoints: Float = maxStaminaPoints
   var isAttacking = false
   var pendingArea: Area = _
@@ -57,8 +57,8 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   var name: String = _
   var isBoss: Boolean = false
   var sprinting = false
-  var equipmentItems: mutable.Map[Int, Item] = mutable.Map()
-  var movementVector: Vector2 = new Vector2(0f, 0f)
+  val equipmentItems: mutable.Map[Int, Item] = mutable.Map()
+  val movementVector: Vector2 = new Vector2(0f, 0f)
   var lastMovingDir: WalkDirection = WalkDirection.Down
   var abilityList: mutable.ListBuffer[Ability] = _
   var attackList: mutable.ListBuffer[Attack] = _
@@ -67,43 +67,43 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   var fixture: Fixture = _
   var toSetBodyNonInteractive: Boolean = false
   var aggroedCreature: Option[Creature] = None
-  protected var healthRegen = 0.3f
-  protected var staminaRegen = 3f
-  protected var staminaOveruseTime = 1.3f
-  protected var poisonTickTime = 1.5f
-  protected var poisonTime = 20f
-  protected var knockbackPower = 0f
+  protected val healthRegen = 0.3f
+  protected val staminaRegen = 3f
+  protected val staminaOveruseTime = 1.3f
+  protected val poisonTickTime = 1.5f
+  protected val poisonTime = 20f
+  protected val knockbackPower = 0f
   protected var healing = false
-  protected var healingTickTime = 0.3f
-  protected var healingTime = 8f
+  protected val healingTickTime = 0.3f
+  protected val healingTime = 8f
   protected var healingPower = 0f
   protected var knockbackVector: Vector2 = _
   protected var knockbackSpeed: Float = 0f
   protected var knockbackable = true
-  protected var dropTable: mutable.Map[String, Float] = mutable.Map()
+  protected val dropTable: mutable.Map[String, Float] = mutable.Map()
   protected var creatureType: String = _
-  protected var effectMap: mutable.Map[String, Effect] = mutable.Map()
+  protected val effectMap: mutable.Map[String, Effect] = mutable.Map()
   protected var staminaDrain = 0.0f
-  protected var movingDir: IntPair = IntPair(0, 0)
+  protected val movingDir: EsIntPair = EsIntPair(0, 0)
   protected var isMoving = false
   protected var wasMoving = false
   protected var totalDirections = 0
   protected var movementIncrement: Float = 0
-  protected var runningStoppedTimer: EsTimer = EsTimer()
+  protected val runningStoppedTimer: EsTimer = EsTimer()
   protected var neutralPositionIndex: Int = _
   protected var isRunningAnimationActive = false
-  protected var walkAnimation: mutable.Map[WalkDirection, EsAnimation] =
+  protected val walkAnimation: mutable.Map[WalkDirection, EsAnimation] =
     mutable.Map()
   protected var bowAttack: BowAttack = _
   protected var unarmedAttack: UnarmedAttack = _
   protected var swordAttack: SwordAttack = _
   protected var tridentAttack: TridentAttack = _
-  protected var healthRegenTimer: EsTimer = EsTimer(true)
-  protected var staminaRegenTimer: EsTimer = EsTimer(true)
-  protected var poisonTickTimer: EsTimer = EsTimer()
-  protected var staminaOveruseTimer: EsTimer = EsTimer()
-  protected var healingTimer: EsTimer = EsTimer()
-  protected var healingTickTimer: EsTimer = EsTimer()
+  protected val healthRegenTimer: EsTimer = EsTimer(true)
+  protected val staminaRegenTimer: EsTimer = EsTimer(true)
+  protected val poisonTickTimer: EsTimer = EsTimer()
+  protected val staminaOveruseTimer: EsTimer = EsTimer()
+  protected val healingTimer: EsTimer = EsTimer()
+  protected val healingTickTimer: EsTimer = EsTimer()
   protected var knocbackable = true
 
   def atFullLife: Boolean = healthPoints >= maxHealthPoints
@@ -474,10 +474,10 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
   protected def defineCustomAbilities(): Unit = {}
 
   protected def defineEffects(): Unit = {
-    effectMap.put("immune", new Effect())
-    effectMap.put("immobilized", new Effect())
-    effectMap.put("staminaRegenStopped", new Effect())
-    effectMap.put("poisoned", new Effect())
+    effectMap.put("immune", Effect())
+    effectMap.put("immobilized", Effect())
+    effectMap.put("staminaRegenStopped", Effect())
+    effectMap.put("poisoned", Effect())
   }
 
   def becomePoisoned(): Unit = {
@@ -602,14 +602,14 @@ abstract class Creature(val id: String) extends Ordered[Creature] {
 
   def loadSprites(
     spriteSheet: EsSpriteSheet,
-    directionalMapping: Map[WalkDirection, Int],
+    directionalMapping: Map[WalkDirection, Int], // TODO: why is this unused :o and why does it work anyway
     neutralPositionIndex: Int
   ): Unit = {
 
     this.neutralPositionIndex = neutralPositionIndex
 
     WalkDirection.values.foreach(dir => {
-      walkAnimation(dir) = new EsAnimation(spriteSheet, walkAnimationFrameDuration, dirMap(dir))
+      walkAnimation(dir) = EsAnimation(spriteSheet, walkAnimationFrameDuration, dirMap(dir))
     })
   }
 

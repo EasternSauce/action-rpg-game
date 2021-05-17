@@ -10,9 +10,9 @@ import space.earlygrey.shapedrawer.ShapeDrawer
 import scala.collection.mutable.ListBuffer
 
 class MeteorCrashAbility private (override val abilityCreature: Creature) extends Ability(abilityCreature) {
-  override protected var channelTime: Float = 1.25f
-  override protected var activeTime: Float = 2f
-  override protected var cooldownTime: Float = 6.5f
+  override protected val channelTime: Float = 0.05f
+  override protected val activeTime: Float = 1.8f
+  override protected val cooldownTime: Float = 6.5f
   protected var meteors: ListBuffer[Meteor] = ListBuffer()
 
   override def onChannellingStart(): Unit = {

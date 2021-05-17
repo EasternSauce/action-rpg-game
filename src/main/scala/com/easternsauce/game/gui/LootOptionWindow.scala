@@ -8,13 +8,13 @@ import system.GameSystem
 
 import scala.collection.mutable.ListBuffer
 
-class LootOptionWindow {
+class LootOptionWindow private {
 
-  var activated = false
-  var visible = false
-  private var currentSelected = 0
+  var activated: Boolean = false
+  var visible: Boolean = false
+  private var currentSelected: Int = 0
   private var itemList: ListBuffer[Item] = ListBuffer()
-  private var scroll = 0
+  private var scroll: Int = 0
 
   def render(batch: SpriteBatch): Unit = {
     if (visible) for (i <- 0 until Math.min(4, itemList.size)) {
@@ -72,4 +72,8 @@ class LootOptionWindow {
     }
   }
 
+}
+
+object LootOptionWindow {
+  def apply() = new LootOptionWindow()
 }

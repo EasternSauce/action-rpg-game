@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx
 
 import scala.collection.mutable.ListBuffer
 
-class EsTimer(var isStarted: Boolean = false) {
+class EsTimer private (var isStarted: Boolean = false) {
   var time: Float = 0
 
   EsTimer.timerList += this

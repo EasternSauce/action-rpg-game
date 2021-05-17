@@ -6,7 +6,7 @@ import com.easternsauce.game.area.Area
 import com.easternsauce.game.assets.Assets
 import space.earlygrey.shapedrawer.ShapeDrawer
 
-class Treasure(override val area: Area, x: Float, y: Float) extends LootPile(area, x, y) {
+class Treasure private (override val area: Area, x: Float, y: Float) extends LootPile(area, x, y) {
 
   val treasureImage: Image = new Image(Assets.treasureTexture)
 
@@ -20,4 +20,8 @@ class Treasure(override val area: Area, x: Float, y: Float) extends LootPile(are
       treasureImage.draw(batch, 1.0f)
     }
   }
+}
+
+object Treasure {
+  def apply(area: Area, x: Float, y: Float) = new Treasure(area, x, y)
 }

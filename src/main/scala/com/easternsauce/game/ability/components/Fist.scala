@@ -22,9 +22,9 @@ class Fist private (
   override protected val activeTime: Float = 0.2f
   override protected val channelTime: Float = 0.4f
   override val abilityAnimation: EsAnimation =
-    new EsAnimation(Assets.fistSlamSpriteSheet, 0.04f)
+    EsAnimation(Assets.fistSlamSpriteSheet, 0.04f)
   override val abilityWindupAnimation: EsAnimation =
-    new EsAnimation(Assets.fistSlamWindupSpriteSheet, 0.08f)
+    EsAnimation(Assets.fistSlamWindupSpriteSheet, 0.08f)
   val scale: Float = 3f
   override var state: AbilityState = AbilityState.Inactive
   override var started: Boolean = false
