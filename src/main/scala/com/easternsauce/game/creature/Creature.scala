@@ -3,7 +3,7 @@ package com.easternsauce.game.creature
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.graphics.g2d.{Sprite, SpriteBatch}
 import com.badlogic.gdx.math.{Rectangle, Vector2}
 import com.badlogic.gdx.physics.box2d._
 import com.easternsauce.game.ability.Ability
@@ -371,18 +371,42 @@ abstract class Creature protected (val id: String) extends Ordered[Creature] {
 
     if (isRunningAnimationActive) {
       val currentFrame = walkAnimation(lastMovingDir).currentFrame
-      batch.draw(
-        currentFrame,
-        posX - realWidth / 2,
-        posY - realHeight / 2,
-        realWidth / 2,
-        realHeight / 2,
-        realWidth,
-        realHeight,
-        1.0f,
-        1.0f,
-        0f
-      )
+
+      if (isAlive && isImmune && (effectMap("immune").getRemainingTime % 0.25f) < 125) {
+        val alpha = effectMap("immune").getRemainingTime * 40f
+        batch.setColor(1,0.1f,0.1f, 5f*Math.sin(alpha).toFloat + 0.5f)
+        batch.draw(
+          currentFrame,
+          posX - realWidth / 2,
+          posY - realHeight / 2,
+          realWidth / 2,
+          realHeight / 2,
+          realWidth,
+          realHeight,
+          1.0f,
+          1.0f,
+          0f
+        )
+        batch.setColor(1,1,1,1)
+
+
+      }
+      else {
+        batch.draw(
+          currentFrame,
+          posX - realWidth / 2,
+          posY - realHeight / 2,
+          realWidth / 2,
+          realHeight / 2,
+          realWidth,
+          realHeight,
+          1.0f,
+          1.0f,
+          0f
+        )
+      }
+
+
     } else {
       val currentFrame =
         walkAnimation(lastMovingDir).getFrameByIndex(neutralPositionIndex)
