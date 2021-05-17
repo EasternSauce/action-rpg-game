@@ -26,7 +26,6 @@ class LootSystem {
     }
   }
 
-
   def update(): Unit = {
 
     assert(GameSystem.currentArea.nonEmpty)
@@ -35,7 +34,12 @@ class LootSystem {
 
     for (lootPile <- GameSystem.currentArea.get.lootPileList) {
       if (GameSystem.currentArea.get == lootPile.area && lootPile.bodyCreated) {
-        if (GameSystem.distance(GameSystem.playerCharacter.body, lootPile.body) < 40f) {
+        if (
+          GameSystem.distance(
+            GameSystem.playerCharacter.body,
+            lootPile.body
+          ) < 40f
+        ) {
           GameSystem.lootOptionWindow.visible = true
           visibleItems.addAll(lootPile.itemList)
         }
@@ -49,7 +53,12 @@ class LootSystem {
 
     for (treasure <- GameSystem.currentArea.get.remainingTreasureList) {
       if (GameSystem.currentArea.get == treasure.area && treasure.bodyCreated) {
-        if (GameSystem.distance(GameSystem.playerCharacter.body, treasure.body) < 40f) {
+        if (
+          GameSystem.distance(
+            GameSystem.playerCharacter.body,
+            treasure.body
+          ) < 40f
+        ) {
           GameSystem.lootOptionWindow.visible = true
           visibleItems.addAll(treasure.itemList)
         }
@@ -64,7 +73,12 @@ class LootSystem {
     GameSystem.lootOptionWindow.update()
   }
 
-  def spawnLootPile(area: Area, x: Float, y: Float, dropTable: mutable.Map[String, Float]): Unit = {
+  def spawnLootPile(
+      area: Area,
+      x: Float,
+      y: Float,
+      dropTable: mutable.Map[String, Float]
+  ): Unit = {
     val newLootPile = new LootPile(area, x, y)
     for ((key, value) <- dropTable) {
       if (GameSystem.random.nextFloat < value) {
@@ -84,7 +98,12 @@ class LootSystem {
     }
   }
 
-  def placeTreasure(area: Area, x: Float, y: Float, itemType: ItemType): Unit = {
+  def placeTreasure(
+      area: Area,
+      x: Float,
+      y: Float,
+      itemType: ItemType
+  ): Unit = {
     val treasure = new Treasure(area, x, y)
     treasure.itemList += new Item(itemType, treasure)
     area.treasureList += treasure

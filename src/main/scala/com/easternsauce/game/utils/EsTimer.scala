@@ -4,15 +4,10 @@ import com.badlogic.gdx.Gdx
 
 import scala.collection.mutable.ListBuffer
 
-
-class EsTimer(var isStarted: Boolean = false){
+class EsTimer(var isStarted: Boolean = false) {
   var time: Float = 0
 
   EsTimer.timerList += this
-
-  private def update(delta: Float): Unit = {
-    if (isStarted) time = time + delta
-  }
 
   def start(): Unit = isStarted = true
 
@@ -23,14 +18,19 @@ class EsTimer(var isStarted: Boolean = false){
     isStarted = true
   }
 
+  private def update(delta: Float): Unit = {
+    if (isStarted) time = time + delta
+  }
+
 }
 
-
 object EsTimer {
-  def apply(): EsTimer = new EsTimer()
-  def apply(isStarted: Boolean): EsTimer = new EsTimer(isStarted)
-
   private val timerList: ListBuffer[EsTimer] = ListBuffer()
 
-  def updateTimers(): Unit = timerList.foreach(_.update(Gdx.graphics.getDeltaTime))
+  def apply(): EsTimer = new EsTimer()
+
+  def apply(isStarted: Boolean): EsTimer = new EsTimer(isStarted)
+
+  def updateTimers(): Unit =
+    timerList.foreach(_.update(Gdx.graphics.getDeltaTime))
 }

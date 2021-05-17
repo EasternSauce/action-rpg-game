@@ -11,7 +11,8 @@ import com.easternsauce.game.wrappers.EsAnimation
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
-class BowAttack(override val abilityCreature: Creature) extends Attack(abilityCreature) {
+class BowAttack private (override val abilityCreature: Creature)
+    extends Attack(abilityCreature) {
 
   override protected var channelTime: Float = 0.5f
   override protected var activeTime: Float = 0.3f
@@ -37,12 +38,22 @@ class BowAttack(override val abilityCreature: Creature) extends Attack(abilityCr
 
     val arrowList: ListBuffer[Arrow] = abilityCreature.area.arrowList
     val tiles: TiledMap = abilityCreature.area.tiledMap
-    val areaCreatures: mutable.Map[String, Creature] = abilityCreature.area.creatures
+    val areaCreatures: mutable.Map[String, Creature] =
+      abilityCreature.area.creatures
 
     if (!abilityCreature.facingVector.equals(new Vector2(0.0f, 0.0f))) {
       val arrowStartX = abilityCreature.posX
       val arrowStartY = abilityCreature.posY
-      val arrow: Arrow = new Arrow(arrowStartX, arrowStartY, abilityCreature.area, abilityCreature.facingVector, arrowList, tiles, areaCreatures, this.abilityCreature)
+      val arrow: Arrow = new Arrow(
+        arrowStartX,
+        arrowStartY,
+        abilityCreature.area,
+        abilityCreature.facingVector,
+        arrowList,
+        tiles,
+        areaCreatures,
+        this.abilityCreature
+      )
       arrowList += arrow
     }
 

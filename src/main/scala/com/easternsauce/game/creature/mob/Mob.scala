@@ -10,28 +10,26 @@ import com.easternsauce.game.spawn.MobSpawnPoint
 import com.easternsauce.game.utils.EsTimer
 import system.GameSystem
 
-abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) extends Creature(id) {
+abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint)
+    extends Creature(id) {
+  override val isMob: Boolean = true
   protected var aggroDistance: Float = 600f
-
-  protected var destinationX = 0f
-  protected var destinationY = 0f
-  protected var hasDestination = false
-
-  override val isMob = true
-
+  protected var destinationX: Float = 0f
+  protected var destinationY: Float = 0f
+  protected var hasDestination: Boolean = false
   protected var attackOrHoldTimer: EsTimer = EsTimer(true)
-  protected var attackOrHoldTime = 0.5f
-  protected var hold = false
+  protected var attackOrHoldTime: Float = 0.5f
+  protected var hold: Boolean = false
 
   protected var circlingDirectionTimer: EsTimer = EsTimer(true)
-  protected var circlingDirectionTime = 0.5f
-  protected var circling = false
-  protected var circlingDir = 0
+  protected var circlingDirectionTime: Float = 0.5f
+  protected var circling: Boolean = false
+  protected var circlingDir: Int = 0
   protected var findNewDestinationTimer: EsTimer = EsTimer(true)
 
   protected var actionTimer: EsTimer = EsTimer(true)
 
-  protected var stayInPlace = false
+  protected var stayInPlace: Boolean = false
 
   protected var currentDirection: WalkDirection = WalkDirection.Down
 
@@ -43,48 +41,29 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
     aggroedCreature = None
     var foundCreatureToAggro = false
 
+    GameSystem.areaCreatures
+      .filter(creature => !creature.isMob && !creature.isNPC)
+      .foreach(creature => {
+        if (
+          !foundCreatureToAggro && isAlive && GameSystem
+            .distance(body, creature.body) < aggroDistance
+        ) {
+          aggroedCreature = Some(creature)
+          foundCreatureToAggro = true
 
+          onAggroed()
+        }
 
-    GameSystem.areaCreatures.filter(creature => !creature.isMob && !creature.isNPC).foreach(creature => { // TODO: exclude npc too
-
-      if (!foundCreatureToAggro && isAlive && GameSystem.distance(body, creature.body) < aggroDistance) {
-        aggroedCreature = Some(creature)
-        foundCreatureToAggro = true
-
-        onAggroed()
-      }
-
-    })
+      })
 
     aggroedCreature match {
       case Some(_) => performAggroedBehavior()
-      case None => performIdleBehavior()
+      case None    => performIdleBehavior()
     }
 
   }
 
-  override def onAggroed(): Unit = {
-
-  }
-
-  def walkTowards(gotoPosX: Float, gotoPosY: Float): Unit = {
-    val creatureCenterX = posX
-    val creatureCenterY = posY
-
-    import com.easternsauce.game.creature.util.WalkDirection._
-
-    if (creatureCenterX < gotoPosX - 5f) moveInDirection(Right)
-    else if (creatureCenterX > gotoPosX + 5f) moveInDirection(Left)
-
-    else if (creatureCenterY > gotoPosY + 5f) moveInDirection(Down)
-    if (creatureCenterY < gotoPosY - 5f) moveInDirection(Up)
-
-
-    val distX = Math.abs(creatureCenterX - gotoPosX)
-    val distY = Math.abs(creatureCenterY - gotoPosY)
-    if (distX - distY < 20f) if (creatureCenterX < gotoPosX) lastMovingDir = Right
-    else lastMovingDir = Left
-  }
+  override def onAggroed(): Unit = {}
 
   def performAggroedBehavior(): Unit = {
     if (attackOrHoldTimer.time > attackOrHoldTime) {
@@ -94,15 +73,15 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
 
     if (circlingDirectionTimer.time > circlingDirectionTime) {
       circling = GameSystem.random.nextFloat() < 0.8f
-      if (circling) if (GameSystem.random.nextFloat() < 0.5f) circlingDir = 0
-      else circlingDir = 1
+      if (circling)
+        if (GameSystem.random.nextFloat() < 0.5f) circlingDir = 0
+        else circlingDir = 1
       circlingDirectionTimer.restart()
     }
 
-
     val aggroed = aggroedCreature match {
       case Some(value) => value
-      case None => throw new RuntimeException("aggroed creature is not set")
+      case None        => throw new RuntimeException("aggroed creature is not set")
     }
 
     val aggroedCenterX = aggroed.posX
@@ -120,52 +99,82 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
             if (circlingDir == 0) {
               destinationX = aggroedCenterX
               destinationY = aggroedCenterY
-              val destinationVector = new Vector2(destinationX - creatureCenterX, destinationY - creatureCenterY)
-              val perpendicular = GameSystem.getVectorPerpendicular(destinationVector)
+              val destinationVector = new Vector2(
+                destinationX - creatureCenterX,
+                destinationY - creatureCenterY
+              )
+              val perpendicular =
+                GameSystem.getVectorPerpendicular(destinationVector)
               destinationX = aggroedCenterX + perpendicular.x
               destinationY = aggroedCenterY + perpendicular.y
               hasDestination = true
-            }
-            else {
+            } else {
               destinationX = aggroedCenterX
               destinationY = aggroedCenterY
-              val destinationVector = new Vector2(destinationX - creatureCenterX, destinationY - creatureCenterY)
-              val perpendicular = GameSystem.getVectorPerpendicular(destinationVector)
+              val destinationVector = new Vector2(
+                destinationX - creatureCenterX,
+                destinationY - creatureCenterY
+              )
+              val perpendicular =
+                GameSystem.getVectorPerpendicular(destinationVector)
               val negated = new Vector2(-perpendicular.x, -perpendicular.y)
 
               destinationX = creatureCenterX + negated.x
               destinationY = creatureCenterY + negated.y
               hasDestination = true
             }
+          } else {
+            hasDestination = false
           }
-          else {
-            hasDestination = false;
-          }
-        }
-        else {
+        } else {
           destinationX = aggroedCenterX
           destinationY = aggroedCenterY
           hasDestination = true
         }
-      }
-      else if (dist < (if (walkUpDistance == null.asInstanceOf[Float]) currentAttackType.walkUpDistance else walkUpDistance)) {
+      } else if (
+        dist < (if (walkUpDistance == null.asInstanceOf[Float])
+                  currentAttackType.walkUpDistance
+                else walkUpDistance)
+      ) {
         destinationX = aggroedCenterX
         destinationY = aggroedCenterY
         hasDestination = true
-      }
-      else {
+      } else {
         hasDestination = false
       }
 
-      findNewDestinationTimer.restart();
+      findNewDestinationTimer.restart()
     }
 
     if (hasDestination) walkTowards(destinationX, destinationY)
 
-    if (isNoAbilityActive && dist < (if (attackDistance == null.asInstanceOf[Float]) currentAttackType.attackDistance else attackDistance)) {
+    if (
+      isNoAbilityActive && dist < (if (
+                                     attackDistance == null.asInstanceOf[Float]
+                                   ) currentAttackType.attackDistance
+                                   else attackDistance)
+    ) {
       if (currentAttack.canPerform) currentAttack.perform()
     }
 
+  }
+
+  def walkTowards(gotoPosX: Float, gotoPosY: Float): Unit = {
+    val creatureCenterX = posX
+    val creatureCenterY = posY
+
+    import com.easternsauce.game.creature.util.WalkDirection._
+
+    if (creatureCenterX < gotoPosX - 5f) moveInDirection(Right)
+    else if (creatureCenterX > gotoPosX + 5f) moveInDirection(Left)
+    else if (creatureCenterY > gotoPosY + 5f) moveInDirection(Down)
+    if (creatureCenterY < gotoPosY - 5f) moveInDirection(Up)
+
+    val distX = Math.abs(creatureCenterX - gotoPosX)
+    val distY = Math.abs(creatureCenterY - gotoPosY)
+    if (distX - distY < 20f)
+      if (creatureCenterX < gotoPosX) lastMovingDir = Right
+      else lastMovingDir = Left
   }
 
   def performIdleBehavior(): Unit = {
@@ -194,7 +203,6 @@ abstract class Mob(override val id: String, val mobSpawnPoint: MobSpawnPoint) ex
 
     toSetBodyNonInteractive = true
   }
-
 
   def grantWeapon(weaponName: String) {
     val weaponItemType = ItemType.getItemType(weaponName)

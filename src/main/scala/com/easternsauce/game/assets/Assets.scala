@@ -27,7 +27,6 @@ object Assets {
   var fistSlamSpriteSheet: EsSpriteSheet = _
   var fistSlamWindupSpriteSheet: EsSpriteSheet = _
 
-
   var iconsSpriteSheet: EsSpriteSheet = _
 
   var attackSound: Sound = _
@@ -69,7 +68,10 @@ object Assets {
 
   def createAssets(): Unit = {
     textureAtlas = new TextureAtlas("assets/atlas/packed_atlas.atlas")
-    textureAtlas.getTextures.forEach(texture => texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest))
+    textureAtlas.getTextures.forEach(texture =>
+      texture
+        .setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest)
+    )
 
     male1SpriteSheet = new EsSpriteSheet("male1", 32, 32)
     skeletonSpriteSheet = new EsSpriteSheet("skeleton", 64, 64)
@@ -85,7 +87,8 @@ object Assets {
     slashWindupSpriteSheet = new EsSpriteSheet("slash_windup", 40, 40)
 
     tridentThrustSpriteSheet = new EsSpriteSheet("trident_thrust", 64, 32)
-    tridentThrustWindupSpriteSheet = new EsSpriteSheet("trident_thrust_windup", 64, 32)
+    tridentThrustWindupSpriteSheet =
+      new EsSpriteSheet("trident_thrust_windup", 64, 32)
 
     explosionSpriteSheet = new EsSpriteSheet("explosion", 64, 64)
     explosionWindupSpriteSheet = new EsSpriteSheet("explosion_windup", 64, 64)
@@ -93,46 +96,79 @@ object Assets {
     fistSlamSpriteSheet = new EsSpriteSheet("fist_slam", 40, 80)
     fistSlamWindupSpriteSheet = new EsSpriteSheet("fist_slam_windup", 40, 80)
 
-
     area1Map = new TmxMapLoader().load("assets/areas/area1/tile_map.tmx")
     area2Map = new TmxMapLoader().load("assets/areas/area2/tile_map.tmx")
     area3Map = new TmxMapLoader().load("assets/areas/area3/tile_map.tmx")
 
-    attackSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/swoosh.wav"))
+    attackSound =
+      Gdx.audio.newSound(Gdx.files.internal("assets/sounds/swoosh.wav"))
     painSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/pain.wav"))
-    arrowWhizzSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/arrow-whizz.wav"))
-    bloodSquirtSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/blood-squirt.wav"))
-    boneClickSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/bone-click.wav"))
-    boneCrushSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/bone-crush.wav"))
-    bowPullSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/bow-pull.wav"))
-    bowReleaseSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/bow-release.wav"))
-    darkLaughSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/dark-laugh.wav"))
-    dogBarkSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/dogbark.wav"))
-    dogWhineSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/dogwhine.wav"))
-    evilYellingSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/evil-yelling.wav"))
-    explosionSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/explosion.wav"))
-    flybySound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/flyby.wav"))
-    glassBreakSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/glass-break.wav"))
-    gruntSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/grunt.wav"))
-    monsterGrowlSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/monster-growl.wav"))
-    punchSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/punch.wav"))
+    arrowWhizzSound =
+      Gdx.audio.newSound(Gdx.files.internal("assets/sounds/arrow-whizz.wav"))
+    bloodSquirtSound =
+      Gdx.audio.newSound(Gdx.files.internal("assets/sounds/blood-squirt.wav"))
+    boneClickSound =
+      Gdx.audio.newSound(Gdx.files.internal("assets/sounds/bone-click.wav"))
+    boneCrushSound =
+      Gdx.audio.newSound(Gdx.files.internal("assets/sounds/bone-crush.wav"))
+    bowPullSound =
+      Gdx.audio.newSound(Gdx.files.internal("assets/sounds/bow-pull.wav"))
+    bowReleaseSound =
+      Gdx.audio.newSound(Gdx.files.internal("assets/sounds/bow-release.wav"))
+    darkLaughSound =
+      Gdx.audio.newSound(Gdx.files.internal("assets/sounds/dark-laugh.wav"))
+    dogBarkSound =
+      Gdx.audio.newSound(Gdx.files.internal("assets/sounds/dogbark.wav"))
+    dogWhineSound =
+      Gdx.audio.newSound(Gdx.files.internal("assets/sounds/dogwhine.wav"))
+    evilYellingSound =
+      Gdx.audio.newSound(Gdx.files.internal("assets/sounds/evil-yelling.wav"))
+    explosionSound =
+      Gdx.audio.newSound(Gdx.files.internal("assets/sounds/explosion.wav"))
+    flybySound =
+      Gdx.audio.newSound(Gdx.files.internal("assets/sounds/flyby.wav"))
+    glassBreakSound =
+      Gdx.audio.newSound(Gdx.files.internal("assets/sounds/glass-break.wav"))
+    gruntSound =
+      Gdx.audio.newSound(Gdx.files.internal("assets/sounds/grunt.wav"))
+    monsterGrowlSound =
+      Gdx.audio.newSound(Gdx.files.internal("assets/sounds/monster-growl.wav"))
+    punchSound =
+      Gdx.audio.newSound(Gdx.files.internal("assets/sounds/punch.wav"))
     roarSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/roar.wav"))
-    runningSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/running.wav"))
-    strongPunchSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/strong-punch.wav"))
-    swooshSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/swoosh.wav"))
-    chestOpeningSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/chest-opening.wav"))
-    coinbagSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/coinbag.wav"))
-    matchIgniteSound = Gdx.audio.newSound(Gdx.files.internal("assets/sounds/match-ignite.wav"))
+    runningSound =
+      Gdx.audio.newSound(Gdx.files.internal("assets/sounds/running.wav"))
+    strongPunchSound =
+      Gdx.audio.newSound(Gdx.files.internal("assets/sounds/strong-punch.wav"))
+    swooshSound =
+      Gdx.audio.newSound(Gdx.files.internal("assets/sounds/swoosh.wav"))
+    chestOpeningSound =
+      Gdx.audio.newSound(Gdx.files.internal("assets/sounds/chest-opening.wav"))
+    coinbagSound =
+      Gdx.audio.newSound(Gdx.files.internal("assets/sounds/coinbag.wav"))
+    matchIgniteSound =
+      Gdx.audio.newSound(Gdx.files.internal("assets/sounds/match-ignite.wav"))
 
-    arrowTexture = new Texture(Gdx.files.internal("assets/projectiles/arrow.png"))
-    treasureTexture = new Texture(Gdx.files.internal("assets/treasure/treasure.png"))
+    arrowTexture = new Texture(
+      Gdx.files.internal("assets/projectiles/arrow.png")
+    )
+    treasureTexture = new Texture(
+      Gdx.files.internal("assets/treasure/treasure.png")
+    )
     bagTexture = new Texture(Gdx.files.internal("assets/treasure/bag.png"))
     gobletTexture = new Texture(Gdx.files.internal("assets/goblet/goblet.png"))
-    gobletLitTexture = new Texture(Gdx.files.internal("assets/goblet/goblet_lit.png"))
-    downarrowTexture = new Texture(Gdx.files.internal("assets/downarrow/downarrow.png"))
+    gobletLitTexture = new Texture(
+      Gdx.files.internal("assets/goblet/goblet_lit.png")
+    )
+    downarrowTexture = new Texture(
+      Gdx.files.internal("assets/downarrow/downarrow.png")
+    )
 
-    abandonedPlainsMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/music/abandoned_plains.wav"))
-    fireDemonMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/music/fire_demon.wav"))
+    abandonedPlainsMusic = Gdx.audio.newMusic(
+      Gdx.files.internal("assets/music/abandoned_plains.wav")
+    )
+    fireDemonMusic =
+      Gdx.audio.newMusic(Gdx.files.internal("assets/music/fire_demon.wav"))
 
   }
 

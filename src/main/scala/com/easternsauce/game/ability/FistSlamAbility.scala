@@ -9,12 +9,38 @@ import system.GameSystem
 
 import scala.collection.mutable.ListBuffer
 
-class FistSlamAbility(override val abilityCreature: Creature) extends Ability(abilityCreature) {
-  protected var fists: ListBuffer[Fist] = ListBuffer()
-
+class FistSlamAbility private (override val abilityCreature: Creature)
+    extends Ability(abilityCreature) {
   override protected var cooldownTime: Float = 6.5f
   override protected var activeTime: Float = 3.0f
   override protected var channelTime: Float = 0.35f
+  protected var fists: ListBuffer[Fist] = ListBuffer()
+
+  override def render(shapeDrawer: ShapeDrawer, batch: SpriteBatch): Unit = {
+    if (state == AbilityState.Active) {
+      for (fist <- fists) {
+        fist.render(shapeDrawer, batch)
+      }
+    }
+  }
+
+  override def onChannellingStart(): Unit = {
+    abilityCreature
+      .getEffect("immobilized")
+      .applyEffect(channelTime + activeTime)
+    fists = new ListBuffer[Fist]
+    for (i <- 0 until 20) {
+      val range: Int = 250
+      val aggroedCreature = abilityCreature.aggroedCreature.get
+      fists += Fist(
+        this,
+        0.1f * i,
+        aggroedCreature.posX + GameSystem.random.between(-range, range),
+        aggroedCreature.posY + GameSystem.random.between(-range, range),
+        20
+      )
+    }
+  }
 
   override protected def onActiveStart(): Unit = {
     abilityCreature.takeStaminaDamage(25f)
@@ -26,29 +52,6 @@ class FistSlamAbility(override val abilityCreature: Creature) extends Ability(ab
         fist.start()
       }
       fist.onUpdateActive()
-    }
-  }
-
-
-
-  override def render(shapeDrawer: ShapeDrawer, batch: SpriteBatch): Unit = {
-    if (state == AbilityState.Active) {
-      for (fist <- fists) {
-        fist.render(shapeDrawer, batch)
-      }
-    }
-  }
-
-
-
-  override def onChannellingStart(): Unit = {
-    abilityCreature.getEffect("immobilized").applyEffect(channelTime + activeTime)
-    fists = new ListBuffer[Fist]
-    for (i <- 0 until 20) {
-      val range: Int = 250
-      val aggroedCreature = abilityCreature.aggroedCreature.get
-      fists += Fist(this, 0.1f * i, aggroedCreature.posX + GameSystem.random.between(-range, range),
-        aggroedCreature.posY + GameSystem.random.between(-range, range), 20)
     }
   }
 

@@ -13,16 +13,17 @@ import system.GameSystem
 
 import scala.collection.mutable.ListBuffer
 
-class NonPlayerCharacter(id: String, trader: Boolean, spriteSheet: EsSpriteSheet, val dialogueStartId: String) extends Creature(id) {
-  private var actionTimer: EsTimer = EsTimer(isStarted = true)
-
-  private var traderInventory: ListBuffer[Item] = ListBuffer()
-
-  var random: scala.util.Random = GameSystem.random
-
+class NonPlayerCharacter(
+    id: String,
+    trader: Boolean,
+    spriteSheet: EsSpriteSheet,
+    val dialogueStartId: String
+) extends Creature(id) {
   override protected val onGettingHitSound: Sound = Assets.painSound
-
   override val isNPC = true
+  var random: scala.util.Random = GameSystem.random
+  private var actionTimer: EsTimer = EsTimer(isStarted = true)
+  private var traderInventory: ListBuffer[Item] = ListBuffer()
 
   loadSprites(spriteSheet, Map(Left -> 2, Right -> 3, Up -> 4, Down -> 1), 1)
 

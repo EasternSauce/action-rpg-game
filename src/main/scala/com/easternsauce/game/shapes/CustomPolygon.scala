@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.Rectangle
 
 import scala.collection.mutable
 
-
 class CustomPolygon extends com.badlogic.gdx.math.Polygon {
 
   def this(vertices: Array[Float]) {
@@ -25,6 +24,5 @@ class CustomPolygon extends com.badlogic.gdx.math.Polygon {
 
     setVertices(vertices.toArray)
   }
-
 
 }

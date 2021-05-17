@@ -9,27 +9,17 @@ import space.earlygrey.shapedrawer.ShapeDrawer
 
 abstract class Ability(val abilityCreature: Creature) {
 
+  protected val isStoppable: Boolean = true
+  var state: AbilityState = Inactive
+  var onCooldown = false
+  var onPerformAction: () => Unit = () => {}
+  var onChannelAction: () => Unit = () => {}
   protected var activeTimer: EsTimer = EsTimer()
   protected var channelTimer: EsTimer = EsTimer()
-
   protected var cooldownTime: Float
   protected var activeTime: Float
   protected var channelTime: Float
-
   protected var isAttack = false
-
-  protected val isStoppable: Boolean = true
-
-
-  var state: AbilityState = Inactive
-  var onCooldown = false
-
-  var onPerformAction: () => Unit = () => {}
-  var onChannelAction: () => Unit = () => {}
-
-  def updateHitbox(): Unit = {
-
-  }
 
   def update(): Unit = {
 
@@ -53,25 +43,19 @@ abstract class Ability(val abilityCreature: Creature) {
     if (state == AbilityState.Channeling) onUpdateChanneling()
     else if (state == AbilityState.Active) onUpdateActive()
 
-
-    if ((state == AbilityState.Inactive) && onCooldown) if (activeTimer.time > cooldownTime) onCooldown = false
+    if ((state == AbilityState.Inactive) && onCooldown)
+      if (activeTimer.time > cooldownTime) onCooldown = false
   }
 
-  protected def onActiveStart(): Unit = {
-  }
+  def updateHitbox(): Unit = {}
 
-  protected def onStop(): Unit = {
-  }
+  protected def onActiveStart(): Unit = {}
 
-  protected def onUpdateActive(): Unit = {
-  }
+  protected def onUpdateActive(): Unit = {}
 
-  protected def onUpdateChanneling(): Unit = {
-  }
+  protected def onUpdateChanneling(): Unit = {}
 
-  def render(shapeDrawer: ShapeDrawer, batch: SpriteBatch): Unit = {
-
-  }
+  def render(shapeDrawer: ShapeDrawer, batch: SpriteBatch): Unit = {}
 
   def forceStop(): Unit = {
     if (isStoppable && state != AbilityState.Inactive) {
@@ -81,10 +65,9 @@ abstract class Ability(val abilityCreature: Creature) {
     }
   }
 
-  def isOnCooldown: Boolean = onCooldown
+  protected def onStop(): Unit = {}
 
-  def onChannellingStart(): Unit = {
-  }
+  def isOnCooldown: Boolean = onCooldown
 
   def perform(): Unit = {
     channelTimer.restart()
@@ -93,16 +76,17 @@ abstract class Ability(val abilityCreature: Creature) {
     onChannelAction()
 
     if (isAttack) { // + 0.01 to ensure regen doesnt start if we hold attack button
-      abilityCreature.getEffect("staminaRegenStopped").applyEffect(channelTime + cooldownTime + 0.01f)
-    }
-    else abilityCreature.getEffect("staminaRegenStopped").applyEffect(1f)
+      abilityCreature
+        .getEffect("staminaRegenStopped")
+        .applyEffect(channelTime + cooldownTime + 0.01f)
+    } else abilityCreature.getEffect("staminaRegenStopped").applyEffect(1f)
   }
 
-  def performMovement(): Unit = {
-  }
+  def onChannellingStart(): Unit = {}
 
-  def performOnUpdateStart(): Unit = {
-  }
+  def performMovement(): Unit = {}
+
+  def performOnUpdateStart(): Unit = {}
 
   def canPerform: Boolean = {
     abilityCreature.staminaPoints > 0 && (state == AbilityState.Inactive) && !onCooldown
@@ -112,9 +96,6 @@ abstract class Ability(val abilityCreature: Creature) {
     state == AbilityState.Active
   }
 
-  def onCollideWithCreature(creature: Creature): Unit = {
-
-  }
+  def onCollideWithCreature(creature: Creature): Unit = {}
 
 }
-

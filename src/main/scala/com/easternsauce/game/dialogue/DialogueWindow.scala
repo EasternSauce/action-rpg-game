@@ -11,21 +11,14 @@ import scala.collection.mutable.ListBuffer
 import scala.io.Source
 
 class DialogueWindow {
-  private var dialogueList: ListBuffer[Dialogue] = ListBuffer()
-
-  private var currentDialogue: Dialogue = _
-
-
-  private var currentDialogueChoices: ListBuffer[Dialogue] = ListBuffer()
-
-  private var currentSelected: Int = 0
-
   var activated: Boolean = false
   var dialogueNPC: NonPlayerCharacter = _
-
+  private var dialogueList: ListBuffer[Dialogue] = ListBuffer()
+  private var currentDialogue: Dialogue = _
+  private var currentDialogueChoices: ListBuffer[Dialogue] = ListBuffer()
+  private var currentSelected: Int = 0
 
   loadDialogueFromFile("assets/dialogues/dialogues.txt")
-
 
   def loadDialogueFromFile(filePath: String): Unit = {
 
@@ -44,33 +37,46 @@ class DialogueWindow {
           if (actionCode.startsWith("g")) {
             action = DialogueAction.Goto
             actionArgument = actionCode.substring(1)
-          }
-          else if (actionCode.startsWith("t")) action = DialogueAction.Trade
+          } else if (actionCode.startsWith("t")) action = DialogueAction.Trade
           else if (actionCode.startsWith("c")) {
             action = DialogueAction.Choice
             actionArgument = actionCode.substring(1)
-          }
-          else if (actionCode.startsWith("e")) action = DialogueAction.Goodbye
+          } else if (actionCode.startsWith("e")) action = DialogueAction.Goodbye
         }
-        val dialogue = new Dialogue(id, if (text.startsWith(">")) text.substring(1)
-        else text, action, actionArgument)
+        val dialogue = Dialogue(
+          id,
+          if (text.startsWith(">")) text.substring(1)
+          else text,
+          action,
+          actionArgument
+        )
         dialogueList += dialogue
 
       }
-    }
-    finally fileContents.close()
+    } finally fileContents.close()
   }
 
   def render(hudBatch: SpriteBatch): Unit = {
     GameSystem.font.setColor(Color.WHITE)
     if (activated) {
-      GameSystem.font.draw(hudBatch, currentDialogue.text, 10, GameSystem.originalHeight - (GameSystem.originalHeight * GameSystem.ScreenProportion + 10))
-      if (currentDialogueChoices != null) for (i <- currentDialogueChoices.indices) {
-        val text = currentDialogueChoices(i).text
+      GameSystem.font.draw(
+        hudBatch,
+        currentDialogue.text,
+        10,
+        GameSystem.originalHeight - (GameSystem.originalHeight * GameSystem.ScreenProportion + 10)
+      )
+      if (currentDialogueChoices != null)
+        for (i <- currentDialogueChoices.indices) {
+          val text = currentDialogueChoices(i).text
 
-        GameSystem.font.draw(hudBatch, (if (currentSelected == i) ">"
-        else "") + text, 10, GameSystem.originalHeight - (GameSystem.originalHeight * GameSystem.ScreenProportion + 10 + 30 * (i + 1)))
-      }
+          GameSystem.font.draw(
+            hudBatch,
+            (if (currentSelected == i) ">"
+             else "") + text,
+            10,
+            GameSystem.originalHeight - (GameSystem.originalHeight * GameSystem.ScreenProportion + 10 + 30 * (i + 1))
+          )
+        }
     }
   }
 
@@ -82,11 +88,10 @@ class DialogueWindow {
           currentDialogue = findDialogueById(dialogue.actionArgument)
 
           setDialogueChoices()
-        }
-        else if (dialogue.action == DialogueAction.Goodbye) activated = false
-        else if (dialogue.action == DialogueAction.Trade) GameSystem.inventoryWindow.openTradeWindow()
-      }
-      else if (currentDialogue.action == DialogueAction.Goto) {
+        } else if (dialogue.action == DialogueAction.Goodbye) activated = false
+        else if (dialogue.action == DialogueAction.Trade)
+          GameSystem.inventoryWindow.openTradeWindow()
+      } else if (currentDialogue.action == DialogueAction.Goto) {
         currentDialogue = findDialogueById(currentDialogue.actionArgument)
         setDialogueChoices()
       }
@@ -98,8 +103,11 @@ class DialogueWindow {
       }
     }
     if (currentDialogueChoices != null && !GameSystem.inventoryWindow.trading) {
-      if (Gdx.input.isKeyJustPressed(Input.Keys.W)) if (currentSelected > 0) currentSelected -= 1
-      if (Gdx.input.isKeyJustPressed(Input.Keys.S)) if (currentSelected < currentDialogueChoices.size - 1) currentSelected += 1
+      if (Gdx.input.isKeyJustPressed(Input.Keys.W))
+        if (currentSelected > 0) currentSelected -= 1
+      if (Gdx.input.isKeyJustPressed(Input.Keys.S))
+        if (currentSelected < currentDialogueChoices.size - 1)
+          currentSelected += 1
     }
     dialogueNPC = null
   }
@@ -116,11 +124,13 @@ class DialogueWindow {
     if (currentDialogue.action == DialogueAction.Choice) {
       currentDialogueChoices = ListBuffer()
       val dialogueIndex = dialogueList.indexOf(currentDialogue)
-      for (i <- dialogueIndex + 1 until dialogueIndex + 1 + currentDialogue.actionArgument.toInt) {
+      for (
+        i <-
+          dialogueIndex + 1 until dialogueIndex + 1 + currentDialogue.actionArgument.toInt
+      ) {
         currentDialogueChoices += dialogueList(i)
       }
-    }
-    else currentDialogueChoices = null
+    } else currentDialogueChoices = null
   }
 
 }

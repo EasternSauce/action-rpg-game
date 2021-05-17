@@ -10,25 +10,23 @@ import scala.collection.mutable.ListBuffer
 
 class LootOptionWindow {
 
-
-  private var currentSelected = 0
-
-
-  private var itemList: ListBuffer[Item] = ListBuffer()
-
-  private var scroll = 0
-
   var activated = false
-
   var visible = false
-
+  private var currentSelected = 0
+  private var itemList: ListBuffer[Item] = ListBuffer()
+  private var scroll = 0
 
   def render(batch: SpriteBatch): Unit = {
     if (visible) for (i <- 0 until Math.min(4, itemList.size)) {
 
       GameSystem.font.setColor(Color.WHITE)
-      GameSystem.font.draw(batch, (if (currentSelected == (i + scroll) && activated) ">"
-      else "") + itemList(i + scroll).name, 10, GameSystem.originalHeight - (GameSystem.originalHeight * GameSystem.ScreenProportion + 10 + 30 * i))
+      GameSystem.font.draw(
+        batch,
+        (if (currentSelected == (i + scroll) && activated) ">"
+         else "") + itemList(i + scroll).name,
+        10,
+        GameSystem.originalHeight - (GameSystem.originalHeight * GameSystem.ScreenProportion + 10 + 30 * i)
+      )
     }
   }
 
@@ -38,28 +36,31 @@ class LootOptionWindow {
         currentSelected -= 1
         if (scroll > currentSelected) scroll -= 1
       }
-      if (Gdx.input.isKeyJustPressed(Input.Keys.S)) if (currentSelected < itemList.size - 1) {
-        currentSelected += 1
-        if (scroll + 4 <= currentSelected) scroll += 1
-      }
-      if (Gdx.input.isKeyJustPressed(Input.Keys.E)) if (itemList.nonEmpty) if (!GameSystem.inventoryWindow.inventoryOpen) {
-        val isPickedUp = GameSystem.inventoryWindow.pickUpItem(itemList(currentSelected), itemList)
-        if (isPickedUp) {
-          if (currentSelected > 0) currentSelected -= 1
-          if (scroll > 0) scroll -= 1
-          if (itemList.isEmpty) {
-            currentSelected = 0
-            activated = false
+      if (Gdx.input.isKeyJustPressed(Input.Keys.S))
+        if (currentSelected < itemList.size - 1) {
+          currentSelected += 1
+          if (scroll + 4 <= currentSelected) scroll += 1
+        }
+      if (Gdx.input.isKeyJustPressed(Input.Keys.E))
+        if (itemList.nonEmpty) if (!GameSystem.inventoryWindow.inventoryOpen) {
+          val isPickedUp = GameSystem.inventoryWindow
+            .pickUpItem(itemList(currentSelected), itemList)
+          if (isPickedUp) {
+            if (currentSelected > 0) currentSelected -= 1
+            if (scroll > 0) scroll -= 1
+            if (itemList.isEmpty) {
+              currentSelected = 0
+              activated = false
+            }
           }
         }
-      }
-      if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) if (!GameSystem.escRecently) {
-        activated = false
-        currentSelected = 0
-        GameSystem.escRecently = true
-      }
-    }
-    else if (Gdx.input.isKeyJustPressed(Input.Keys.E)) if (itemList.nonEmpty) {
+      if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
+        if (!GameSystem.escRecently) {
+          activated = false
+          currentSelected = 0
+          GameSystem.escRecently = true
+        }
+    } else if (Gdx.input.isKeyJustPressed(Input.Keys.E)) if (itemList.nonEmpty) {
       activated = true
       currentSelected = 0
     }

@@ -24,9 +24,36 @@ class MainMenu {
 
   import java.io.File
 
-  private def saveFileExists: Boolean = {
-    val file = new File("saves/savegame.sav")
-    file.exists && file.length != 0
+  def render(batch: SpriteBatch): Unit = {
+    if (!prompt) for (i <- 0 until Math.min(4, optionList.size)) {
+      GameSystem.font.setColor(Color.WHITE)
+      GameSystem.font.draw(
+        batch,
+        (if (currentSelected == i) ">"
+         else "") + optionList(i),
+        100,
+        GameSystem.originalHeight - (100 + 30 * i)
+      )
+    }
+    else {
+      GameSystem.font.setColor(Color.WHITE)
+      GameSystem.font.draw(
+        batch,
+        promptText,
+        100,
+        GameSystem.originalHeight - 100
+      )
+      for (i <- 0 until Math.min(4, optionList.size)) {
+        GameSystem.font.setColor(Color.WHITE)
+        GameSystem.font.draw(
+          batch,
+          (if (currentSelected == i) ">"
+           else "") + optionList(i),
+          100,
+          GameSystem.originalHeight - (130 + 30 * i)
+        )
+      }
+    }
   }
 
   if (saveFileExists) {
@@ -35,24 +62,6 @@ class MainMenu {
 
   optionList += "New game"
   optionList += "Exit"
-
-  def render(batch: SpriteBatch): Unit = {
-    if (!prompt) for (i <- 0 until Math.min(4, optionList.size)) {
-      GameSystem.font.setColor(Color.WHITE)
-      GameSystem.font.draw(batch, (if (currentSelected == i) ">"
-      else "") + optionList(i), 100, GameSystem.originalHeight - (100 + 30 * i))
-    }
-    else {
-      GameSystem.font.setColor(Color.WHITE)
-      GameSystem.font.draw(batch, promptText, 100, GameSystem.originalHeight - 100)
-      for (i <- 0 until Math.min(4, optionList.size)) {
-        GameSystem.font.setColor(Color.WHITE)
-        GameSystem.font.draw(batch, (if (currentSelected == i) ">"
-        else "") + optionList(i), 100, GameSystem.originalHeight - (130 + 30 * i))
-      }
-    }
-  }
-
 
   def update(): Unit = {
     if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
@@ -68,8 +77,7 @@ class MainMenu {
           optionList += "Exit"
           GameSystem.loadGame()
         }
-      }
-      else if (optionList(currentSelected) == "New game") {
+      } else if (optionList(currentSelected) == "New game") {
         if (!prompt) {
           prompt = true
           promptOption = "New game"
@@ -80,11 +88,9 @@ class MainMenu {
           promptText = "Start new game?"
           currentSelected = 0
         }
-      }
-      else if (optionList(currentSelected) == "Save game") {
+      } else if (optionList(currentSelected) == "Save game") {
         GameSystem.saveGame()
-      }
-      else if (optionList(currentSelected) == "Exit") {
+      } else if (optionList(currentSelected) == "Exit") {
         if (!prompt) {
           prompt = true
           promptOption = "Exit"
@@ -95,27 +101,32 @@ class MainMenu {
           promptText = "Quit without saving?"
           currentSelected = 0
         }
-      }
-      else if (optionList(currentSelected).equals("Yes") || optionList(currentSelected).equals("No")) {
+      } else if (
+        optionList(currentSelected).equals("Yes") || optionList(currentSelected)
+          .equals("No")
+      ) {
         val option: String = optionList(currentSelected)
         if (option.equals("Yes")) {
           if (promptOption.equals("Exit")) {
             prompt = false
             System.exit(0)
-          }
-          else if (promptOption == "New game") {
+          } else if (promptOption == "New game") {
 
             try {
-              var writer: BufferedWriter = Files.newBufferedWriter(Paths.get("saves/savegame.sav"))
+              var writer: BufferedWriter =
+                Files.newBufferedWriter(Paths.get("saves/savegame.sav"))
               writer.write("")
               writer.flush()
               writer = Files.newBufferedWriter(Paths.get("saves/inventory.sav"))
               writer.write("")
               writer.flush()
-              writer = Files.newBufferedWriter(Paths.get("saves/respawn_points.sav"))
+              writer =
+                Files.newBufferedWriter(Paths.get("saves/respawn_points.sav"))
               writer.write("")
               writer.flush()
-              writer = Files.newBufferedWriter(Paths.get("saves/treasure_collected.sav"))
+              writer = Files.newBufferedWriter(
+                Paths.get("saves/treasure_collected.sav")
+              )
               writer.write("")
               writer.flush()
             } catch {
@@ -132,25 +143,34 @@ class MainMenu {
               optionList += "New game"
               optionList += "Save game"
               optionList += "Exit"
-            }
-            else optionList = savedOptionList
+            } else optionList = savedOptionList
             prompt = false
             currentSelected = 0
           }
-        }
-        else {
+        } else {
           optionList = savedOptionList
           prompt = false
           currentSelected = 0
         }
       }
     }
-    if (Gdx.input.isKeyJustPressed(Input.Keys.W)) if (currentSelected > 0) currentSelected -= 1
-    if (Gdx.input.isKeyJustPressed(Input.Keys.S)) if (currentSelected < optionList.size - 1) currentSelected += 1
-    if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) if (!GameSystem.escRecently) if (!GameSystem.inventoryWindow.inventoryOpen && !GameSystem.lootOptionWindow.activated) {
+    if (Gdx.input.isKeyJustPressed(Input.Keys.W))
+      if (currentSelected > 0) currentSelected -= 1
+    if (Gdx.input.isKeyJustPressed(Input.Keys.S))
+      if (currentSelected < optionList.size - 1) currentSelected += 1
+    if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
+      if (!GameSystem.escRecently)
+        if (
+          !GameSystem.inventoryWindow.inventoryOpen && !GameSystem.lootOptionWindow.activated
+        ) {
 
-      if (!startMenu) GameSystem.state = GameState.Gameplay
-      GameSystem.escRecently = true
-    }
+          if (!startMenu) GameSystem.state = GameState.Gameplay
+          GameSystem.escRecently = true
+        }
+  }
+
+  private def saveFileExists: Boolean = {
+    val file = new File("saves/savegame.sav")
+    file.exists && file.length != 0
   }
 }

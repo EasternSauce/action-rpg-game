@@ -10,14 +10,12 @@ class Effect {
 
   protected var effectActive = false
 
-
   def applyEffect(effectTime: Float): Unit = {
     if (effectActive) {
       effectTimer.restart()
       val remainingTime = effectEndTime - effectTimer.time
       effectEndTime = Math.max(remainingTime, effectTime)
-    }
-    else {
+    } else {
       effectActive = true
       effectTimer.restart()
       effectEndTime = effectTime

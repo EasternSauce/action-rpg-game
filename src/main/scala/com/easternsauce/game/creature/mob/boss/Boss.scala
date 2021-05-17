@@ -5,14 +5,14 @@ import com.easternsauce.game.creature.mob.Mob
 import com.easternsauce.game.spawn.MobSpawnPoint
 import system.GameSystem
 
-class Boss(override val id: String, override val mobSpawnPoint: MobSpawnPoint) extends Mob(id, mobSpawnPoint) {
-  protected var bossBattleStarted = false
+class Boss(override val id: String, override val mobSpawnPoint: MobSpawnPoint)
+    extends Mob(id, mobSpawnPoint) {
   var bossMusic: Music = _
+  protected var bossBattleStarted = false
 
   isBoss = true
   bossBattleStarted = false
   knocbackable = false
-
 
   override def onAggroed(): Unit = {
     if (!bossBattleStarted) {
@@ -25,19 +25,17 @@ class Boss(override val id: String, override val mobSpawnPoint: MobSpawnPoint) e
     }
   }
 
-  override def onDeath(): Unit = {
-    super.onDeath()
-
-    bossMusic.stop()
-    if (GameSystem.hud.bossHealthBar.boss == this) GameSystem.hud.bossHealthBar.hide()
-    mobSpawnPoint.blockade.active = false
-  }
-
   override def performIdleBehavior(): Unit = {
     // stay put
   }
 
-  override def takeDamage(damage: Float, immunityFrames: Boolean, knockbackPower: Float, sourceX: Float, sourceY: Float): Unit = {
+  override def takeDamage(
+      damage: Float,
+      immunityFrames: Boolean,
+      knockbackPower: Float,
+      sourceX: Float,
+      sourceY: Float
+  ): Unit = {
     if (isAlive) {
       val beforeHP = healthPoints
       val actualDamage = damage * 100f / (100f + totalArmor)
@@ -48,5 +46,14 @@ class Boss(override val id: String, override val mobSpawnPoint: MobSpawnPoint) e
 
       if (GameSystem.random.nextFloat() < 0.3) onGettingHitSound.play(0.1f)
     }
+  }
+
+  override def onDeath(): Unit = {
+    super.onDeath()
+
+    bossMusic.stop()
+    if (GameSystem.hud.bossHealthBar.boss == this)
+      GameSystem.hud.bossHealthBar.hide()
+    mobSpawnPoint.blockade.active = false
   }
 }

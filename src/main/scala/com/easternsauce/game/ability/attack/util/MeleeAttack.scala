@@ -13,27 +13,25 @@ import system.GameSystem
 
 import scala.language.implicitConversions
 
-abstract class MeleeAttack(override val abilityCreature: Creature) extends Attack(abilityCreature) {
-  //protected val weaponSound: Sound = Assets.attackSound
-  protected var aimed: Boolean
-
-  protected var width: Float
-  protected var height: Float
+abstract class MeleeAttack(override val abilityCreature: Creature)
+    extends Attack(abilityCreature) {
 
   var scale: Float
   var attackRange: Float
-
-  protected var knockbackPower: Float
-
   var body: Body = _
-
   var hitbox: AttackHitbox = _
-
   var toRemoveBody = false
-  var bodyActive = false // IMPORTANT: do NOT use body after already destroyed (otherwise weird behavior occurs, because, for some reason,
+  var bodyActive =
+    false // IMPORTANT: do NOT use body after already destroyed (otherwise weird behavior occurs, because, for some reason,
+  //protected val weaponSound: Sound = Assets.attackSound
+  protected var aimed: Boolean
+  protected var width: Float
+  protected var height: Float
+  protected var knockbackPower: Float
   // the reference can STILL be attached to some other random body after destruction, like arrow bodies)
 
-  implicit def rectConversion(s: com.badlogic.gdx.math.Rectangle): Rectangle = new Rectangle(s.x, s.y, s.width, s.height)
+  implicit def rectConversion(s: com.badlogic.gdx.math.Rectangle): Rectangle =
+    new Rectangle(s.x, s.y, s.width, s.height)
 
   override def onActiveStart(): Unit = {
     super.onActiveStart()
@@ -48,7 +46,10 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
     val theta = new Vector2(attackVector.x, attackVector.y).angleDeg()
 
     if (attackVector.len() > 0f) {
-      attackVector = new Vector2(attackVector.x / attackVector.len(), attackVector.y / attackVector.len())
+      attackVector = new Vector2(
+        attackVector.x / attackVector.len(),
+        attackVector.y / attackVector.len()
+      )
     }
 
     val attackShiftX = attackVector.x * attackRange
@@ -57,7 +58,7 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
     val attackRectX = attackShiftX + abilityCreature.posX
     val attackRectY = attackShiftY + abilityCreature.posY
 
-    val poly = new CustomPolygon(new Rectangle(0,0, width, height))
+    val poly = new CustomPolygon(new Rectangle(0, 0, width, height))
 
     poly.setOrigin(0, height / 2)
     poly.setRotation(theta)
@@ -73,11 +74,33 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
     toRemoveBody = false
   }
 
+  def initBody(hitbox: AttackHitbox): Unit = {
+    val bodyDef = new BodyDef()
+    bodyDef.position.set(
+      hitbox.x / GameSystem.PixelsPerMeter,
+      hitbox.y / GameSystem.PixelsPerMeter
+    )
+
+    bodyDef.`type` = BodyDef.BodyType.KinematicBody
+    body = abilityCreature.area.world.createBody(bodyDef)
+    body.setUserData(this)
+
+    val converted = hitbox.polygon.getTransformedVertices.map(a =>
+      a / GameSystem.PixelsPerMeter
+    )
+
+    val fixtureDef: FixtureDef = new FixtureDef()
+    val shape: PolygonShape = new PolygonShape()
+    shape.set(converted)
+    fixtureDef.shape = shape
+    fixtureDef.isSensor = true
+    body.createFixture(fixtureDef)
+  }
+
   override def onUpdateActive(): Unit = {
     super.onUpdateActive()
 
   }
-
 
   override def render(shapeDrawer: ShapeDrawer, batch: SpriteBatch): Unit = {
     super.render(shapeDrawer, batch)
@@ -88,8 +111,18 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
       val attackVector = abilityCreature.attackVector
       val theta = new Vector2(attackVector.x, attackVector.y).angleDeg()
 
-      batch.draw(image, hitbox.x, hitbox.y - height / 2, 0, height / 2,
-        image.getRegionWidth, image.getRegionHeight, scale, scale, theta)
+      batch.draw(
+        image,
+        hitbox.x,
+        hitbox.y - height / 2,
+        0,
+        height / 2,
+        image.getRegionWidth,
+        image.getRegionHeight,
+        scale,
+        scale,
+        theta
+      )
     }
     if (state == AbilityState.Active) {
       val image = abilityAnimation.currentFrame
@@ -97,8 +130,18 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
       val attackVector = abilityCreature.attackVector
       val theta = new Vector2(attackVector.x, attackVector.y).angleDeg()
 
-      batch.draw(image, hitbox.x, hitbox.y - height / 2, 0, height / 2,
-        image.getRegionWidth, image.getRegionHeight, scale, scale, theta)
+      batch.draw(
+        image,
+        hitbox.x,
+        hitbox.y - height / 2,
+        0,
+        height / 2,
+        image.getRegionWidth,
+        image.getRegionHeight,
+        scale,
+        scale,
+        theta
+      )
     }
   }
 
@@ -111,7 +154,10 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
     val theta = new Vector2(attackVector.x, attackVector.y).angleDeg()
 
     if (attackVector.len() > 0f) {
-      attackVector = new Vector2(attackVector.x / attackVector.len(), attackVector.y / attackVector.len())
+      attackVector = new Vector2(
+        attackVector.x / attackVector.len(),
+        attackVector.y / attackVector.len()
+      )
     }
 
     val attackShiftX = attackVector.x * attackRange
@@ -120,7 +166,7 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
     val attackRectX = attackShiftX + abilityCreature.posX
     val attackRectY = attackShiftY + abilityCreature.posY
 
-    val poly = new CustomPolygon(new Rectangle(0,0, width, height))
+    val poly = new CustomPolygon(new Rectangle(0, 0, width, height))
 
     poly.setOrigin(0, height / 2)
     poly.setRotation(theta)
@@ -132,7 +178,6 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
 
   }
 
-
   override def update(): Unit = {
     super.update()
 
@@ -143,24 +188,6 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
     }
   }
 
-  def initBody(hitbox: AttackHitbox): Unit = {
-    val bodyDef = new BodyDef()
-    bodyDef.position.set(hitbox.x / GameSystem.PixelsPerMeter, hitbox.y / GameSystem.PixelsPerMeter)
-
-    bodyDef.`type` = BodyDef.BodyType.KinematicBody
-    body = abilityCreature.area.world.createBody(bodyDef)
-    body.setUserData(this)
-
-    val converted = hitbox.polygon.getTransformedVertices.map(a => a / GameSystem.PixelsPerMeter)
-
-    val fixtureDef: FixtureDef = new FixtureDef()
-    val shape: PolygonShape = new PolygonShape()
-    shape.set(converted)
-    fixtureDef.shape = shape
-    fixtureDef.isSensor = true
-    body.createFixture(fixtureDef)
-  }
-
   override def updateHitbox(): Unit = {
     super.updateHitbox()
 
@@ -168,7 +195,10 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
       var attackVector = abilityCreature.attackVector
 
       if (attackVector.len() > 0f) {
-        attackVector = new Vector2(attackVector.x / attackVector.len(), attackVector.y / attackVector.len())
+        attackVector = new Vector2(
+          attackVector.x / attackVector.len(),
+          attackVector.y / attackVector.len()
+        )
       }
 
       val attackShiftX = attackVector.x * attackRange
@@ -178,7 +208,11 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
       hitbox.y = attackShiftY + abilityCreature.posY
 
       if (bodyActive) {
-        body.setTransform(hitbox.x / GameSystem.PixelsPerMeter, hitbox.y / GameSystem.PixelsPerMeter, 0f)
+        body.setTransform(
+          hitbox.x / GameSystem.PixelsPerMeter,
+          hitbox.y / GameSystem.PixelsPerMeter,
+          0f
+        )
       }
     }
 
@@ -187,7 +221,8 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
   override def onStop() {
     super.onStop()
 
-    if (state == AbilityState.Active) toRemoveBody = true // IMPORTANT: ability has to be active
+    if (state == AbilityState.Active)
+      toRemoveBody = true // IMPORTANT: ability has to be active
     // if we remove during channeling we could remove it before body is created, causing BOX2D crash
 
   }
@@ -195,10 +230,15 @@ abstract class MeleeAttack(override val abilityCreature: Creature) extends Attac
   override def onCollideWithCreature(creature: Creature): Unit = {
     super.onCollideWithCreature(creature)
     if (!(abilityCreature.isMob && creature.isMob)) {
-      if (abilityCreature != creature && state == AbilityState.Active && !creature.isImmune) {
-        creature.takeDamage(abilityCreature.weaponDamage, immunityFrames = true, 30f, 0f, 0f)
+      if (
+        abilityCreature != creature && state == AbilityState.Active && !creature.isImmune
+      ) {
+        creature.takeDamage(
+          abilityCreature.weaponDamage,
+          immunityFrames = true,
+          30f
+        )
       }
     }
   }
 }
-

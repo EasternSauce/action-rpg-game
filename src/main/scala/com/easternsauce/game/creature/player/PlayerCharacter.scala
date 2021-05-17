@@ -20,17 +20,10 @@ class PlayerCharacter(id: String) extends Creature(id) {
   override val isPlayer = true
 
   override protected val onGettingHitSound: Sound = Assets.painSound
-
-  private var respawnTimer: EsTimer = EsTimer()
-
   var dashAbility: DashAbility = _
   var respawning: Boolean = false
-
   var currentRespawnPoint: PlayerRespawnPoint = _
-
-  def inMenus: Boolean = GameSystem.inventoryWindow.inventoryOpen || GameSystem.dialogueWindow.activated
-
-  loadSprites(Assets.male1SpriteSheet, Map(Left -> 2, Right -> 3, Up -> 4, Down -> 1), 1)
+  private var respawnTimer: EsTimer = EsTimer()
 
   override def onInit(): Unit = {
     super.onInit()
@@ -39,6 +32,12 @@ class PlayerCharacter(id: String) extends Creature(id) {
     respawning = false
 
   }
+
+  loadSprites(
+    Assets.male1SpriteSheet,
+    Map(Left -> 2, Right -> 3, Up -> 4, Down -> 1),
+    1
+  )
 
   override def controlMovement(): Unit = {
 
@@ -52,21 +51,25 @@ class PlayerCharacter(id: String) extends Creature(id) {
       if (GameSystem.dirKeysMap(S)) moveInDirection(Down)
     }
 
-
   }
 
-  override def performActions(): Unit = {
+  def inMenus: Boolean =
+    GameSystem.inventoryWindow.inventoryOpen || GameSystem.dialogueWindow.activated
 
-  }
+  override def performActions(): Unit = {}
 
   override def setFacingDirection(): Unit = {
     val mouseX = Gdx.input.getX
     val mouseY = Gdx.input.getY
 
     val centerX = Gdx.graphics.getWidth / 2f
-    val centerY = (1f - GameSystem.ScreenProportion) * Gdx.graphics.getHeight + GameSystem.ScreenProportion * Gdx.graphics.getHeight / 2f
+    val centerY =
+      (1f - GameSystem.ScreenProportion) * Gdx.graphics.getHeight + GameSystem.ScreenProportion * Gdx.graphics.getHeight / 2f
 
-    facingVector = new Vector2(mouseX - centerX, (Gdx.graphics.getHeight - mouseY) - centerY).nor() // we need to reverse y due to mouse coordinates being in different system
+    facingVector = new Vector2(
+      mouseX - centerX,
+      (Gdx.graphics.getHeight - mouseY) - centerY
+    ).nor() // we need to reverse y due to mouse coordinates being in different system
   }
 
   override def onDeath(): Unit = {
@@ -91,24 +94,10 @@ class PlayerCharacter(id: String) extends Creature(id) {
     Assets.fireDemonMusic.stop()
   }
 
-  override protected def defineCustomAbilities(): Unit = {
-    dashAbility = DashAbility(this)
-
-    dashAbility.onPerformAction = () => {
-      Assets.flybySound.play(0.05f)
-    }
-
-    abilityList += dashAbility
-    //        swordAttackAbility.setAimed(true);
-    //        unarmedAttackAbility.setAimed(true);
-    //        tridentAttackAbility.setAimed(true);
-  }
-
   override def processMovement(): Unit = {
     if (isMoving && !wasMoving) {
       Assets.runningSound.loop(0.1f)
     }
-
 
     if (wasMoving && !isMoving) {
       Assets.runningSound.stop()
@@ -123,7 +112,12 @@ class PlayerCharacter(id: String) extends Creature(id) {
     if (GameSystem.lootSystem.getVisibleItemsCount == 0) {
       for (creature <- area.creatures.values) {
         if (creature != this) {
-          if (GameSystem.distance(creature.body, body) < 70f && creature.isNPC && creature.healthPoints > 0) {
+          if (
+            GameSystem.distance(
+              creature.body,
+              body
+            ) < 70f && creature.isNPC && creature.healthPoints > 0
+          ) {
             creature.asInstanceOf[NonPlayerCharacter].triggerDialogue()
           }
         }
@@ -133,10 +127,13 @@ class PlayerCharacter(id: String) extends Creature(id) {
         if (GameSystem.distance(playerRespawnPoint.body, body) < 70f) {
           currentRespawnPoint = playerRespawnPoint
 
-          if (currentRespawnPoint.respawnSetTimer.time >= currentRespawnPoint.respawnSetTime) {
-              currentRespawnPoint.onRespawnSet()
+          if (
+            currentRespawnPoint.respawnSetTimer.time >= currentRespawnPoint.respawnSetTime
+          ) {
+            currentRespawnPoint.onRespawnSet()
 
-            if (healthPoints < maxHealthPoints / 2) healthPoints = maxHealthPoints / 2
+            if (healthPoints < maxHealthPoints / 2)
+              healthPoints = maxHealthPoints / 2
 
             assert(GameSystem.currentArea.nonEmpty)
             GameSystem.currentArea.get.softReset()
@@ -168,4 +165,17 @@ class PlayerCharacter(id: String) extends Creature(id) {
   }
 
   def respawnArea: Area = currentRespawnPoint.area
+
+  override protected def defineCustomAbilities(): Unit = {
+    dashAbility = DashAbility(this)
+
+    dashAbility.onPerformAction = () => {
+      Assets.flybySound.play(0.05f)
+    }
+
+    abilityList += dashAbility
+    //        swordAttackAbility.setAimed(true);
+    //        unarmedAttackAbility.setAimed(true);
+    //        tridentAttackAbility.setAimed(true);
+  }
 }

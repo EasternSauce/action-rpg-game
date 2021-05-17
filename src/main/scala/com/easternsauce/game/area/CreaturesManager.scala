@@ -12,37 +12,46 @@ import scala.collection.mutable.ListBuffer
 
 class CreaturesManager(private val area: Area) {
 
-
-
   var creatures: mutable.Map[String, Creature] = mutable.Map()
 
   private var renderAlivePriorityQueue: mutable.PriorityQueue[Creature] = _
   private var renderDeadPriorityQueue: mutable.PriorityQueue[Creature] = _
 
-
   def onAreaEntry(): Unit = {
-    creatures.values.filter(creature => !creature.isPlayer && !creature.isNPC).foreach(creature => {
-      creature.area.world.destroyBody(creature.body)
-    })
-    creatures.filterInPlace((_, creature) => creature.isPlayer || creature.isNPC)
+    creatures.values
+      .filter(creature => !creature.isPlayer && !creature.isNPC)
+      .foreach(creature => {
+        creature.area.world.destroyBody(creature.body)
+      })
+    creatures.filterInPlace((_, creature) =>
+      creature.isPlayer || creature.isNPC
+    )
   }
 
   def addCreature(creature: Creature): Unit = {
     creatures.put(creature.id, creature)
   }
 
-  def renderAliveCreatures(batch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
-    if (renderAlivePriorityQueue != null) while (renderAlivePriorityQueue.nonEmpty) {
-      val creature = renderAlivePriorityQueue.dequeue()
-      creature.render(shapeDrawer, batch)
-    }
+  def renderAliveCreatures(
+      batch: SpriteBatch,
+      shapeDrawer: ShapeDrawer
+  ): Unit = {
+    if (renderAlivePriorityQueue != null)
+      while (renderAlivePriorityQueue.nonEmpty) {
+        val creature = renderAlivePriorityQueue.dequeue()
+        creature.render(shapeDrawer, batch)
+      }
   }
 
-  def renderDeadCreatures(batch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
-    if (renderDeadPriorityQueue != null) while (renderDeadPriorityQueue.nonEmpty) {
-      val creature = renderDeadPriorityQueue.dequeue()
-      creature.render(shapeDrawer, batch)
-    }
+  def renderDeadCreatures(
+      batch: SpriteBatch,
+      shapeDrawer: ShapeDrawer
+  ): Unit = {
+    if (renderDeadPriorityQueue != null)
+      while (renderDeadPriorityQueue.nonEmpty) {
+        val creature = renderDeadPriorityQueue.dequeue()
+        creature.render(shapeDrawer, batch)
+      }
 
   }
   def renderAbilities(batch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
@@ -53,7 +62,8 @@ class CreaturesManager(private val area: Area) {
 
   def renderHealthBars(batch: SpriteBatch, shapeDrawer: ShapeDrawer): Unit = {
     for (creature <- creatures.values) {
-      if (creature.isAlive && !creature.atFullLife) creature.renderHealthBar(shapeDrawer)
+      if (creature.isAlive && !creature.atFullLife)
+        creature.renderHealthBar(shapeDrawer)
     }
   }
 
@@ -86,8 +96,10 @@ class CreaturesManager(private val area: Area) {
             val armor: String =
               if (value.armor == null.asInstanceOf[Float]) "0"
               else "" + value.armor.intValue
-            writer.write("equipment_item " + key + " " + value.itemType.id +
-              " " + damage + " " + armor + "\n")
+            writer.write(
+              "equipment_item " + key + " " + value.itemType.id +
+                " " + damage + " " + armor + "\n"
+            )
           }
         }
       }
