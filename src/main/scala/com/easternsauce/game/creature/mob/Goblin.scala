@@ -33,7 +33,7 @@ class Goblin private (override val id: String, override val mobSpawnPoint: MobSp
 
   creatureType = "goblin"
 
-  maxHealthPoints = 10f
+  maxHealthPoints = 400f
   healthPoints = maxHealthPoints
 
   grantWeapon("poisonDagger")

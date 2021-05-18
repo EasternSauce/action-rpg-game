@@ -55,15 +55,6 @@ class NonPlayerCharacter private (id: String, trader: Boolean, spriteSheet: EsSp
     }
   }
 
-  override def onDeath(): Unit = {
-    isRunningAnimationActive = false
-
-    for (ability <- abilityList) {
-      ability.forceStop()
-    }
-    currentAttack.forceStop()
-  }
-
   def triggerDialogue(): Unit = {
     if (!GameSystem.dialogueWindow.activated) {
       GameSystem.dialogueWindow.dialogueNPC = this

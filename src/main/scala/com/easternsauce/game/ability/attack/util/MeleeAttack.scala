@@ -20,14 +20,16 @@ abstract class MeleeAttack protected (override val abilityCreature: Creature) ex
   var body: Body = _
   var hitbox: AttackHitbox = _
   var toRemoveBody = false
-  var bodyActive =
-    false // IMPORTANT: do NOT use body after already destroyed (otherwise weird behavior occurs, because, for some reason,
-  //protected val weaponSound: Sound = Assets.attackSound
+
+  var bodyActive = false
+  // IMPORTANT: do NOT use body after already destroyed (otherwise weird behavior occurs, because, for some reason,
+  // the reference can STILL be attached to some other random body after destruction, like arrow bodies)
+
   protected var aimed: Boolean
   protected var width: Float
   protected var height: Float
   protected var knockbackPower: Float
-  // the reference can STILL be attached to some other random body after destruction, like arrow bodies)
+  override protected val isAttack = true
 
   implicit def rectConversion(s: com.badlogic.gdx.math.Rectangle): Rectangle =
     new Rectangle(s.x, s.y, s.width, s.height)
@@ -202,6 +204,8 @@ abstract class MeleeAttack protected (override val abilityCreature: Creature) ex
   override def onStop() {
     super.onStop()
 
+    abilityCreature.isAttacking = false
+
     if (state == AbilityState.Active)
       toRemoveBody = true // IMPORTANT: ability has to be active
     // if we remove during channeling we could remove it before body is created, causing BOX2D crash
@@ -212,7 +216,13 @@ abstract class MeleeAttack protected (override val abilityCreature: Creature) ex
     super.onCollideWithCreature(creature)
     if (!(abilityCreature.isMob && creature.isMob)) {
       if (abilityCreature != creature && state == AbilityState.Active && !creature.isImmune) {
-        creature.takeDamage(abilityCreature.weaponDamage, immunityFrames = true, 30f)
+        creature.takeDamage(
+          abilityCreature.weaponDamage,
+          immunityFrames = true,
+          knockbackPower * 100f,
+          abilityCreature.posX,
+          abilityCreature.posY
+        )
       }
     }
   }

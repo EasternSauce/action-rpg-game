@@ -68,20 +68,12 @@ class PlayerCharacter private (id: String) extends Creature(id) {
 
   override def onDeath(): Unit = {
     super.onDeath()
+
     respawnTimer.restart()
     respawning = true
     sprinting = false
 
-    for (ability <- abilityList) {
-      ability.forceStop()
-    }
-
-    currentAttack.forceStop()
-
     GameSystem.hud.bossHealthBar.hide()
-
-    isRunningAnimationActive = false
-    toSetBodyNonInteractive = true
 
     // TODO: add music manager
     Assets.abandonedPlainsMusic.stop()
@@ -154,7 +146,7 @@ class PlayerCharacter private (id: String) extends Creature(id) {
   def respawnArea: Area = currentRespawnPoint.area
 
   override protected def defineCustomAbilities(): Unit = {
-    dashAbility = DashAbility(this)
+    dashAbility = DashAbility(this, 150f)
 
     dashAbility.onPerformAction = () => {
       Assets.flybySound.play(0.05f)

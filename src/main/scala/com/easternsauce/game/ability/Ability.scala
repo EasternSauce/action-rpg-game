@@ -19,7 +19,7 @@ abstract class Ability protected (val abilityCreature: Creature) {
   protected val cooldownTime: Float
   protected val activeTime: Float
   protected val channelTime: Float
-  protected var isAttack = false
+  protected val isAttack = false
 
   def update(): Unit = {
 

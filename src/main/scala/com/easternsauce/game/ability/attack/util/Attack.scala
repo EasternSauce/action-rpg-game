@@ -9,7 +9,7 @@ abstract class Attack protected (override val abilityCreature: Creature) extends
   protected var abilityAnimation: EsAnimation
   protected var abilityWindupAnimation: EsAnimation
 
-  isAttack = true
+  override protected val isAttack = true
 
   override def onStop() {
     super.onStop()

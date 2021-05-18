@@ -66,9 +66,6 @@ class Ghost private (override val id: String, override val mobSpawnPoint: MobSpa
     abilityList += explodeAbility
   }
 
-  override def onDeath(): Unit = {
-    super.onDeath()
-  }
 }
 
 object Ghost {

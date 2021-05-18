@@ -182,15 +182,9 @@ abstract class Mob protected (override val id: String, val mobSpawnPoint: MobSpa
   }
 
   override def onDeath(): Unit = {
-    isRunningAnimationActive = false
+    super.onDeath()
 
     GameSystem.lootSystem.spawnLootPile(area, posX, posY, dropTable)
-
-    for (ability <- abilityList) {
-      ability.forceStop()
-    }
-
-    currentAttack.forceStop()
 
     toSetBodyNonInteractive = true
   }

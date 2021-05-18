@@ -3,7 +3,7 @@ package com.easternsauce.game.creature
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.audio.Sound
 import com.badlogic.gdx.graphics.Color
-import com.badlogic.gdx.graphics.g2d.{Sprite, SpriteBatch}
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.{Rectangle, Vector2}
 import com.badlogic.gdx.physics.box2d._
 import com.easternsauce.game.ability.Ability
@@ -34,7 +34,7 @@ abstract class Creature protected (val id: String) extends Ordered[Creature] {
   val isNPC = false
   val baseSpeed: Float = 12f
   val dirMap = Map(Left -> 1, Right -> 2, Up -> 3, Down -> 0)
-  val mass: Float = 100f
+  val mass: Float = 200f
   protected val onGettingHitSound: Sound = null
   protected val walkAnimationFrameDuration = 0.1f
   protected val walkAnimationTimer: EsTimer = EsTimer()
@@ -251,7 +251,14 @@ abstract class Creature protected (val id: String) extends Ordered[Creature] {
     totalArmor
   }
 
-  def onDeath(): Unit = {}
+  def onDeath(): Unit = {
+    isRunningAnimationActive = false
+
+    for (ability <- abilityList) {
+      ability.forceStop()
+    }
+    currentAttack.forceStop()
+  }
 
   def abilityActive: Boolean = {
     var abilityActive = false
@@ -369,67 +376,31 @@ abstract class Creature protected (val id: String) extends Ordered[Creature] {
     val realWidth = spriteWidth * scale
     val realHeight = spriteHeight * scale
 
-    if (isRunningAnimationActive) {
-      val currentFrame = walkAnimation(lastMovingDir).currentFrame
+    val currentFrame =
+      if (isRunningAnimationActive) walkAnimation(lastMovingDir).currentFrame
+      else walkAnimation(lastMovingDir).getFrameByIndex(neutralPositionIndex)
 
-      if (isAlive && isImmune && (effectMap("immune").getRemainingTime % 0.25f) < 125) {
-        val alpha = effectMap("immune").getRemainingTime * 40f
-        batch.setColor(1,0.1f,0.1f, 5f*Math.sin(alpha).toFloat + 0.5f)
-        batch.draw(
-          currentFrame,
-          posX - realWidth / 2,
-          posY - realHeight / 2,
-          realWidth / 2,
-          realHeight / 2,
-          realWidth,
-          realHeight,
-          1.0f,
-          1.0f,
-          0f
-        )
-        batch.setColor(1,1,1,1)
+    val rotation = if (isAlive) 0f else 90f
 
-
-      }
-      else {
-        batch.draw(
-          currentFrame,
-          posX - realWidth / 2,
-          posY - realHeight / 2,
-          realWidth / 2,
-          realHeight / 2,
-          realWidth,
-          realHeight,
-          1.0f,
-          1.0f,
-          0f
-        )
-      }
-
-
-    } else {
-      val currentFrame =
-        walkAnimation(lastMovingDir).getFrameByIndex(neutralPositionIndex)
-
-      var rotation = 0.0f
-
-      if (!isAlive) {
-        rotation = 90f
-      }
-
-      batch.draw(
-        currentFrame,
-        posX - realWidth / 2,
-        posY - realHeight / 2,
-        realWidth / 2,
-        realHeight / 2,
-        realWidth,
-        realHeight,
-        1.0f,
-        1.0f,
-        rotation
-      )
+    if (isAlive && isImmune) {
+      val alpha = effectMap("immune").getRemainingTime * 50f
+      batch.setColor(1, 0.1f, 0.1f, 5f * Math.sin(alpha).toFloat + 0.5f)
     }
+
+    batch.draw(
+      currentFrame,
+      posX - realWidth / 2,
+      posY - realHeight / 2,
+      realWidth / 2,
+      realHeight / 2,
+      realWidth,
+      realHeight,
+      1.0f,
+      1.0f,
+      rotation
+    )
+
+    batch.setColor(1, 1, 1, 1)
   }
 
   def isAlive: Boolean = healthPoints > 0f
@@ -458,7 +429,7 @@ abstract class Creature protected (val id: String) extends Ordered[Creature] {
     currentAttack.render(shapeDrawer, batch)
   }
 
-  def currentAttack: Attack = {
+  def currentAttack: Ability = {
     if (equipmentItems.contains(0)) {
       equipmentItems(0).itemType.attackType match {
         case Sword   => swordAttack

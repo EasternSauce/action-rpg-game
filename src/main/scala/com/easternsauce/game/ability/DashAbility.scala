@@ -3,11 +3,12 @@ package com.easternsauce.game.ability
 import com.badlogic.gdx.math.Vector2
 import com.easternsauce.game.ability.util.AbilityState
 import com.easternsauce.game.creature.Creature
+import com.easternsauce.game.wrappers.EsAnimation
 import system.GameSystem
 
 class DashAbility private (override val abilityCreature: Creature, val dashDistance: Float)
     extends Ability(abilityCreature) {
-  protected val dashSpeed: Float = 30.0f
+  protected val dashSpeed: Float = 45.0f
   override protected val cooldownTime: Float = 1.0f
   override protected val channelTime: Float = 0f
   override protected val activeTime: Float =
@@ -70,6 +71,8 @@ class DashAbility private (override val abilityCreature: Creature, val dashDista
       .applyEffect(channelTime + activeTime)
     abilityCreature.takeStaminaDamage(15f)
   }
+
+
 }
 
 object DashAbility {
